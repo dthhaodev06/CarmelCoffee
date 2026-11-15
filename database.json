@@ -1,0 +1,2130 @@
+{
+  "carmel_inventory": [
+    {
+      "id": 1,
+      "name": "Hạt Robusta",
+      "unit": "bịch",
+      "inQty": 0,
+      "outQty": 5
+    },
+    {
+      "id": 2,
+      "name": "Hạt Cầu Đất",
+      "unit": "bịch",
+      "inQty": 15,
+      "outQty": 3
+    },
+    {
+      "id": 3,
+      "name": "Hạt Núi Min",
+      "unit": "bịch",
+      "inQty": 10,
+      "outQty": 2
+    },
+    {
+      "id": 4,
+      "name": "Sữa Đặc",
+      "unit": "hộp",
+      "inQty": 50,
+      "outQty": 12
+    },
+    {
+      "id": 5,
+      "name": "Sữa Tươi",
+      "unit": "bịch",
+      "inQty": 40,
+      "outQty": 15
+    },
+    {
+      "id": 6,
+      "name": "Syrup Đào",
+      "unit": "chai",
+      "inQty": 12,
+      "outQty": 2
+    },
+    {
+      "id": 7,
+      "name": "Syrup Sơri",
+      "unit": "chai",
+      "inQty": 8,
+      "outQty": 1
+    },
+    {
+      "id": 8,
+      "name": "Syrup Thơm",
+      "unit": "chai",
+      "inQty": 6,
+      "outQty": 1
+    },
+    {
+      "id": 9,
+      "name": "Syrup Vải",
+      "unit": "chai",
+      "inQty": 10,
+      "outQty": 2
+    },
+    {
+      "id": 10,
+      "name": "Đường",
+      "unit": "Kg",
+      "inQty": 30,
+      "outQty": 5
+    },
+    {
+      "id": 11,
+      "name": "Trân Châu OK",
+      "unit": "bịch",
+      "inQty": 15,
+      "outQty": 3
+    },
+    {
+      "id": 12,
+      "name": "Hũ Đào",
+      "unit": "Hũ",
+      "inQty": 12,
+      "outQty": 2
+    },
+    {
+      "id": 13,
+      "name": "Hũ Vải",
+      "unit": "Hũ",
+      "inQty": 12,
+      "outQty": 2
+    },
+    {
+      "id": 14,
+      "name": "Bịch Dâu Tằm",
+      "unit": "Kg",
+      "inQty": 8,
+      "outQty": 1
+    },
+    {
+      "id": 15,
+      "name": "Bịch Đác",
+      "unit": "Kg",
+      "inQty": 10,
+      "outQty": 2
+    },
+    {
+      "id": 16,
+      "name": "Muối",
+      "unit": "Kg",
+      "inQty": 5,
+      "outQty": 1
+    },
+    {
+      "id": 17,
+      "name": "Matcha",
+      "unit": "Bịch",
+      "inQty": 6,
+      "outQty": 1
+    },
+    {
+      "id": 18,
+      "name": "Chocolate",
+      "unit": "Bịch",
+      "inQty": 6,
+      "outQty": 1
+    },
+    {
+      "id": 19,
+      "name": "Trà Nhài",
+      "unit": "Kg",
+      "inQty": 10,
+      "outQty": 2
+    },
+    {
+      "id": 20,
+      "name": "Trà Bá Tước",
+      "unit": "Kg",
+      "inQty": 8,
+      "outQty": 1
+    },
+    {
+      "id": 21,
+      "name": "Trà Olong",
+      "unit": "Kg",
+      "inQty": 10,
+      "outQty": 2
+    },
+    {
+      "id": 22,
+      "name": "Trà Gạo Rang",
+      "unit": "Kg",
+      "inQty": 8,
+      "outQty": 1
+    },
+    {
+      "id": 23,
+      "name": "Bột Béo",
+      "unit": "Kg",
+      "inQty": 15,
+      "outQty": 3
+    }
+  ],
+  "inventory": [
+    {
+      "id": 1,
+      "name": "Hạt Robusta",
+      "unit": "bịch",
+      "inQty": 0,
+      "outQty": 5
+    },
+    {
+      "id": 2,
+      "name": "Hạt Cầu Đất",
+      "unit": "bịch",
+      "inQty": 15,
+      "outQty": 3
+    },
+    {
+      "id": 3,
+      "name": "Hạt Núi Min",
+      "unit": "bịch",
+      "inQty": 10,
+      "outQty": 2
+    },
+    {
+      "id": 4,
+      "name": "Sữa Đặc",
+      "unit": "hộp",
+      "inQty": 50,
+      "outQty": 12
+    },
+    {
+      "id": 5,
+      "name": "Sữa Tươi",
+      "unit": "bịch",
+      "inQty": 40,
+      "outQty": 15
+    },
+    {
+      "id": 6,
+      "name": "Syrup Đào",
+      "unit": "chai",
+      "inQty": 12,
+      "outQty": 2
+    },
+    {
+      "id": 7,
+      "name": "Syrup Sơri",
+      "unit": "chai",
+      "inQty": 8,
+      "outQty": 1
+    },
+    {
+      "id": 8,
+      "name": "Syrup Thơm",
+      "unit": "chai",
+      "inQty": 6,
+      "outQty": 1
+    },
+    {
+      "id": 9,
+      "name": "Syrup Vải",
+      "unit": "chai",
+      "inQty": 10,
+      "outQty": 2
+    },
+    {
+      "id": 10,
+      "name": "Đường",
+      "unit": "Kg",
+      "inQty": 30,
+      "outQty": 5
+    },
+    {
+      "id": 11,
+      "name": "Trân Châu OK",
+      "unit": "bịch",
+      "inQty": 15,
+      "outQty": 3
+    },
+    {
+      "id": 12,
+      "name": "Hũ Đào",
+      "unit": "Hũ",
+      "inQty": 12,
+      "outQty": 2
+    },
+    {
+      "id": 13,
+      "name": "Hũ Vải",
+      "unit": "Hũ",
+      "inQty": 12,
+      "outQty": 2
+    },
+    {
+      "id": 14,
+      "name": "Bịch Dâu Tằm",
+      "unit": "Kg",
+      "inQty": 8,
+      "outQty": 1
+    },
+    {
+      "id": 15,
+      "name": "Bịch Đác",
+      "unit": "Kg",
+      "inQty": 10,
+      "outQty": 2
+    },
+    {
+      "id": 16,
+      "name": "Muối",
+      "unit": "Kg",
+      "inQty": 5,
+      "outQty": 1
+    },
+    {
+      "id": 17,
+      "name": "Matcha",
+      "unit": "Bịch",
+      "inQty": 6,
+      "outQty": 1
+    },
+    {
+      "id": 18,
+      "name": "Chocolate",
+      "unit": "Bịch",
+      "inQty": 6,
+      "outQty": 1
+    },
+    {
+      "id": 19,
+      "name": "Trà Nhài",
+      "unit": "Kg",
+      "inQty": 10,
+      "outQty": 2
+    },
+    {
+      "id": 20,
+      "name": "Trà Bá Tước",
+      "unit": "Kg",
+      "inQty": 8,
+      "outQty": 1
+    },
+    {
+      "id": 21,
+      "name": "Trà Olong",
+      "unit": "Kg",
+      "inQty": 10,
+      "outQty": 2
+    },
+    {
+      "id": 22,
+      "name": "Trà Gạo Rang",
+      "unit": "Kg",
+      "inQty": 8,
+      "outQty": 1
+    },
+    {
+      "id": 23,
+      "name": "Bột Béo",
+      "unit": "Kg",
+      "inQty": 15,
+      "outQty": 3
+    }
+  ],
+  "users": {
+    "Admin": {
+      "role": "manager",
+      "pass": "123"
+    },
+    "Đỗ Thái Huy Hào": {
+      "role": "employee",
+      "pass": "123"
+    },
+    "Thiện": {
+      "role": "manager",
+      "pass": "123"
+    }
+  },
+  "registrations": {
+    "Đỗ Thái Huy Hào": {
+      "t2": [
+        "A",
+        "B"
+      ],
+      "t3": [],
+      "t4": [
+        "A"
+      ],
+      "t5": [
+        "A"
+      ],
+      "t6": [],
+      "t7": [
+        "B"
+      ],
+      "cn": [
+        "B",
+        "C"
+      ]
+    },
+    "Thiện": {
+      "t2": [
+        "A"
+      ],
+      "t3": [
+        "A"
+      ],
+      "t4": [
+        "A"
+      ],
+      "t5": [
+        "B(12h-17h)",
+        "C(18h-22h)"
+      ],
+      "t6": [],
+      "t7": [],
+      "cn": []
+    }
+  },
+  "masterRoster": {
+    "Đỗ Thái Huy Hào": {
+      "t2": "AB",
+      "t3": "Off",
+      "t4": "A",
+      "t5": "A",
+      "t6": "Off",
+      "t7": "B",
+      "cn": "BC"
+    },
+    "Thiện": {
+      "t2": "A",
+      "t3": "A",
+      "t4": "A",
+      "t5": "B(12h-17h)C(18h-22h)",
+      "t6": "Off",
+      "t7": "Off",
+      "cn": "Off"
+    }
+  },
+  "shiftRequests": [
+    {
+      "id": 1792837679348,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t5",
+      "fromShift": "C",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837679348,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t5",
+      "fromShift": "C",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837707981,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t7",
+      "fromShift": "B",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837707981,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t7",
+      "fromShift": "B",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837754930,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t7",
+      "fromShift": "A",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837754930,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t7",
+      "fromShift": "A",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837799433,
+      "type": "PASS",
+      "from": "Thái Trân",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "A",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837799433,
+      "type": "PASS",
+      "from": "Thái Trân",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "A",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837821246,
+      "type": "PASS",
+      "from": "Thái Trân",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "C",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837821246,
+      "type": "PASS",
+      "from": "Thái Trân",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "C",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837845956,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "cn",
+      "fromShift": "A",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837845956,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "cn",
+      "fromShift": "A",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837861145,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "cn",
+      "fromShift": "C",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837861145,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "cn",
+      "fromShift": "C",
+      "status": "PENDING"
+    },
+    {
+      "id": 1793013472079,
+      "type": "PASS",
+      "from": "Thiện",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "B",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1793013472079,
+      "type": "PASS",
+      "from": "Thiện",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "B",
+      "status": "PENDING"
+    },
+    {
+      "id": 1793964011086,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Hân",
+      "fromDay": "t2",
+      "fromShift": "A",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1793964011086,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Hân",
+      "fromDay": "t2",
+      "fromShift": "A",
+      "status": "PENDING"
+    },
+    {
+      "id": 1793964216286,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thịnh",
+      "fromDay": "t2",
+      "fromShift": "A",
+      "status": "APPROVED"
+    }
+  ],
+  "revenue": {
+    "2026-10-28": {
+      "cash": 200000,
+      "bank": 300000,
+      "total": 500000
+    },
+    "2026-11-07": {
+      "cash": 450000,
+      "bank": 46000,
+      "total": 496000
+    }
+  },
+  "expenses": [
+    {
+      "id": 1794017386594,
+      "date": "2026-11-07",
+      "name": "Sữa tươi",
+      "qty": "2 bịch",
+      "cost": 30000
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": 1794746554113,
+      "time": "19:42:34 15/11/2026",
+      "actor": "Thiện",
+      "action": "Cập nhật kho",
+      "detail": "Đã lưu lại tồn kho mới"
+    },
+    {
+      "id": 1794746148470,
+      "time": "19:35:48 15/11/2026",
+      "actor": "Thiện",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794746095982,
+      "time": "19:34:55 15/11/2026",
+      "actor": "Thiện",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794746076673,
+      "time": "19:34:36 15/11/2026",
+      "actor": "Thiện",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794746065074,
+      "time": "19:34:25 15/11/2026",
+      "actor": "Thiện",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794746054387,
+      "time": "19:34:14 15/11/2026",
+      "actor": "Thiện",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794746013860,
+      "time": "19:33:33 15/11/2026",
+      "actor": "Đỗ Thái Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794743371689,
+      "time": "18:49:31 15/11/2026",
+      "actor": "Đỗ Thái Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794395999376,
+      "time": "18:19:59 11/11/2026",
+      "actor": "Đỗ Thái Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794395998967,
+      "time": "18:19:58 11/11/2026",
+      "actor": "Đỗ Thái Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794394999599,
+      "time": "18:03:19 11/11/2026",
+      "actor": "Đỗ Thái Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794394978900,
+      "time": "18:02:58 11/11/2026",
+      "actor": "Admin",
+      "action": "Xóa tài khoản",
+      "detail": "Đã xóa nhân viên: Trân"
+    },
+    {
+      "id": 1794394975522,
+      "time": "18:02:55 11/11/2026",
+      "actor": "Admin",
+      "action": "Xóa tài khoản",
+      "detail": "Đã xóa nhân viên: Thịnh"
+    },
+    {
+      "id": 1794394972000,
+      "time": "18:02:52 11/11/2026",
+      "actor": "Admin",
+      "action": "Xóa tài khoản",
+      "detail": "Đã xóa nhân viên: Hân"
+    },
+    {
+      "id": 1794394967248,
+      "time": "18:02:47 11/11/2026",
+      "actor": "Admin",
+      "action": "Xóa tài khoản",
+      "detail": "Đã xóa nhân viên: Huy Hào"
+    },
+    {
+      "id": 1794046104802,
+      "time": "17:08:24 7/11/2026",
+      "actor": "Admin",
+      "action": "Phê duyệt yêu cầu",
+      "detail": "Mã yêu cầu: #1793964011086"
+    },
+    {
+      "id": 1794045675630,
+      "time": "17:01:15 7/11/2026",
+      "actor": "Admin",
+      "action": "Nhập doanh thu",
+      "detail": "Ngày 2026-11-07: 496.000 đ"
+    },
+    {
+      "id": 1794045545844,
+      "time": "16:59:05 7/11/2026",
+      "actor": "Thiện",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794045511264,
+      "time": "16:58:31 7/11/2026",
+      "actor": "Thịnh",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794045468277,
+      "time": "16:57:48 7/11/2026",
+      "actor": "Thiện",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794045447564,
+      "time": "16:57:27 7/11/2026",
+      "actor": "Thịnh",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794045426798,
+      "time": "16:57:06 7/11/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Thiện (manager)"
+    },
+    {
+      "id": 1794024856770,
+      "time": "11:14:16 7/11/2026",
+      "actor": "Đỗ Thái Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794024835910,
+      "time": "11:13:55 7/11/2026",
+      "actor": "Đỗ Thái Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794024823008,
+      "time": "11:13:43 7/11/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Đỗ Thái Huy Hào (employee)"
+    },
+    {
+      "id": 1794024556302,
+      "time": "11:09:16 7/11/2026",
+      "actor": "Trân",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794024545644,
+      "time": "11:09:05 7/11/2026",
+      "actor": "Trân",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794024525668,
+      "time": "11:08:45 7/11/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Trân (employee)"
+    },
+    {
+      "id": 1794023666040,
+      "time": "10:54:26 7/11/2026",
+      "actor": "Thịnh",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794023656721,
+      "time": "10:54:16 7/11/2026",
+      "actor": "Thịnh",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794023634371,
+      "time": "10:53:54 7/11/2026",
+      "actor": "Hân",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794023616373,
+      "time": "10:53:36 7/11/2026",
+      "actor": "Hân",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794023614665,
+      "time": "10:53:34 7/11/2026",
+      "actor": "Hân",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794023603308,
+      "time": "10:53:23 7/11/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794023598915,
+      "time": "10:53:18 7/11/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794022743333,
+      "time": "10:39:03 7/11/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1794022731736,
+      "time": "10:38:51 7/11/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794017386653,
+      "time": "09:09:46 7/11/2026",
+      "actor": "Admin",
+      "action": "Thêm khoản chi",
+      "detail": "Sữa tươi (30.000 đ)"
+    },
+    {
+      "id": 1794017310412,
+      "time": "09:08:30 7/11/2026",
+      "actor": "Admin",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794017306317,
+      "time": "09:08:26 7/11/2026",
+      "actor": "Admin",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794017290182,
+      "time": "09:08:10 7/11/2026",
+      "actor": "Admin",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794017242403,
+      "time": "09:07:22 7/11/2026",
+      "actor": "Admin",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1794013745661,
+      "time": "08:09:05 7/11/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793967670741,
+      "time": "19:21:10 6/11/2026",
+      "actor": "Admin",
+      "action": "Cập nhật kho",
+      "detail": "Đã lưu lại tồn kho mới"
+    },
+    {
+      "id": 1793967164458,
+      "time": "19:12:44 6/11/2026",
+      "actor": "Admin",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793966949623,
+      "time": "19:09:09 6/11/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793966922895,
+      "time": "19:08:42 6/11/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793966909538,
+      "time": "19:08:29 6/11/2026",
+      "actor": "Admin",
+      "action": "Xóa lịch tuần",
+      "detail": "Đã đặt lại toàn bộ lịch làm việc về Off"
+    },
+    {
+      "id": 1793966892867,
+      "time": "19:08:12 6/11/2026",
+      "actor": "Admin",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793966848479,
+      "time": "19:07:28 6/11/2026",
+      "actor": "Admin",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793966848373,
+      "time": "19:07:28 6/11/2026",
+      "actor": "Admin",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793965829097,
+      "time": "18:50:29 6/11/2026",
+      "actor": "Admin",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793964229563,
+      "time": "18:23:49 6/11/2026",
+      "actor": "Admin",
+      "action": "Phê duyệt yêu cầu",
+      "detail": "Mã yêu cầu: #1793964216286"
+    },
+    {
+      "id": 1793964011164,
+      "time": "18:20:11 6/11/2026",
+      "actor": "Huy Hào",
+      "action": "Tạo yêu cầu PASS",
+      "detail": "Gửi cho Hân"
+    },
+    {
+      "id": 1793963978632,
+      "time": "18:19:38 6/11/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793608330401,
+      "time": "15:32:10 2/11/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793260314300,
+      "time": "14:51:54 29/10/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793259402526,
+      "time": "14:36:42 29/10/2026",
+      "actor": "Admin",
+      "action": "Cập nhật kho",
+      "detail": "Đã lưu lại tồn kho mới"
+    },
+    {
+      "id": 1793259399529,
+      "time": "14:36:39 29/10/2026",
+      "actor": "Admin",
+      "action": "Cập nhật kho",
+      "detail": "Đã lưu lại tồn kho mới"
+    },
+    {
+      "id": 1793259380572,
+      "time": "14:36:20 29/10/2026",
+      "actor": "Admin",
+      "action": "Cập nhật kho",
+      "detail": "Đã lưu lại tồn kho mới"
+    },
+    {
+      "id": 1793259378533,
+      "time": "14:36:18 29/10/2026",
+      "actor": "Admin",
+      "action": "Cập nhật kho",
+      "detail": "Đã lưu lại tồn kho mới"
+    },
+    {
+      "id": 1793259361959,
+      "time": "14:36:01 29/10/2026",
+      "actor": "Admin",
+      "action": "Cập nhật kho",
+      "detail": "Đã lưu lại tồn kho mới"
+    },
+    {
+      "id": 1793256736281,
+      "time": "13:52:16 29/10/2026",
+      "actor": "Hân",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793256732321,
+      "time": "13:52:12 29/10/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793256728844,
+      "time": "13:52:08 29/10/2026",
+      "actor": "Thịnh",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793256714980,
+      "time": "13:51:54 29/10/2026",
+      "actor": "Hân",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793256692260,
+      "time": "13:51:32 29/10/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793256689168,
+      "time": "13:51:29 29/10/2026",
+      "actor": "Thịnh",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793256667545,
+      "time": "13:51:07 29/10/2026",
+      "actor": "Admin",
+      "action": "Xóa lịch tuần",
+      "detail": "Đã đặt lại toàn bộ lịch làm việc về Off"
+    },
+    {
+      "id": 1793256659597,
+      "time": "13:50:59 29/10/2026",
+      "actor": "Thịnh",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793256647510,
+      "time": "13:50:47 29/10/2026",
+      "actor": "Thịnh",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793256638027,
+      "time": "13:50:38 29/10/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Thịnh (employee)"
+    },
+    {
+      "id": 1793256586496,
+      "time": "13:49:46 29/10/2026",
+      "actor": "Hân",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793256545334,
+      "time": "13:49:05 29/10/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793256532223,
+      "time": "13:48:52 29/10/2026",
+      "actor": "Admin",
+      "action": "Xóa lịch tuần",
+      "detail": "Đã đặt lại toàn bộ lịch làm việc về Off"
+    },
+    {
+      "id": 1793256528127,
+      "time": "13:48:48 29/10/2026",
+      "actor": "Hân",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793256497975,
+      "time": "13:48:17 29/10/2026",
+      "actor": "Hân",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793256468730,
+      "time": "13:47:48 29/10/2026",
+      "actor": "Hân",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793256385236,
+      "time": "13:46:25 29/10/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Hân (employee)"
+    },
+    {
+      "id": 1793256356048,
+      "time": "13:45:56 29/10/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793256278210,
+      "time": "13:44:38 29/10/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793256262085,
+      "time": "13:44:22 29/10/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Huy Hào (employee)"
+    },
+    {
+      "id": 1793254504428,
+      "time": "13:15:04 29/10/2026",
+      "actor": "Admin",
+      "action": "Xóa tài khoản",
+      "detail": "Đã xóa nhân viên: Hàoo"
+    },
+    {
+      "id": 1793254500652,
+      "time": "13:15:00 29/10/2026",
+      "actor": "Admin",
+      "action": "Xóa tài khoản",
+      "detail": "Đã xóa nhân viên: Thiện"
+    },
+    {
+      "id": 1793254497779,
+      "time": "13:14:57 29/10/2026",
+      "actor": "Admin",
+      "action": "Xóa tài khoản",
+      "detail": "Đã xóa nhân viên: Hào"
+    },
+    {
+      "id": 1793254495026,
+      "time": "13:14:55 29/10/2026",
+      "actor": "Admin",
+      "action": "Xóa tài khoản",
+      "detail": "Đã xóa nhân viên: Thái Trân"
+    },
+    {
+      "id": 1793254492124,
+      "time": "13:14:52 29/10/2026",
+      "actor": "Admin",
+      "action": "Xóa tài khoản",
+      "detail": "Đã xóa nhân viên: Huy Hào"
+    },
+    {
+      "id": 1793187225904,
+      "time": "18:33:45 28/10/2026",
+      "actor": "Hàoo",
+      "action": "Nhập doanh thu",
+      "detail": "Ngày 2026-10-28: 500.000 đ"
+    },
+    {
+      "id": 1793186910474,
+      "time": "18:28:30 28/10/2026",
+      "actor": "Hàoo",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793186901644,
+      "time": "18:28:21 28/10/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Hàoo (manager)"
+    },
+    {
+      "id": 1793018422243,
+      "time": "19:40:22 26/10/2026",
+      "actor": "Admin",
+      "action": "Xóa lịch tuần",
+      "detail": "Đã đặt lại toàn bộ lịch làm việc về Off"
+    },
+    {
+      "id": 1793013486347,
+      "time": "18:18:06 26/10/2026",
+      "actor": "Admin",
+      "action": "Phê duyệt yêu cầu",
+      "detail": "Mã yêu cầu: #1793013472079"
+    },
+    {
+      "id": 1793013472086,
+      "time": "18:17:52 26/10/2026",
+      "actor": "Thiện",
+      "action": "Tạo yêu cầu PASS",
+      "detail": "Gửi cho Huy Hào"
+    },
+    {
+      "id": 1793013398685,
+      "time": "18:16:38 26/10/2026",
+      "actor": "Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793013394229,
+      "time": "18:16:34 26/10/2026",
+      "actor": "Thiện",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793013383291,
+      "time": "18:16:23 26/10/2026",
+      "actor": "Admin",
+      "action": "Xóa lịch tuần",
+      "detail": "Đã đặt lại toàn bộ lịch làm việc về Off"
+    },
+    {
+      "id": 1793013381050,
+      "time": "18:16:21 26/10/2026",
+      "actor": "Thiện",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793013307545,
+      "time": "18:15:07 26/10/2026",
+      "actor": "Thiện",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793013305438,
+      "time": "18:15:05 26/10/2026",
+      "actor": "Thiện",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793013294433,
+      "time": "18:14:54 26/10/2026",
+      "actor": "Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793013294015,
+      "time": "18:14:54 26/10/2026",
+      "actor": "Thiện",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793013288681,
+      "time": "18:14:48 26/10/2026",
+      "actor": "Admin",
+      "action": "Xóa lịch tuần",
+      "detail": "Đã đặt lại toàn bộ lịch làm việc về Off"
+    },
+    {
+      "id": 1793013272932,
+      "time": "18:14:32 26/10/2026",
+      "actor": "Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793013271600,
+      "time": "18:14:31 26/10/2026",
+      "actor": "Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793013259630,
+      "time": "18:14:19 26/10/2026",
+      "actor": "Admin",
+      "action": "Xóa lịch tuần",
+      "detail": "Đã đặt lại toàn bộ lịch làm việc về Off"
+    },
+    {
+      "id": 1793013232606,
+      "time": "18:13:52 26/10/2026",
+      "actor": "Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793013222558,
+      "time": "18:13:42 26/10/2026",
+      "actor": "Thiện",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1793013197088,
+      "time": "18:13:17 26/10/2026",
+      "actor": "Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793013171638,
+      "time": "18:12:51 26/10/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Hào (employee)"
+    },
+    {
+      "id": 1793013158138,
+      "time": "18:12:38 26/10/2026",
+      "actor": "Thiện",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1793012947899,
+      "time": "18:09:07 26/10/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Thiện (employee)"
+    },
+    {
+      "id": 1792837864443,
+      "time": "17:31:04 24/10/2026",
+      "actor": "Admin",
+      "action": "Phê duyệt yêu cầu",
+      "detail": "Mã yêu cầu: #1792837861145"
+    },
+    {
+      "id": 1792837861200,
+      "time": "17:31:01 24/10/2026",
+      "actor": "Huy Hào",
+      "action": "Tạo yêu cầu PASS",
+      "detail": "Gửi cho Thái Trân"
+    },
+    {
+      "id": 1792837853350,
+      "time": "17:30:53 24/10/2026",
+      "actor": "Admin",
+      "action": "Phê duyệt yêu cầu",
+      "detail": "Mã yêu cầu: #1792837845956"
+    },
+    {
+      "id": 1792837846166,
+      "time": "17:30:46 24/10/2026",
+      "actor": "Huy Hào",
+      "action": "Tạo yêu cầu PASS",
+      "detail": "Gửi cho Thái Trân"
+    },
+    {
+      "id": 1792837827693,
+      "time": "17:30:27 24/10/2026",
+      "actor": "Admin",
+      "action": "Phê duyệt yêu cầu",
+      "detail": "Mã yêu cầu: #1792837821246"
+    },
+    {
+      "id": 1792837821328,
+      "time": "17:30:21 24/10/2026",
+      "actor": "Thái Trân",
+      "action": "Tạo yêu cầu PASS",
+      "detail": "Gửi cho Huy Hào"
+    },
+    {
+      "id": 1792837806740,
+      "time": "17:30:06 24/10/2026",
+      "actor": "Admin",
+      "action": "Phê duyệt yêu cầu",
+      "detail": "Mã yêu cầu: #1792837799433"
+    },
+    {
+      "id": 1792837799511,
+      "time": "17:29:59 24/10/2026",
+      "actor": "Thái Trân",
+      "action": "Tạo yêu cầu PASS",
+      "detail": "Gửi cho Huy Hào"
+    },
+    {
+      "id": 1792837760542,
+      "time": "17:29:20 24/10/2026",
+      "actor": "Admin",
+      "action": "Phê duyệt yêu cầu",
+      "detail": "Mã yêu cầu: #1792837754930"
+    },
+    {
+      "id": 1792837755042,
+      "time": "17:29:15 24/10/2026",
+      "actor": "Huy Hào",
+      "action": "Tạo yêu cầu PASS",
+      "detail": "Gửi cho Thái Trân"
+    },
+    {
+      "id": 1792837715386,
+      "time": "17:28:35 24/10/2026",
+      "actor": "Admin",
+      "action": "Phê duyệt yêu cầu",
+      "detail": "Mã yêu cầu: #1792837707981"
+    },
+    {
+      "id": 1792837708080,
+      "time": "17:28:28 24/10/2026",
+      "actor": "Huy Hào",
+      "action": "Tạo yêu cầu PASS",
+      "detail": "Gửi cho Thái Trân"
+    },
+    {
+      "id": 1792837688068,
+      "time": "17:28:08 24/10/2026",
+      "actor": "Admin",
+      "action": "Phê duyệt yêu cầu",
+      "detail": "Mã yêu cầu: #1792837679348"
+    },
+    {
+      "id": 1792837679484,
+      "time": "17:27:59 24/10/2026",
+      "actor": "Huy Hào",
+      "action": "Tạo yêu cầu PASS",
+      "detail": "Gửi cho Thái Trân"
+    },
+    {
+      "id": 1792837592717,
+      "time": "17:26:32 24/10/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1792837576633,
+      "time": "17:26:16 24/10/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1792837568830,
+      "time": "17:26:08 24/10/2026",
+      "actor": "Thái Trân",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1792837547453,
+      "time": "17:25:47 24/10/2026",
+      "actor": "Admin",
+      "action": "Xóa lịch tuần",
+      "detail": "Đã đặt lại toàn bộ lịch làm việc về Off"
+    },
+    {
+      "id": 1792837534421,
+      "time": "17:25:34 24/10/2026",
+      "actor": "Thái Trân",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1792837500606,
+      "time": "17:25:00 24/10/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Thái Trân (employee)"
+    },
+    {
+      "id": 1792836481037,
+      "time": "17:08:01 24/10/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1792836300133,
+      "time": "17:05:00 24/10/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng ký ca làm",
+      "detail": "Nộp phiếu đăng ký tuần"
+    },
+    {
+      "id": 1792836049770,
+      "time": "17:00:49 24/10/2026",
+      "actor": "Huy Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1792836027864,
+      "time": "17:00:27 24/10/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Huy Hào (employee)"
+    },
+    {
+      "id": 1792755053007,
+      "time": "18:30:53 23/10/2026",
+      "actor": "Admin",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1792754509145,
+      "time": "18:21:49 23/10/2026",
+      "actor": "Admin",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1792754375790,
+      "time": "18:19:35 23/10/2026",
+      "actor": "Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1792753678944,
+      "time": "18:07:58 23/10/2026",
+      "actor": "Hào",
+      "action": "Đăng nhập",
+      "detail": "Vào hệ thống thành công"
+    },
+    {
+      "id": 1792753669585,
+      "time": "18:07:49 23/10/2026",
+      "actor": "Admin",
+      "action": "Tạo tài khoản",
+      "detail": "Cấp tài khoản cho: Hào (employee)"
+    },
+    {
+      "id": 1792752721752,
+      "time": "17:52:01 23/10/2026",
+      "actor": "Admin",
+      "action": "Cập nhật kho",
+      "detail": "Đã lưu lại tồn kho mới"
+    },
+    {
+      "id": 1792752721555,
+      "time": "17:52:01 23/10/2026",
+      "actor": "Admin",
+      "action": "Cập nhật kho",
+      "detail": "Đã lưu lại tồn kho mới"
+    }
+  ],
+  "carmel_user_accounts": {
+    "Đỗ Thái Huy Hào": "employee",
+    "Thiện": "manager"
+  },
+  "carmel_master_roster": {
+    "Đỗ Thái Huy Hào": {
+      "t2": "AB",
+      "t3": "Off",
+      "t4": "A",
+      "t5": "A",
+      "t6": "Off",
+      "t7": "B",
+      "cn": "BC"
+    },
+    "Thiện": {
+      "t2": "A",
+      "t3": "A",
+      "t4": "A",
+      "t5": "B(12h-17h)C(18h-22h)",
+      "t6": "Off",
+      "t7": "Off",
+      "cn": "Off"
+    }
+  },
+  "all_staff_registrations": {
+    "Đỗ Thái Huy Hào": {
+      "t2": [
+        "A",
+        "B"
+      ],
+      "t3": [],
+      "t4": [
+        "A"
+      ],
+      "t5": [
+        "A"
+      ],
+      "t6": [],
+      "t7": [
+        "B"
+      ],
+      "cn": [
+        "B",
+        "C"
+      ]
+    },
+    "Thiện": {
+      "t2": [
+        "A"
+      ],
+      "t3": [
+        "A"
+      ],
+      "t4": [
+        "A"
+      ],
+      "t5": [
+        "B(12h-17h)",
+        "C(18h-22h)"
+      ],
+      "t6": [],
+      "t7": [],
+      "cn": []
+    }
+  },
+  "carmel_shift_requests": [
+    {
+      "id": 1792837679348,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t5",
+      "fromShift": "C",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837679348,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t5",
+      "fromShift": "C",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837707981,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t7",
+      "fromShift": "B",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837707981,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t7",
+      "fromShift": "B",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837754930,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t7",
+      "fromShift": "A",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837754930,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "t7",
+      "fromShift": "A",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837799433,
+      "type": "PASS",
+      "from": "Thái Trân",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "A",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837799433,
+      "type": "PASS",
+      "from": "Thái Trân",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "A",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837821246,
+      "type": "PASS",
+      "from": "Thái Trân",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "C",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837821246,
+      "type": "PASS",
+      "from": "Thái Trân",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "C",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837845956,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "cn",
+      "fromShift": "A",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837845956,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "cn",
+      "fromShift": "A",
+      "status": "PENDING"
+    },
+    {
+      "id": 1792837861145,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "cn",
+      "fromShift": "C",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1792837861145,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thái Trân",
+      "fromDay": "cn",
+      "fromShift": "C",
+      "status": "PENDING"
+    },
+    {
+      "id": 1793013472079,
+      "type": "PASS",
+      "from": "Thiện",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "B",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1793013472079,
+      "type": "PASS",
+      "from": "Thiện",
+      "to": "Huy Hào",
+      "fromDay": "t5",
+      "fromShift": "B",
+      "status": "PENDING"
+    },
+    {
+      "id": 1793964011086,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Hân",
+      "fromDay": "t2",
+      "fromShift": "A",
+      "status": "APPROVED"
+    },
+    {
+      "id": 1793964011086,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Hân",
+      "fromDay": "t2",
+      "fromShift": "A",
+      "status": "PENDING"
+    },
+    {
+      "id": 1793964216286,
+      "type": "PASS",
+      "from": "Huy Hào",
+      "to": "Thịnh",
+      "fromDay": "t2",
+      "fromShift": "A",
+      "status": "APPROVED"
+    }
+  ],
+  "carmel_revenue_records": {
+    "2026-10-28": {
+      "cash": 200000,
+      "bank": 300000,
+      "total": 500000
+    },
+    "2026-11-07": {
+      "cash": 450000,
+      "bank": 46000,
+      "total": 496000
+    }
+  },
+  "carmel_expense_records": [
+    {
+      "id": 1794017386594,
+      "date": "2026-11-07",
+      "name": "Sữa tươi",
+      "qty": "2 bịch",
+      "cost": 30000
+    }
+  ],
+  "carmel_rosters_by_week": {
+    "2026-11-02": {
+      "Huy Hào": {
+        "t2": "Off",
+        "t3": "B",
+        "t4": "Off",
+        "t5": "C",
+        "t6": "B(12h-17h)",
+        "t7": "Off",
+        "cn": "Off"
+      },
+      "Hân": {
+        "t2": "BA",
+        "t3": "Off",
+        "t4": "B",
+        "t5": "Off",
+        "t6": "A",
+        "t7": "Off",
+        "cn": "Off"
+      },
+      "Thịnh": {
+        "t2": "A",
+        "t3": "A",
+        "t4": "Off",
+        "t5": "B",
+        "t6": "A",
+        "t7": "A",
+        "cn": "A"
+      },
+      "Trân": {
+        "t2": "C",
+        "t3": "Off",
+        "t4": "C",
+        "t5": "A",
+        "t6": "Off",
+        "t7": "B",
+        "cn": "Off"
+      },
+      "Đỗ Thái Huy Hào": {
+        "t2": "Off",
+        "t3": "Off",
+        "t4": "Off",
+        "t5": "Off",
+        "t6": "Off",
+        "t7": "Off",
+        "cn": "Off"
+      },
+      "Thiện": {
+        "t2": "Off",
+        "t3": "A",
+        "t4": "A",
+        "t5": "Off",
+        "t6": "Off",
+        "t7": "Off",
+        "cn": "Off"
+      }
+    },
+    "2026-11-09": {
+      "Đỗ Thái Huy Hào": {
+        "t2": "AB",
+        "t3": "Off",
+        "t4": "A",
+        "t5": "A",
+        "t6": "Off",
+        "t7": "B",
+        "cn": "BC"
+      },
+      "Thiện": {
+        "t2": "A",
+        "t3": "A",
+        "t4": "A",
+        "t5": "B(12h-17h)C(18h-22h)",
+        "t6": "Off",
+        "t7": "Off",
+        "cn": "Off"
+      }
+    }
+  },
+  "carmel_registrations_by_week": {
+    "2026-11-02": {
+      "Huy Hào": {
+        "t2": [
+          "A",
+          "B"
+        ],
+        "t3": [
+          "B"
+        ],
+        "t4": [
+          "B"
+        ],
+        "t5": [
+          "C"
+        ],
+        "t6": [
+          "B(12h-17h)"
+        ],
+        "t7": [
+          "B(13h-17h)"
+        ],
+        "cn": [
+          "C"
+        ]
+      },
+      "Hân": {
+        "t2": [
+          "B",
+          "C"
+        ],
+        "t3": [],
+        "t4": [
+          "B"
+        ],
+        "t5": [],
+        "t6": [
+          "A"
+        ],
+        "t7": [],
+        "cn": [
+          "B"
+        ]
+      },
+      "Thịnh": {
+        "t2": [
+          "A",
+          "B"
+        ],
+        "t3": [
+          "A"
+        ],
+        "t4": [
+          "C"
+        ],
+        "t5": [
+          "B"
+        ],
+        "t6": [
+          "A"
+        ],
+        "t7": [
+          "A"
+        ],
+        "cn": [
+          "A"
+        ]
+      },
+      "Trân": {
+        "t2": [
+          "B",
+          "C"
+        ],
+        "t3": [
+          "A"
+        ],
+        "t4": [
+          "C"
+        ],
+        "t5": [
+          "C"
+        ],
+        "t6": [],
+        "t7": [
+          "B"
+        ],
+        "cn": []
+      },
+      "Đỗ Thái Huy Hào": {
+        "t2": [
+          "B"
+        ],
+        "t3": [],
+        "t4": [
+          "A"
+        ],
+        "t5": [
+          "A"
+        ],
+        "t6": [],
+        "t7": [
+          "B"
+        ],
+        "cn": [
+          "B",
+          "C"
+        ]
+      },
+      "Thiện": {
+        "t2": [
+          "A"
+        ],
+        "t3": [
+          "A"
+        ],
+        "t4": [
+          "A"
+        ],
+        "t5": [
+          "B(8h)",
+          "C"
+        ],
+        "t6": [],
+        "t7": [],
+        "cn": []
+      }
+    },
+    "2026-11-09": {
+      "Đỗ Thái Huy Hào": {
+        "t2": [
+          "A",
+          "B"
+        ],
+        "t3": [],
+        "t4": [
+          "A"
+        ],
+        "t5": [
+          "A"
+        ],
+        "t6": [],
+        "t7": [
+          "B"
+        ],
+        "cn": [
+          "B",
+          "C"
+        ]
+      },
+      "Thiện": {
+        "t2": [
+          "A"
+        ],
+        "t3": [
+          "A"
+        ],
+        "t4": [
+          "A"
+        ],
+        "t5": [
+          "B(12h-17h)",
+          "C(18h-22h)"
+        ],
+        "t6": [],
+        "t7": [],
+        "cn": []
+      }
+    }
+  },
+  "carmel_full_users": {
+    "Admin": {
+      "role": "manager",
+      "pass": "123"
+    },
+    "Huy Hào": {
+      "role": "employee",
+      "pass": "123"
+    },
+    "Hân": {
+      "role": "employee",
+      "pass": "123"
+    },
+    "Thịnh": {
+      "role": "employee",
+      "pass": "123"
+    },
+    "Trân": {
+      "role": "employee",
+      "pass": "123"
+    },
+    "Đỗ Thái Huy Hào": {
+      "role": "employee",
+      "pass": "123"
+    }
+  },
+  "carmel_staff_rates": {
+    "Trân": 23000,
+    "Đỗ Thái Huy Hào": 25000,
+    "Thiện": 25000
+  }
+}
