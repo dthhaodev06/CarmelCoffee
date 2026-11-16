@@ -1,76 +1,91 @@
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
 const path = require('path');
+const mongoose = require('mongoose');
+const webpush = require('web-push');
 
 const app = express();
-const PORT = 3000;
-const DB_FILE = path.join(__dirname, 'database.json');
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-function readData() {
-  if (!fs.existsSync(DB_FILE)) {
-    const defaultData = {
-      users: {
-        "Admin": { role: "manager", pass: "123456" }
-      },
-      inventory: [],
-      registrations: {},
-      masterRoster: {},
-      shiftRequests: [],
-      revenue: {},
-      expenses: [],
-      auditLogs: [],
-      carmel_user_accounts: { "Admin": "manager" },
-      all_staff_registrations: {},
-      carmel_master_roster: {},
-      carmel_shift_requests: [],
-      carmel_inventory: [],
-      carmel_revenue_records: {},
-      carmel_expense_records: []
-    };
-    fs.writeFileSync(DB_FILE, JSON.stringify(defaultData, null, 2));
-    return defaultData;
-  }
+// ====================================================
+// 1. KẾT NỐI CLOUD DATABASE (MONGODB ATLAS)
+// ====================================================
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://huyhao0620_db_user:Sy42pPnptuaa0x07@cluster0.w5ubkha.mongodb.net/carmelcoffee';
 
-  try {
-    let data = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
-    if (!data.users) data.users = {};
-    if (!data.inventory) data.inventory = [];
-    if (!data.registrations) data.registrations = {};
-    if (!data.masterRoster) data.masterRoster = {};
-    if (!data.shiftRequests) data.shiftRequests = [];
-    if (!data.revenue) data.revenue = {};
-    if (!data.expenses) data.expenses = [];
-    if (!data.auditLogs) data.auditLogs = [];
-    if (!data.carmel_user_accounts) {
-      data.carmel_user_accounts = {};
-      Object.keys(data.users).forEach(u => data.carmel_user_accounts[u] = data.users[u].role);
-    }
-    if (!data.carmel_master_roster) data.carmel_master_roster = data.masterRoster;
-    if (!data.all_staff_registrations) data.all_staff_registrations = data.registrations;
-    if (!data.carmel_shift_requests) data.carmel_shift_requests = data.shiftRequests;
-    if (!data.carmel_inventory) data.carmel_inventory = data.inventory;
-    if (!data.carmel_revenue_records) data.carmel_revenue_records = data.revenue;
-    if (!data.carmel_expense_records) data.carmel_expense_records = data.expenses;
-    return data;
-  } catch (err) {
-    console.error("Lỗi đọc file database.json:", err);
-    return {};
+mongoose.connect(MONGO_URI)
+  .then(() => console.log('✅ Đã kết nối Cloud Database (MongoDB) thành công!'))
+  .catch(err => console.error('❌ Lỗi kết nối MongoDB:', err));
+
+const StoreSchema = new mongoose.Schema({
+  key: { type: String, default: 'main_store' },
+  payload: { type: Object, required: true }
+});
+const StoreModel = mongoose.model('Store', StoreSchema);
+
+let memoryCache = null;
+
+function ensureDataStructure(data) {
+  if (!data.users) data.users = { "Admin": { role: "manager", pass: "123456" } };
+  if (!data.inventory) data.inventory = [];
+  if (!data.registrations) data.registrations = {};
+  if (!data.masterRoster) data.masterRoster = {};
+  if (!data.shiftRequests) data.shiftRequests = [];
+  if (!data.revenue) data.revenue = {};
+  if (!data.expenses) data.expenses = [];
+  if (!data.auditLogs) data.auditLogs = [];
+  if (!data.carmel_user_accounts) {
+    data.carmel_user_accounts = {};
+    Object.keys(data.users).forEach(u => data.carmel_user_accounts[u] = data.users[u].role);
   }
+  if (!data.carmel_master_roster) data.carmel_master_roster = data.masterRoster;
+  if (!data.all_staff_registrations) data.all_staff_registrations = data.registrations;
+  if (!data.carmel_shift_requests) data.carmel_shift_requests = data.shiftRequests;
+  if (!data.carmel_inventory) data.carmel_inventory = data.inventory;
+  if (!data.carmel_revenue_records) data.carmel_revenue_records = data.revenue;
+  if (!data.carmel_expense_records) data.carmel_expense_records = data.expenses;
+  if (!data.pushSubscriptions) data.pushSubscriptions = [];
+  return data;
+}
+
+async function initDatabase() {
+  const defaultData = ensureDataStructure({
+    users: {
+      "Admin": { role: "manager", pass: "123456" }
+    }
+  });
+
+  let doc = await StoreModel.findOne({ key: 'main_store' });
+  if (!doc) {
+    doc = await StoreModel.create({ key: 'main_store', payload: defaultData });
+  }
+  memoryCache = ensureDataStructure(doc.payload);
+}
+
+function readData() {
+  return memoryCache || ensureDataStructure({});
 }
 
 function writeData(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+  // Giới hạn 500 dòng nhật ký gần nhất để không bao giờ quá tải dung lượng
+  if (Array.isArray(data.auditLogs) && data.auditLogs.length > 500) {
+    data.auditLogs = data.auditLogs.slice(0, 500);
+  }
+  memoryCache = data;
+  StoreModel.findOneAndUpdate(
+    { key: 'main_store' },
+    { payload: data },
+    { upsert: true }
+  ).catch(err => console.error('❌ Lỗi đồng bộ dữ liệu lên Cloud:', err));
 }
 
 function logActivity(data, actor, action, detail) {
   const logItem = {
     id: Date.now(),
-    time: new Date().toLocaleString('vi-VN'),
+    time: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
     actor: actor || 'Ẩn danh',
     action: action,
     detail: detail || ''
@@ -78,6 +93,10 @@ function logActivity(data, actor, action, detail) {
   if (!Array.isArray(data.auditLogs)) data.auditLogs = [];
   data.auditLogs.unshift(logItem);
 }
+
+// ====================================================
+// 2. CÁC API QUẢN LÝ DỮ LIỆU & NHÂN SỰ
+// ====================================================
 
 // 1. API lấy toàn bộ dữ liệu
 app.get('/api/data', (req, res) => {
@@ -200,7 +219,6 @@ app.post('/api/shifts/clear-roster', (req, res) => {
   data.registrations = {};
   data.all_staff_registrations = {};
 
-  writeData(data);
   logActivity(data, req.body.actor || 'Quản lý', 'Xóa lịch tuần', 'Đã đặt lại toàn bộ lịch làm việc về Off');
   writeData(data);
 
@@ -298,16 +316,9 @@ app.get('/api/logs', (req, res) => {
   res.json(readData().auditLogs);
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`====================================================`);
-  console.log(`🚀 Máy chủ Carmel Coffee đang chạy trên Port ${PORT}`);
-  console.log(`👉 Truy cập từ máy tính: http://localhost:${PORT}/dashboard.html`);
-  console.log(`👉 Truy cập từ điện thoại: http://192.168.0.111:${PORT}/dashboard.html`);
-  console.log(`====================================================`);
-});
-const webpush = require('web-push');
-
-// 1. Dán 2 chuỗi vừa tạo ở Bước 1 vào đây:
+// ====================================================
+// 3. THÔNG BÁO ĐẨY (WEB PUSH NOTIFICATIONS)
+// ====================================================
 const publicVapidKey = 'BBKRszWMOyxzA7KsJ8WrkoHzkVBfLLvHjwXtD9GMoNYTSiHzQl5Hos-kZ80mqPDyp4ka234B64_fba4FZn1F2vs';
 const privateVapidKey = 'tu7Bqd0tLOS2kwiBM3ZyzoqGQHJouI5Y7M9bMdRRDUI';
 
@@ -317,34 +328,56 @@ webpush.setVapidDetails(
   privateVapidKey
 );
 
-// Mảng lưu danh sách các điện thoại đã đăng ký nhận thông báo
-let pushSubscriptions = [];
-
-// API nhận đăng ký từ điện thoại
+// API nhận đăng ký từ điện thoại (lưu luôn lên Cloud để không mất khi restart)
 app.post('/api/subscribe', (req, res) => {
   const subscription = req.body;
-  if (subscription && !pushSubscriptions.some(s => s.endpoint === subscription.endpoint)) {
-    pushSubscriptions.push(subscription);
+  const data = readData();
+  if (!Array.isArray(data.pushSubscriptions)) data.pushSubscriptions = [];
+
+  if (subscription && !data.pushSubscriptions.some(s => s.endpoint === subscription.endpoint)) {
+    data.pushSubscriptions.push(subscription);
+    writeData(data);
   }
   res.status(201).json({ success: true });
 });
 
-// HÀM TIỆN ÍCH: Gọi hàm này ở bất cứ đâu để bắn thông báo về điện thoại
+// Hàm tiện ích gửi thông báo về điện thoại
 function sendPhoneNotification(title, message) {
   const payload = JSON.stringify({ title, body: message });
+  const data = readData();
+  const subs = data.pushSubscriptions || [];
+  let changed = false;
 
-  pushSubscriptions.forEach(sub => {
+  subs.forEach(sub => {
     webpush.sendNotification(sub, payload).catch(err => {
-      // Nếu token hết hạn thì xóa khỏi danh sách
       if (err.statusCode === 410 || err.statusCode === 404) {
-        pushSubscriptions = pushSubscriptions.filter(s => s.endpoint !== sub.endpoint);
+        data.pushSubscriptions = data.pushSubscriptions.filter(s => s.endpoint !== sub.endpoint);
+        changed = true;
       }
     });
   });
+
+  if (changed) writeData(data);
 }
 
-// VÍ DỤ TEST: API gửi thử 1 thông báo
+// API gửi thử 1 thông báo
 app.post('/api/test-notify', (req, res) => {
   sendPhoneNotification('Carmel Coffee', '🔔 Thông báo thử nghiệm: Web đã kết nối điện thoại thành công!');
   res.json({ success: true });
 });
+
+// ====================================================
+// 4. KHỞI CHẠY SERVER SAU KHI TẢI XONG DỮ LIỆU CLOUD
+// ====================================================
+initDatabase()
+  .then(() => {
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`====================================================`);
+      console.log(`🚀 Máy chủ Carmel Coffee đang chạy trên Port ${PORT}`);
+      console.log(`👉 Truy cập từ máy tính: http://localhost:${PORT}/dashboard.html`);
+      console.log(`====================================================`);
+    });
+  })
+  .catch(err => {
+    console.error('❌ Không thể khởi động server do lỗi kết nối database:', err);
+  });
