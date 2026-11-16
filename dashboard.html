@@ -1672,30 +1672,60 @@ function initScheduleGrid() {
       renderRevenueTable();
     }
 
-    function renderRevenueTable() {
+function renderRevenueTable() {
       const tbody = document.getElementById('revenueTableBody');
       if (!tbody) return;
       tbody.innerHTML = '';
+
+      const monthInput = document.getElementById('filterRevenueMonth');
+      const selectedMonth = monthInput ? monthInput.value : '';
       const revenueData = JSON.parse(localStorage.getItem('carmel_revenue_records')) || {};
-      const dates = Object.keys(revenueData);
+
+      let monthlyCash = 0;
+      let monthlyBank = 0;
+      let monthlyTotal = 0;
+
+      const dates = Object.keys(revenueData)
+        .filter(d => !selectedMonth || d.startsWith(selectedMonth))
+        .sort((a, b) => new Date(b) - new Date(a));
 
       if (dates.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 20px;">Chưa có dữ liệu.</td></tr>`;
-        return;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 20px;">Chưa có dữ liệu doanh thu trong tháng này.</td></tr>`;
+      } else {
+        dates.forEach((dateStr, idx) => {
+          const item = revenueData[dateStr];
+          monthlyCash += (item.cash || 0);
+          monthlyBank += (item.bank || 0);
+          monthlyTotal += (item.total || 0);
+
+          const parts = dateStr.split('-');
+          const displayDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${idx + 1}</strong></td>
+            <td><strong>${displayDate}</strong></td>
+            <td style="text-align:right;">${(item.cash || 0).toLocaleString('vi-VN')} đ</td>
+            <td style="text-align:right;">${(item.bank || 0).toLocaleString('vi-VN')} đ</td>
+            <td style="text-align:right; color:#16a34a; font-weight:700;">${(item.total || 0).toLocaleString('vi-VN')} đ</td>
+            <td style="text-align:center;">
+              <button class="btn-action btn-reset" style="padding: 3px 8px; font-size: 11px; background:#dc2626;" onclick="deleteRevenue('${dateStr}')">Xóa</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
       }
 
-      dates.forEach((dateStr, idx) => {
-        const item = revenueData[dateStr];
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${idx + 1}</strong></td><td><strong>${dateStr}</strong></td>
-          <td style="text-align:right;">${item.cash.toLocaleString('vi-VN')} đ</td>
-          <td style="text-align:right;">${item.bank.toLocaleString('vi-VN')} đ</td>
-          <td style="text-align:right; color:#16a34a; font-weight:700;">${item.total.toLocaleString('vi-VN')} đ</td>
-          <td style="text-align:center;"><button class="btn-action btn-reset" style="padding: 3px 8px; font-size: 11px; background:#dc2626;" onclick="deleteRevenue('${dateStr}')">Xóa</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
+      // NHẢY SỐ LIỆU CHO 3 Ô TỔNG DOANH THU TO Ở TRÊN
+      if (document.getElementById('statMonthlyCash')) {
+        document.getElementById('statMonthlyCash').textContent = monthlyCash.toLocaleString('vi-VN') + ' đ';
+      }
+      if (document.getElementById('statMonthlyBank')) {
+        document.getElementById('statMonthlyBank').textContent = monthlyBank.toLocaleString('vi-VN') + ' đ';
+      }
+      if (document.getElementById('statMonthlyTotal')) {
+        document.getElementById('statMonthlyTotal').textContent = monthlyTotal.toLocaleString('vi-VN') + ' đ';
+      }
     }
 
     function deleteRevenue(dateStr) {
@@ -1742,25 +1772,66 @@ function initScheduleGrid() {
       const tbody = document.getElementById('expenseTableBody');
       if (!tbody) return;
       tbody.innerHTML = '';
+
+      const monthInput = document.getElementById('filterExpenseMonth');
+      const selectedMonth = monthInput ? monthInput.value : '';
       const expenses = JSON.parse(localStorage.getItem('carmel_expense_records')) || [];
 
-      if (expenses.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #94a3b8; padding: 20px;">Chưa có khoản chi nào.</td></tr>`;
-        return;
+      const todayStr = new Date().toISOString().split('T')[0];
+      let monthlyTotal = 0;
+      let todayTotal = 0;
+
+      expenses.forEach(item => {
+        if (item.date === todayStr) {
+          todayTotal += (item.cost || 0);
+        }
+      });
+
+      const monthExpenses = expenses
+        .filter(item => !selectedMonth || item.date.startsWith(selectedMonth))
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      if (monthExpenses.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #94a3b8; padding: 20px;">Chưa có khoản chi nào trong tháng này.</td></tr>`;
+      } else {
+        const dailyTotals = {};
+        monthExpenses.forEach(item => {
+          dailyTotals[item.date] = (dailyTotals[item.date] || 0) + (item.cost || 0);
+          monthlyTotal += (item.cost || 0);
+        });
+
+        monthExpenses.forEach((item, idx) => {
+          const parts = item.date.split('-');
+          const displayDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+          const dayTotalVal = dailyTotals[item.date] || 0;
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td style="text-align: center;"><strong>${idx + 1}</strong></td>
+            <td><strong>${displayDate}</strong></td>
+            <td>${escapeHtml(item.name)}</td>
+            <td style="text-align:center;"><span class="badge-unit">${escapeHtml(item.qty)}</span></td>
+            <td style="text-align:right;">${(item.cost || 0).toLocaleString('vi-VN')} đ</td>
+            <td style="text-align:right; color:#b91c1c; font-weight:700;">${dayTotalVal.toLocaleString('vi-VN')} đ</td>
+            <td style="text-align:center;">
+              <button class="btn-action btn-reset" style="padding: 3px 8px; font-size: 11px; background:#dc2626;" onclick="deleteExpense(${item.id})">Xóa</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
       }
 
-      expenses.forEach((item, idx) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${idx + 1}</strong></td><td><strong>${item.date}</strong></td>
-          <td>${escapeHtml(item.name)}</td><td style="text-align:center;">${escapeHtml(item.qty)}</td>
-          <td style="text-align:right;">${item.cost.toLocaleString('vi-VN')} đ</td>
-          <td style="text-align:right; color:#b91c1c; font-weight:700;">${item.cost.toLocaleString('vi-VN')} đ</td>
-          <td style="text-align:center;"><button class="btn-action btn-reset" style="padding: 3px 8px; font-size: 11px; background:#dc2626;" onclick="deleteExpense(${item.id})">Xóa</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
+      // NHẢY SỐ LIỆU CHO 3 Ô TỔNG CHI PHÍ TO Ở TRÊN
+      if (document.getElementById('statMonthlyExpense')) {
+        document.getElementById('statMonthlyExpense').textContent = monthlyTotal.toLocaleString('vi-VN') + ' đ';
+      }
+      if (document.getElementById('statTodayExpense')) {
+        document.getElementById('statTodayExpense').textContent = todayTotal.toLocaleString('vi-VN') + ' đ';
+      }
+      if (document.getElementById('statCountExpense')) {
+        document.getElementById('statCountExpense').textContent = monthExpenses.length + ' khoản';
+      }
+    }    
 
     function deleteExpense(id) {
       if (currentUser.role !== 'manager') return;
