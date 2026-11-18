@@ -563,6 +563,136 @@
         font-size: 12.5px !important;
         border-radius: 8px !important;
       }
+      /* --- DECOR DANH SÁCH PASS CA & ĐỔI CA DẠNG THẺ GỌN ĐẸP TRÊN MÁY TÍNH --- */
+    @media (min-width: 769px) {
+      #tab-pass-shift .data-card,
+      #tab-swap-shift .data-card {
+        border-radius: 14px !important;
+      }
+
+      #tab-pass-shift .custom-table,
+      #tab-swap-shift .custom-table {
+        display: block !important;
+        width: 100% !important;
+      }
+
+      #tab-pass-shift .custom-table thead,
+      #tab-swap-shift .custom-table thead {
+        display: none !important;
+      }
+
+      #tab-pass-shift .custom-table tbody,
+      #tab-swap-shift .custom-table tbody {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 100% !important;
+      }
+
+      #tab-pass-shift .custom-table tr,
+      #tab-swap-shift .custom-table tr {
+        display: grid !important;
+        grid-template-columns: auto 1fr auto !important;
+        gap: 8px 10px !important;
+        align-items: center !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        padding: 14px 16px !important;
+        transition: 0.2s;
+      }
+
+      #tab-pass-shift .custom-table tr:hover,
+      #tab-swap-shift .custom-table tr:hover {
+        border-color: #cbd5e1 !important;
+        background: #f1f5f9 !important;
+      }
+
+      #tab-pass-shift .custom-table td,
+      #tab-swap-shift .custom-table td {
+        border: none !important;
+        padding: 0 !important;
+        white-space: nowrap !important;
+        font-size: 13.5px !important;
+      }
+
+      /* Hàng 1: Badge PASS/SWAP | Người gửi -> Người nhận | Trạng thái */
+      #tab-pass-shift .custom-table td:nth-child(1),
+      #tab-swap-shift .custom-table td:nth-child(1) {
+        grid-column: 1;
+      }
+
+      #tab-pass-shift .custom-table td:nth-child(2),
+      #tab-swap-shift .custom-table td:nth-child(2) {
+        grid-column: 2;
+        font-size: 14px !important;
+        color: #0f172a !important;
+      }
+
+      #tab-pass-shift .custom-table td:nth-child(2)::after,
+      #tab-swap-shift .custom-table td:nth-child(2)::after {
+        content: " ➔";
+        color: #64748b;
+        font-weight: 400;
+      }
+
+      #tab-pass-shift .custom-table td:nth-child(5),
+      #tab-swap-shift .custom-table td:nth-child(5) {
+        grid-column: 3;
+        text-align: right !important;
+        font-size: 12px !important;
+      }
+
+      /* Hàng 2: Người nhận / Người đổi */
+      #tab-pass-shift .custom-table td:nth-child(4),
+      #tab-swap-shift .custom-table td:nth-child(4) {
+        grid-column: 1 / -1;
+        font-size: 13px !important;
+        color: #0369a1 !important;
+      }
+
+      #tab-pass-shift .custom-table td:nth-child(4)::before {
+        content: "Người nhận: ";
+        color: #64748b;
+        font-weight: 500;
+      }
+
+      #tab-swap-shift .custom-table td:nth-child(4)::before {
+        content: "Đổi với: ";
+        color: #64748b;
+        font-weight: 500;
+      }
+
+      /* Hàng 3: Khung chi tiết ca làm */
+      #tab-pass-shift .custom-table td:nth-child(3),
+      #tab-swap-shift .custom-table td:nth-child(3) {
+        grid-column: 1 / -1;
+        background: #ffffff !important;
+        padding: 8px 12px !important;
+        border-radius: 8px !important;
+        border: 1px dashed #cbd5e1 !important;
+        color: #334155 !important;
+        font-weight: 600 !important;
+        font-size: 13px !important;
+      }
+
+      /* Hàng 4: Nút Duyệt / Từ chối hoặc trạng thái xử lý */
+      #tab-pass-shift .custom-table td:nth-child(6),
+      #tab-swap-shift .custom-table td:nth-child(6) {
+        grid-column: 1 / -1;
+        display: flex !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        margin-top: 2px !important;
+      }
+
+      #tab-pass-shift .custom-table td:nth-child(6) button,
+      #tab-swap-shift .custom-table td:nth-child(6) button {
+        padding: 6px 14px !important;
+        font-size: 12.5px !important;
+        border-radius: 8px !important;
+      }
+    }
     }
   </style>
 </head>
