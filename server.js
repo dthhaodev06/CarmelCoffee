@@ -335,9 +335,9 @@ app.get('/api/logs', (req, res) => {
 });
 
 // ====================================================
+// ====================================================
 // 3. THÔNG BÁO ĐẨY (CHỈ GỬI CHO THIẾT BỊ QUẢN LÝ)
 // ====================================================
-// ĐÃ ĐỒNG BỘ CHÍNH XÁC VỚI PUBLIC KEY TRONG DASHBOARD.HTML
 const publicVapidKey = 'BMiUgyG-W-R45LFuoBtX3d90RgrL3_F_fHC87UPrwZmpfMA0ITUslURt5cdWW6O2FTNpT5HxkvqxzKDYEURRMsk';
 const privateVapidKey = 'tu7Bqd0tLOS2kwiBM3ZyzoqGQHJouI5Y7M9bMdRRDUI';
 
@@ -354,24 +354,31 @@ function sendManagerNotification(title, message) {
   const subs = data.pushSubscriptions || [];
   let changed = false;
 
-  // Lọc chỉ lấy các thiết bị có role là manager
   const managerSubs = subs.filter(s => s.role === 'manager' || !s.role);
 
   managerSubs.forEach(subObj => {
-    const subTarget = subObj.subscription || subObj;
-    webpush.sendNotification(subTarget, payload).catch(err => {
-      console.error('Lỗi gửi Push:', err.statusCode);
-      if (err.statusCode === 410 || err.statusCode === 404) {
-        data.pushSubscriptions = data.pushSubscriptions.filter(s => (s.endpoint || s.subscription?.endpoint) !== subTarget.endpoint);
-        changed = true;
-      }
-    });
+    const subTarget = subObj.subscription ? subObj.subscription : subObj;
+    webpush.sendNotification(subTarget, payload)
+      .then(() => {
+        console.log('✅ Đã gửi thông báo đẩy thành công tới:', subTarget.endpoint.slice(0, 45) + '...');
+      })
+      .catch(err => {
+        console.error('❌ Lỗi gửi Push:', err.statusCode, err.body || err.message);
+        // Xóa tự động nếu token hết hạn (410/404) hoặc sai khóa VAPID cũ (401/403)
+        if ([401, 403, 404, 410].includes(err.statusCode)) {
+          data.pushSubscriptions = data.pushSubscriptions.filter(s => {
+            const ep = s.subscription ? s.subscription.endpoint : s.endpoint;
+            return ep !== subTarget.endpoint;
+          });
+          changed = true;
+        }
+      });
   });
 
   if (changed) writeData(data);
 }
 
-// API nhận đăng ký từ điện thoại Quản lý
+// API nhận đăng ký từ điện thoại Quản lý (Luôn cập nhật đè mã mới nhất)
 app.post('/api/subscribe', (req, res) => {
   const { subscription, role, actor } = req.body;
   const data = readData();
@@ -380,7 +387,13 @@ app.post('/api/subscribe', (req, res) => {
   const subData = subscription || req.body;
   const endpoint = subData.endpoint;
 
-  if (endpoint && !data.pushSubscriptions.some(s => (s.endpoint || s.subscription?.endpoint) === endpoint)) {
+  if (endpoint) {
+    // Xóa bản ghi cũ của cùng thiết bị này (nếu có) để cập nhật khóa mới nhất
+    data.pushSubscriptions = data.pushSubscriptions.filter(s => {
+      const ep = s.subscription ? s.subscription.endpoint : s.endpoint;
+      return ep !== endpoint;
+    });
+
     data.pushSubscriptions.push({
       subscription: subData,
       role: role || 'manager',
@@ -389,13 +402,15 @@ app.post('/api/subscribe', (req, res) => {
     writeData(data);
   }
 
-  // Tự động bắn ngay 1 thông báo thử nghiệm về điện thoại Quản lý sau 1 giây
+  // Bắn ngay 1 thông báo thử nghiệm về điện thoại Quản lý sau 1 giây
   setTimeout(() => {
     const payload = JSON.stringify({
       title: 'Carmel Coffee ☕',
       body: '🎉 Chúc mừng Quản lý! Điện thoại đã kích hoạt nhận thông báo điều hành thành công!'
     });
-    webpush.sendNotification(subData, payload).catch(e => console.error("Lỗi test push:", e));
+    webpush.sendNotification(subData, payload)
+      .then(() => console.log('✅ Đã gửi thông báo chào mừng tới iPhone!'))
+      .catch(e => console.error('❌ Lỗi test push:', e.statusCode, e.body || e.message));
   }, 1000);
 
   res.status(201).json({ success: true });
@@ -405,9 +420,7 @@ app.post('/api/subscribe', (req, res) => {
 app.post('/api/test-notify', (req, res) => {
   sendManagerNotification('Carmel Coffee ☕', '🔔 Thông báo thử nghiệm: Web đã kết nối điện thoại Quản lý thành công!');
   res.json({ success: true });
-});
-
-// ====================================================
+});// ====================================================
 // 4. KHỞI CHẠY SERVER SAU KHI TẢI XONG DỮ LIỆU CLOUD
 // ====================================================
 initDatabase()
