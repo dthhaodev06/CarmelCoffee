@@ -52,57 +52,20 @@
       overflow: hidden;
     }
 
-    /* --- CỘT TRÁI: BANNER THƯƠNG HIỆU DOANH NGHIỆP --- */
+    /* --- CỘT TRÁI: BANNER THƯƠNG HIỆU DOANH NGHIỆP (DESKTOP) --- */
     .brand-side {
       flex: 1;
-background-color: #3a251a;
+      background-color: #3a251a;
       background-image: url('carmelcoffee.jpg');
-      background-size: contain;        /* Thu nhỏ ảnh để hiển thị trọn vẹn 100% khung hình, không bị cắt xén */
-      background-position: center;     /* Căn ảnh nằm chính giữa khung màu nâu */
-      background-repeat: no-repeat;      padding: 48px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding: 48px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
       box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.15); 
-    }
-
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    .brand-logo .logo-icon {
-      background: rgba(255, 255, 255, 0.2);
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-    }
-
-    .brand-content h2 {
-      font-size: 28px;
-      line-height: 1.3;
-      margin-bottom: 16px;
-      font-weight: 700;
-    }
-
-    .brand-content p {
-      font-size: 15px;
-      color: #cbd5e1;
-      line-height: 1.6;
-    }
-
-    .brand-footer {
-      font-size: 13px;
-      color: #94a3b8;
     }
 
     /* --- CỘT PHẢI: FORM ĐĂNG NHẬP --- */
@@ -112,6 +75,11 @@ background-color: #3a251a;
       display: flex;
       flex-direction: column;
       justify-content: center;
+    }
+
+    /* Logo tròn hiển thị trên mobile */
+    .mobile-brand-logo {
+      display: none;
     }
 
     .form-header {
@@ -154,8 +122,8 @@ background-color: #3a251a;
       width: 100%;
       padding: 12px 14px;
       border: 1.5px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 14px;
+      border-radius: 10px;
+      font-size: 14.5px;
       color: var(--text-main);
       outline: none;
       transition: all 0.2s ease;
@@ -204,45 +172,81 @@ background-color: #3a251a;
     /* Nút đăng nhập */
     .btn-submit {
       width: 100%;
-      padding: 13px;
-      background-color: var(--primary);
+      padding: 14px;
+      background: linear-gradient(135deg, #cbb269 0%, #b89d52 100%);
       color: var(--white);
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(203, 178, 105, 0.35);
+      box-shadow: 0 6px 16px rgba(203, 178, 105, 0.4);
     }
 
     .btn-submit:hover {
-      background-color: var(--primary-hover);
-      box-shadow: 0 6px 16px rgba(203, 178, 105, 0.45);
+      background: linear-gradient(135deg, #b89d52 0%, #a58b42 100%);
+      box-shadow: 0 8px 20px rgba(203, 178, 105, 0.5);
     }
 
     .btn-submit:active {
       transform: translateY(1px);
     }
 
-    /* Responsive cho điện thoại */
+    /* --- DECOR GIAO DIỆN ĐIỆN THOẠI (MOBILE) --- */
     @media (max-width: 768px) {
       body {
-        padding: 16px;
+        background: linear-gradient(180deg, #463222 0%, #3a251a 42%, #f8f5f0 42%, #f8f5f0 100%);
+        padding: 24px 16px;
+        align-items: center;
       }
+
       .login-container {
         flex-direction: column;
-        max-width: 440px;
+        max-width: 420px;
         min-height: auto;
+        border-radius: 24px;
+        box-shadow: 0 20px 45px rgba(58, 37, 26, 0.22);
+        border: 1px solid rgba(203, 178, 105, 0.25);
       }
+
       .brand-side {
         display: none;
       }
+
       .form-side {
-        padding: 36px 22px;
+        padding: 36px 24px 32px;
       }
+
+      .mobile-brand-logo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+
+      .mobile-brand-logo img {
+        width: 82px;
+        height: 82px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2.5px solid #cbb269;
+        box-shadow: 0 8px 20px rgba(70, 50, 34, 0.28);
+      }
+
+      .form-header {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
       .form-header h1 {
-        font-size: 22px;
+        font-size: 23px;
+        color: #3a251a;
+        letter-spacing: 0.5px;
+      }
+
+      .form-header p {
+        font-size: 13.5px;
       }
     }
   </style>
@@ -253,24 +257,26 @@ background-color: #3a251a;
     
     <!-- CỘT TRÁI: THƯƠNG HIỆU & GIỚI THIỆU -->
     <div class="brand-side">
-      <div class="brand-logo">
-      </div>
-
+      <div class="brand-logo"></div>
       <div class="brand-content">
         <h2></h2>
         <p></p>
       </div>
-
-      <div class="brand-footer">
-      </div>
+      <div class="brand-footer"></div>
     </div>
 
     <!-- CỘT PHẢI: FORM ĐĂNG NHẬP -->
     <div class="form-side">
+      <!-- Logo tròn hiển thị riêng trên điện thoại -->
+      <div class="mobile-brand-logo">
+        <img src="/logocarmel.jpg" alt="Carmel Coffee Logo">
+      </div>
+
       <div class="form-header">
         <h1>CARMEL COFFEE</h1>
         <p>Đăng nhập để vào hệ thống quản lý ca làm việc</p>
       </div>
+
       <form onsubmit="handleLogin(event)">
         <!-- Ô chọn vai trò -->
         <div class="form-group">
@@ -348,15 +354,10 @@ background-color: #3a251a;
           return;
         }
 
-        // ========================================================
         // KIỂM TRA CHẶN: VAI TRÒ CHỌN PHẢI TRÙNG VỚI VAI TRÒ THỰC TẾ
-        // ========================================================
         if (result.user && result.user.role !== roleInput) {
-          const selectedText = (roleInput === 'manager') ? 'Quản lý (Manager)' : 'Nhân viên (Staff)';
-          const actualText = (result.user.role === 'manager') ? 'Quản lý' : 'Nhân viên';
-          
           alert(`Đăng nhập không thành công`);
-          return; // Chặn lại, không cho phép lưu phiên hay chuyển trang
+          return;
         }
 
         // Lưu thông tin phiên đăng nhập hợp lệ
