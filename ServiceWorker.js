@@ -1,34 +1,28 @@
-// 1. Ép Service Worker cài đặt và kích hoạt chạy ngầm ngay lập tức
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', event => {
-  event.waitUntil(clients.claim());
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
 });
 
-// 2. Lắng nghe và hiển thị thông báo lên màn hình khóa
-self.addEventListener('push', event => {
-  let data = { title: 'Carmel Coffee ☕', body: 'Bạn có thông báo mới!' };
-
-  // Bọc an toàn: Đảm bảo không bao giờ bị lỗi sập ngầm
+// Nhận thông báo từ server và đính kèm đường dẫn tab đích
+self.addEventListener('push', (event) => {
+  let data = { title: 'Carmel Coffee ☕', body: 'Bạn có thông báo mới!', url: '/dashboard.html' };
   if (event.data) {
     try {
-      data = event.data.json();
+      data = Object.assign(data, event.data.json());
     } catch (e) {
-      data = { title: 'Carmel Coffee ☕', body: event.data.text() };
+      data.body = event.data.text();
     }
   }
 
   const options = {
     body: data.body,
     icon: '/logocarmel.jpg',
-    badge: '/logocarmel.jpg',    vibrate: [200, 100, 200],
-    tag: 'carmel-notification', // Chống trùng lặp thông báo
-    renotify: true,
-    data: {
-      url: '/dashboard.html'
-    }
+    badge: '/logocarmel.jpg',
+    vibrate: [200, 100, 200],
+    data: { url: data.url || '/dashboard.html' }
   };
 
   event.waitUntil(
@@ -36,21 +30,21 @@ self.addEventListener('push', event => {
   );
 });
 
-// 3. Khi bấm vào thông báo: Tự động mở đúng trang Dashboard
-self.addEventListener('notificationclick', event => {
+// Xử lý khi người dùng chạm vào banner thông báo
+self.addEventListener('notificationclick', (event) => {
   event.notification.close();
+  const targetUrl = (event.notification.data && event.notification.data.url) || '/dashboard.html';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
-      // Nếu đã có tab Dashboard đang mở thì chuyển tới tab đó
-      for (let client of windowClients) {
-        if (client.url.includes('/dashboard.html') && 'focus' in client) {
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.includes('dashboard.html') && 'focus' in client) {
+          client.navigate(targetUrl);
           return client.focus();
         }
       }
-      // Nếu chưa có thì mở trang Dashboard mới
       if (clients.openWindow) {
-        return clients.openWindow('/dashboard.html');
+        return clients.openWindow(targetUrl);
       }
     })
   );

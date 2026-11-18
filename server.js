@@ -97,12 +97,10 @@ function logActivity(data, actor, action, detail) {
 // 2. CÁC API QUẢN LÝ DỮ LIỆU & NHÂN SỰ
 // ====================================================
 
-// 1. API lấy toàn bộ dữ liệu
 app.get('/api/data', (req, res) => {
   res.json(readData());
 });
 
-// 2. API lưu dữ liệu tổng hợp
 app.post('/api/save-data', (req, res) => {
   const incomingData = req.body;
   const data = readData();
@@ -119,7 +117,6 @@ app.post('/api/save-data', (req, res) => {
   res.json({ success: true });
 });
 
-// 3. API Đăng nhập
 app.post('/api/login', (req, res) => {
   const { name, pass } = req.body;
   const data = readData();
@@ -147,7 +144,6 @@ app.post('/api/login', (req, res) => {
   });
 });
 
-// 4. API TẠO TÀI KHOẢN MỚI
 app.post('/api/users/create', (req, res) => {
   const { name, pass, role, actor } = req.body;
   const data = readData();
@@ -177,7 +173,6 @@ app.post('/api/users/create', (req, res) => {
   res.json({ success: true, message: `Đã cấp tài khoản cho ${staffName} thành công!` });
 });
 
-// 5. API XÓA TÀI KHOẢN NHÂN VIÊN
 app.delete('/api/users/:name', (req, res) => {
   const staffName = req.params.name;
   const actor = req.query.actor || 'Admin';
@@ -203,7 +198,6 @@ app.delete('/api/users/:name', (req, res) => {
   res.status(404).json({ success: false, message: 'Không tìm thấy tài khoản!' });
 });
 
-// 6. API XÓA SẠCH LỊCH VỀ OFF
 app.post('/api/shifts/clear-roster', (req, res) => {
   const data = readData();
   const emptyRoster = {};
@@ -224,7 +218,7 @@ app.post('/api/shifts/clear-roster', (req, res) => {
   res.json({ success: true, emptyRoster });
 });
 
-// 7. Cập nhật kho & CẢNH BÁO QUẢN LÝ KHI NVL SẮP HẾT (TỒN KHO <= 3)
+// 7. Cập nhật kho -> Bắn thông báo NVL (khi bấm mở thẳng tab-nvl)
 app.post('/api/inventory', (req, res) => {
   const { items, actor } = req.body;
   const data = readData();
@@ -233,19 +227,23 @@ app.post('/api/inventory', (req, res) => {
   logActivity(data, actor, 'Cập nhật kho', 'Đã lưu lại tồn kho mới');
   writeData(data);
 
-  // Kiểm tra nếu có món nào tồn kho <= 3 thì bắn thông báo đến Quản lý
   if (Array.isArray(items)) {
     const lowStockItems = items.filter(i => (Number(i.inQty) - Number(i.outQty)) <= 3);
     if (lowStockItems.length > 0) {
       const names = lowStockItems.map(i => `${i.name} (còn ${Math.max(0, i.inQty - i.outQty)} ${i.unit})`).join(', ');
-      sendManagerNotification('Cảnh báo Kho NVL', `${names}.`);
+      sendPushToTargets(
+        s => s.role === 'manager',
+        'Cảnh báo Kho NVL',
+        `${names}.`,
+        '/dashboard.html?tab=tab-nvl'
+      );
     }
   }
 
   res.json({ success: true });
 });
 
-// 8. Đăng ký ca làm & THÔNG BÁO CHO QUẢN LÝ BIẾT
+// 8. Đăng ký ca làm -> Báo Quản lý (khi bấm mở thẳng tab-shift)
 app.post('/api/shifts/register', (req, res) => {
   const { staffName, schedule } = req.body;
   const data = readData();
@@ -254,13 +252,17 @@ app.post('/api/shifts/register', (req, res) => {
   logActivity(data, staffName, 'Đăng ký ca làm', 'Nộp phiếu đăng ký tuần');
   writeData(data);
 
-  // Bắn thông báo về điện thoại Quản lý
-  sendManagerNotification('Đăng ký Ca Làm', `Nhân viên ${staffName} vừa nộp phiếu đăng ký lịch làm tuần mới!`);
+  sendPushToTargets(
+    s => s.role === 'manager',
+    'Đăng ký Ca Làm',
+    `Nhân viên ${staffName} vừa nộp phiếu đăng ký lịch làm tuần mới!`,
+    '/dashboard.html?tab=tab-shift'
+  );
 
   res.json({ success: true });
 });
 
-// 9. Yêu cầu Pass / Đổi ca & THÔNG BÁO CHO QUẢN LÝ XÉT DUYỆT
+// 9. Yêu cầu Pass / Đổi ca -> Báo Quản lý (khi bấm mở thẳng tab-request)
 app.post('/api/shifts/request', (req, res) => {
   const { newRequest } = req.body;
   const data = readData();
@@ -269,18 +271,23 @@ app.post('/api/shifts/request', (req, res) => {
   logActivity(data, newRequest.from, `Tạo yêu cầu ${newRequest.type}`, `Gửi cho ${newRequest.to}`);
   writeData(data);
 
-  // Bắn thông báo về điện thoại Quản lý
   const actionText = newRequest.type === 'PASS' ? 'xin Pass ca' : 'xin Đổi ca';
-  sendManagerNotification('Yêu Cầu Ca Làm', `Nhân viên ${newRequest.from} vừa gửi đơn ${actionText} cho ${newRequest.to}. Quản lý vui lòng xét duyệt!`);
+  sendPushToTargets(
+    s => s.role === 'manager',
+    'Yêu Cầu Ca Làm',
+    `Nhân viên ${newRequest.from} vừa gửi đơn ${actionText} cho ${newRequest.to}. Quản lý vui lòng xét duyệt!`,
+    '/dashboard.html?tab=tab-request'
+  );
 
   res.json({ success: true });
 });
 
-// 10. Duyệt ca
+// 10. Duyệt / Từ chối Pass hoặc Đổi ca -> GỬI THÔNG BÁO VỀ MÁY NHÂN VIÊN LIÊN QUAN
 app.post('/api/shifts/handle-request', (req, res) => {
   const { reqId, status, actor, masterRoster } = req.body;
   const data = readData();
   const targetReq = data.shiftRequests.find(r => r.id === reqId);
+
   if (targetReq) {
     targetReq.status = status;
     const carmelTarget = data.carmel_shift_requests.find(r => r.id === reqId);
@@ -291,7 +298,36 @@ app.post('/api/shifts/handle-request', (req, res) => {
     }
     logActivity(data, actor, `${status === 'APPROVED' ? 'Phê duyệt' : 'Từ chối'} yêu cầu`, `Mã yêu cầu: #${reqId}`);
     writeData(data);
+
+    // Gửi thông báo về đúng tài khoản nhân viên gửi yêu cầu và nhân viên nhận ca
+    const typeText = targetReq.type === 'PASS' ? 'Pass ca' : 'Đổi ca';
+    const statusText = status === 'APPROVED' ? 'ĐÃ CHẤP NHẬN ✅' : 'ĐÃ TỪ CHỐI ❌';
+    const relatedNames = [targetReq.from, targetReq.to].filter(Boolean).map(n => n.toLowerCase());
+
+    sendPushToTargets(
+      s => s.role === 'employee' && relatedNames.includes((s.actor || '').toLowerCase()),
+      `Kết quả ${typeText}`,
+      `Quản lý ${statusText} yêu cầu ${typeText} giữa ${targetReq.from} và ${targetReq.to}.`,
+      '/dashboard.html?tab=tab-request'
+    );
   }
+  res.json({ success: true });
+});
+
+// 10B. API BÁO CHO TOÀN BỘ NHÂN VIÊN KHI QUẢN LÝ ĐÃ XẾP XONG BẢNG LỊCH LÀM
+app.post('/api/shifts/publish-roster', (req, res) => {
+  const { actor, weekLabel } = req.body;
+  const data = readData();
+  logActivity(data, actor || 'Quản lý', 'Công bố lịch làm', `Đã hoàn tất xếp lịch (${weekLabel || 'tuần mới'})`);
+  writeData(data);
+
+  sendPushToTargets(
+    s => s.role === 'employee',
+    'Lịch Làm Việc Mới 📅',
+    `Quản lý đã xếp xong bảng lịch làm ${weekLabel || 'tuần mới'}. Vào xem ca của bạn ngay!`,
+    '/dashboard.html?tab=tab-schedule'
+  );
+
   res.json({ success: true });
 });
 
@@ -329,13 +365,12 @@ app.delete('/api/expenses/:id', (req, res) => {
   res.json({ success: true });
 });
 
-// 13. Xem logs
 app.get('/api/logs', (req, res) => {
   res.json(readData().auditLogs);
 });
 
 // ====================================================
-// 3. THÔNG BÁO ĐẨY (CHỈ GỬI CHO THIẾT BỊ QUẢN LÝ)
+// 3. HỆ THỐNG THÔNG BÁO ĐẨY 2 CHIỀU & DEEP-LINK TAB
 // ====================================================
 const publicVapidKey = 'BMVrq03lPj1UYEJVVQ20pvFDTARfl_AbUpQJFoeEkmkQMzF6KTuKu0Zo28PmwLbaCRw5rv__ineMDq2bXJrjk_g';
 const privateVapidKey = 'iOH9tXmt6ysad8u_UAcNtSptnzuEIhGnxMrqZVJnRCI';
@@ -346,25 +381,23 @@ webpush.setVapidDetails(
   privateVapidKey
 );
 
-// HÀM TIỆN ÍCH: CHỈ BẮN THÔNG BÁO ĐẾN ĐIỆN THOẠI QUẢN LÝ
-function sendManagerNotification(title, message) {
-  const payload = JSON.stringify({ title, body: message });
+// HÀM GỬI THÔNG BÁO ĐẾN ĐÚNG NHÓM ĐỐI TƯỢNG VÀ KÈM URL TAB ĐÍCH
+function sendPushToTargets(filterFn, title, message, targetUrl = '/dashboard.html') {
+  const payload = JSON.stringify({ title, body: message, url: targetUrl });
   const data = readData();
   const subs = data.pushSubscriptions || [];
   let changed = false;
 
-  // Chỉ lọc đúng các thiết bị có role === 'manager'
-  const managerSubs = subs.filter(s => s.role === 'manager');
+  const matchedSubs = subs.filter(filterFn);
 
-  managerSubs.forEach(subObj => {
+  matchedSubs.forEach(subObj => {
     const subTarget = subObj.subscription ? subObj.subscription : subObj;
     webpush.sendNotification(subTarget, payload)
       .then(() => {
-        console.log('✅ Đã gửi thông báo đẩy thành công tới:', subTarget.endpoint.slice(0, 45) + '...');
+        console.log(`✅ Đã gửi Push [${title}] tới ${subObj.actor} (${subObj.role})`);
       })
       .catch(err => {
         console.error('❌ Lỗi gửi Push:', err.statusCode, err.body || err.message);
-        // Xóa tự động nếu token hết hạn (410/404) hoặc sai khóa VAPID cũ (401/403)
         if ([401, 403, 404, 410].includes(err.statusCode)) {
           data.pushSubscriptions = data.pushSubscriptions.filter(s => {
             const ep = s.subscription ? s.subscription.endpoint : s.endpoint;
@@ -378,46 +411,30 @@ function sendManagerNotification(title, message) {
   if (changed) writeData(data);
 }
 
-// API nhận đăng ký từ điện thoại Quản lý
+// API nhận đăng ký thiết bị (Lưu cả Quản lý và Nhân viên kèm tên tài khoản)
 app.post('/api/subscribe', (req, res) => {
   const { subscription, role, actor } = req.body;
-
-  // Chặn tuyệt đối nếu không phải tài khoản Quản lý
-  if (role !== 'manager') {
-    return res.status(403).json({ success: false, message: 'Chỉ Quản lý mới được đăng ký nhận thông báo!' });
-  }
-
   const data = readData();
   if (!Array.isArray(data.pushSubscriptions)) data.pushSubscriptions = [];
 
   const subData = subscription || req.body;
   const endpoint = subData.endpoint;
 
-  if (endpoint) {
-    // Xóa bản ghi cũ của cùng thiết bị này và dọn luôn các token cũ không gắn role
+  if (endpoint && role && actor) {
+    // Xóa bản ghi cũ của cùng thiết bị này để cập nhật đúng người đang đăng nhập
     data.pushSubscriptions = data.pushSubscriptions.filter(s => {
       const ep = s.subscription ? s.subscription.endpoint : s.endpoint;
-      return ep !== endpoint && s.role === 'manager';
+      return ep !== endpoint;
     });
 
     data.pushSubscriptions.push({
       subscription: subData,
-      role: 'manager',
-      actor: actor || 'Quản lý'
+      role: role,
+      actor: actor
     });
     writeData(data);
+    console.log(`📲 Đã gắn thiết bị cho ${actor} (${role})`);
   }
-
-  // Bắn ngay 1 thông báo thử nghiệm về điện thoại Quản lý sau 1 giây
-  setTimeout(() => {
-    const payload = JSON.stringify({
-      title: 'Carmel Coffee ☕',
-      body: '🎉 Chúc mừng Quản lý! Điện thoại đã kích hoạt nhận thông báo điều hành thành công!'
-    });
-    webpush.sendNotification(subData, payload)
-      .then(() => console.log('✅ Đã gửi thông báo chào mừng tới iPhone!'))
-      .catch(e => console.error('❌ Lỗi test push:', e.statusCode, e.body || e.message));
-  }, 1000);
 
   res.status(201).json({ success: true });
 });
@@ -433,30 +450,33 @@ app.post('/api/unsubscribe', (req, res) => {
       return ep !== endpoint;
     });
     writeData(data);
-    console.log('🔕 Đã gỡ thiết bị khỏi danh sách nhận thông báo:', endpoint.slice(0, 45) + '...');
+    console.log('🔕 Đã gỡ thiết bị khỏi danh sách nhận thông báo');
   }
 
   res.json({ success: true });
 });
 
-// API gửi thử thông báo
 app.post('/api/test-notify', (req, res) => {
-  sendManagerNotification('Carmel Coffee ☕', '🔔 Thông báo thử nghiệm: Web đã kết nối điện thoại Quản lý thành công!');
+  sendPushToTargets(
+    s => s.role === 'manager',
+    'Carmel Coffee ☕',
+    '🔔 Thông báo thử nghiệm: Kết nối thành công!',
+    '/dashboard.html?tab=tab-schedule'
+  );
   res.json({ success: true });
 });
 
 // ====================================================
-// 4. KHỞI CHẠY SERVER SAU KHI TẢI XONG DỮ LIỆU CLOUD
+// 4. KHỞI CHẠY SERVER
 // ====================================================
 initDatabase()
   .then(() => {
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`====================================================`);
       console.log(`🚀 Máy chủ Carmel Coffee đang chạy trên Port ${PORT}`);
-      console.log(`👉 Truy cập từ máy tính: http://localhost:${PORT}/dashboard.html`);
       console.log(`====================================================`);
     });
   })
   .catch(err => {
-    console.error('❌ Không thể khởi động server do lỗi kết nối database:', err);
+    console.error('❌ Không thể khởi động server:', err);
   });

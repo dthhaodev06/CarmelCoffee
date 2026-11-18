@@ -514,6 +514,7 @@
                   <span id="currentWeekDisplayLabel" style="font-weight: 700; font-size: 13px; color: #0f766e; min-width: 150px; text-align: center;">Tuần Hiện Tại</span>
                   <button class="week-nav-btn" onclick="changeWeek(1)">▶</button>
                   <button class="week-nav-btn" onclick="changeWeek(0, true)" style="background: #e0f2fe; color: #0369a1;">Về tuần này</button>
+                  <button class="btn-action" id="btnPublishRoster" style="background:#0284c7;" onclick="publishRosterToStaff()">Thông báo lịch làm</button>
                 </div>
               </div>
               <table class="excel-legend-table">
@@ -2040,9 +2041,6 @@ function renderRevenueTable() {
     }
 
 async function enablePushNotifications() {
-if (!currentUser || currentUser.role !== 'manager') {
-    return;
-  }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         alert('Trình duyệt chưa hỗ trợ thông báo đẩy!');
         return;
@@ -2091,6 +2089,38 @@ if (!currentUser || currentUser.role !== 'manager') {
       }
     }
         setInterval(syncDataFromServer, 10000);
+        // Tự động mở đúng trang khi bấm vào thông báo đẩy
+    (function openTabFromNotification() {
+      const params = new URLSearchParams(window.location.search);
+      const targetTab = params.get('tab');
+      if (targetTab) {
+        setTimeout(() => {
+          const menuBtn = document.querySelector(`[onclick*="${targetTab}"], [data-tab="${targetTab}"]`);
+          if (menuBtn) {
+            menuBtn.click();
+          } else if (typeof switchTab === 'function') {
+            switchTab(targetTab);
+          }
+          window.history.replaceState({}, document.title, '/dashboard.html');
+        }, 300);
+      }
+    })();
+
+    // Hàm gửi thông báo có lịch làm mới cho toàn bộ nhân viên
+    async function publishRosterToStaff() {
+      const weekLabel = document.getElementById('rosterWeekDisplayLabel')?.innerText || 'tuần này';
+      if (!confirm(`Gửi thông báo đã có lịch làm (${weekLabel}) đến tất cả nhân viên?`)) return;
+      try {
+        await fetch('/api/shifts/publish-roster', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ actor: currentUser.name, weekLabel })
+        });
+        alert('✅ Đã gửi thông báo lịch làm mới đến điện thoại của nhân viên!');
+      } catch (e) {
+        alert('❌ Lỗi gửi thông báo!');
+      }
+    }
 
     syncDataFromServer().then(() => {
       updateCurrentWeekDates();
