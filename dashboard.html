@@ -892,13 +892,30 @@ async function handleLogout() {
       return Math.round(totalHours * 10) / 10;
     }
 
-    const defaultItems = [
-      { id: 1, name: "Hạt Robusta", unit: "bịch", inQty: 20, outQty: 5 },
+const defaultItems = [
+      { id: 1, name: "Hạt Robusta", unit: "bịch", inQty: 0, outQty: 5 },
       { id: 2, name: "Hạt Cầu Đất", unit: "bịch", inQty: 15, outQty: 3 },
-      { id: 3, name: "Sữa Đặc", unit: "hộp", inQty: 50, outQty: 12 },
-      { id: 4, name: "Sữa Tươi", unit: "bịch", inQty: 40, outQty: 15 },
-      { id: 5, name: "Syrup Đào", unit: "chai", inQty: 12, outQty: 2 },
-      { id: 6, name: "Đường", unit: "Kg", inQty: 30, outQty: 5 }
+      { id: 3, name: "Hạt Núi Min", unit: "bịch", inQty: 10, outQty: 2 },
+      { id: 4, name: "Sữa Đặc", unit: "hộp", inQty: 50, outQty: 12 },
+      { id: 5, name: "Sữa Tươi", unit: "bịch", inQty: 40, outQty: 15 },
+      { id: 6, name: "Syrup Đào", unit: "chai", inQty: 12, outQty: 2 },
+      { id: 7, name: "Syrup Sơri", unit: "chai", inQty: 8, outQty: 1 },
+      { id: 8, name: "Syrup Thơm", unit: "chai", inQty: 6, outQty: 1 },
+      { id: 9, name: "Syrup Vải", unit: "chai", inQty: 10, outQty: 2 },
+      { id: 10, name: "Đường", unit: "Kg", inQty: 30, outQty: 5 },
+      { id: 11, name: "Trân Châu OK", unit: "bịch", inQty: 15, outQty: 3 },
+      { id: 12, name: "Hũ Đào", unit: "Hũ", inQty: 12, outQty: 2 },
+      { id: 13, name: "Hũ Vải", unit: "Hũ", inQty: 12, outQty: 2 },
+      { id: 14, name: "Bịch Dâu Tằm", unit: "Kg", inQty: 8, outQty: 1 },
+      { id: 15, name: "Bịch Đác", unit: "Kg", inQty: 10, outQty: 2 },
+      { id: 16, name: "Muối", unit: "Kg", inQty: 5, outQty: 1 },
+      { id: 17, name: "Matcha", unit: "Bịch", inQty: 6, outQty: 1 },
+      { id: 18, name: "Chocolate", unit: "Bịch", inQty: 6, outQty: 1 },
+      { id: 19, name: "Trà Nhài", unit: "Kg", inQty: 10, outQty: 2 },
+      { id: 20, name: "Trà Bá Tước", unit: "Kg", inQty: 8, outQty: 1 },
+      { id: 21, name: "Trà Olong", unit: "Kg", inQty: 10, outQty: 2 },
+      { id: 22, name: "Trà Gạo Rang", unit: "Kg", inQty: 8, outQty: 1 },
+      { id: 23, name: "Bột Béo", unit: "Kg", inQty: 15, outQty: 3 }
     ];
 
     let inventory = JSON.parse(localStorage.getItem('carmel_inventory')) || defaultItems;
@@ -1184,16 +1201,20 @@ if (currentUser && currentUser.role === 'manager') {
       }
     }
 
-    function resetDefaultData() {
+function resetDefaultData() {
       if (currentUser.role !== 'manager') return;
-      if (confirm('Đặt lại toàn bộ kho về mặc định?')) {
+      if (confirm('Khôi phục toàn bộ 23 nguyên vật liệu chuẩn của quán về số lượng ban đầu?')) {
         inventory = JSON.parse(JSON.stringify(defaultItems));
         localStorage.setItem('carmel_inventory', JSON.stringify(inventory));
         renderTable();
         pushDataToServer({ carmel_inventory: inventory });
+        fetch('/api/inventory', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: inventory, actor: currentUser.name })
+        }).catch(e => console.error("Lỗi cập nhật kho:", e));
       }
     }
-
 function initScheduleGrid() {
       const grid = document.getElementById('scheduleGrid');
       grid.innerHTML = '';
