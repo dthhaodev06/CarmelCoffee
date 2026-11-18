@@ -11,22 +11,17 @@
   <link rel="apple-touch-icon" href="/logocarmel.jpg">
 <link rel="icon" type="image/jpeg" href="/logocarmel.jpg">
   <style>
-/* --- DECOR PHẦN ĐẦU BẢNG LỊCH LÀM TRÊN ĐIỆN THOẠI --- */
+/* --- CHỈ DECOR PHẦN ĐẦU TAB BẢNG LỊCH LÀM TRÊN ĐIỆN THOẠI (GIỮ NGUYÊN BẢNG LỊCH BÊN DƯỚI) --- */
     @media (max-width: 768px) {
-      /* 1. Căn giữa tiêu đề BẢNG LỊCH LÀM CARMEL COFFEE */
-      section:has(#btnAutoBalance) h2,
-      section:has(#btnAutoBalance) h3,
-      div:has(#btnAutoBalance) h2,
-      div:has(#btnAutoBalance) h3 {
+      #tab-schedule h2,
+      #tab-schedule h3 {
         text-align: center !important;
         font-size: 18px !important;
         color: #3a251a !important;
         margin-bottom: 12px !important;
       }
 
-      /* 2. Thanh chọn tuần + nút Về tuần này */
-      section:has(#btnAutoBalance) .week-nav-box,
-      div:has(#btnAutoBalance) .week-nav-box {
+      #tab-schedule .week-nav-box {
         background: #fffdf5 !important;
         border: 1.5px solid #f3d078 !important;
         border-radius: 14px !important;
@@ -34,30 +29,25 @@
         margin-bottom: 12px !important;
       }
 
-      /* 3. Biến bảng nhỏ Ghi chú ca làm (nằm ngay trên nút Chia Lịch) thành 3 thẻ ngang */
-      section:has(#btnAutoBalance) table:first-of-type,
-      .data-card:has(#btnAutoBalance) > table:first-of-type,
-      .data-card:has(#btnAutoBalance) > div > table:first-of-type {
+      .excel-legend-table {
         width: 100% !important;
         border: none !important;
-        margin-bottom: 14px !important;
+        margin: 10px 0 14px 0 !important;
+        background: transparent !important;
       }
 
-      section:has(#btnAutoBalance) table:first-of-type thead,
-      .data-card:has(#btnAutoBalance) > table:first-of-type thead {
-        display: none !important;
-      }
-
-      section:has(#btnAutoBalance) table:first-of-type tbody,
-      .data-card:has(#btnAutoBalance) > table:first-of-type tbody {
+      .excel-legend-table tbody {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important;
         gap: 8px !important;
         width: 100% !important;
       }
 
-      section:has(#btnAutoBalance) table:first-of-type tr,
-      .data-card:has(#btnAutoBalance) > table:first-of-type tr {
+      .excel-legend-table tr:first-child {
+        display: none !important;
+      }
+
+      .excel-legend-table tr:not(:first-child) {
         display: flex !important;
         flex-direction: column !important;
         border-radius: 12px !important;
@@ -67,8 +57,7 @@
         box-shadow: 0 2px 6px rgba(58, 37, 26, 0.06) !important;
       }
 
-      section:has(#btnAutoBalance) table:first-of-type td,
-      .data-card:has(#btnAutoBalance) > table:first-of-type td {
+      .excel-legend-table td {
         width: 100% !important;
         text-align: center !important;
         border: none !important;
@@ -76,16 +65,15 @@
         font-size: 12.5px !important;
       }
 
-      /* 4. Hàng chứa 2 nút Chia Lịch Tự Động & Xóa Lịch chia đều 50/50 */
-      div:has(> #btnAutoBalance) {
+      #tab-schedule div:has(> #btnAutoBalance) {
         display: flex !important;
         gap: 8px !important;
         width: 100% !important;
         margin-bottom: 14px !important;
       }
 
-      #btnAutoBalance,
-      #btnClearSchedule {
+      #tab-schedule #btnAutoBalance,
+      #tab-schedule #btnClearSchedule {
         flex: 1 !important;
         width: 50% !important;
         padding: 11px 8px !important;
@@ -94,10 +82,8 @@
         font-weight: 700 !important;
         text-align: center !important;
         margin: 0 !important;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
       }
-    }
-    /* --- DECOR KHUNG QUY ĐỊNH & CHỌN TUẦN TRÊN ĐIỆN THOẠI --- */
+    }     /* --- DECOR KHUNG QUY ĐỊNH & CHỌN TUẦN TRÊN ĐIỆN THOẠI --- */
     @media (max-width: 768px) {
       .shift-legend {
         background: linear-gradient(180deg, #fffdf5 0%, #fef9e7 100%) !important;
