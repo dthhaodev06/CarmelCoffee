@@ -34,17 +34,21 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const targetUrl = (event.notification.data && event.notification.data.url) || '/dashboard.html';
+  const fullTargetUrl = new URL(targetUrl, self.location.origin).href;
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
         if (client.url.includes('dashboard.html') && 'focus' in client) {
-          client.navigate(targetUrl);
+          client.postMessage({ type: 'OPEN_TAB_FROM_PUSH', url: targetUrl });
+          if ('navigate' in client) {
+            client.navigate(fullTargetUrl).catch(() => {});
+          }
           return client.focus();
         }
       }
       if (clients.openWindow) {
-        return clients.openWindow(targetUrl);
+        return clients.openWindow(fullTargetUrl);
       }
     })
   );

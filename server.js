@@ -276,8 +276,7 @@ app.post('/api/shifts/request', (req, res) => {
     s => s.role === 'manager',
     'Yêu Cầu Ca Làm',
     `Nhân viên ${newRequest.from} vừa gửi đơn ${actionText} cho ${newRequest.to}. Quản lý vui lòng xét duyệt!`,
-    '/dashboard.html?tab=tab-request'
-  );
+newRequest.type === 'SWAP' ? '/dashboard.html?tab=tab-swap-shift' : '/dashboard.html?tab=tab-pass-shift'  );
 
   res.json({ success: true });
 });
@@ -308,8 +307,7 @@ app.post('/api/shifts/handle-request', (req, res) => {
       s => s.role === 'employee' && relatedNames.includes((s.actor || '').toLowerCase()),
       `Kết quả ${typeText}`,
       `Quản lý ${statusText} yêu cầu ${typeText} giữa ${targetReq.from} và ${targetReq.to}.`,
-      '/dashboard.html?tab=tab-request'
-    );
+targetReq.type === 'SWAP' ? '/dashboard.html?tab=tab-swap-shift' : '/dashboard.html?tab=tab-pass-shift'    );
   }
   res.json({ success: true });
 });
