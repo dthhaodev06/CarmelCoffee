@@ -255,7 +255,7 @@ app.post('/api/shifts/register', (req, res) => {
   writeData(data);
 
   // Bắn thông báo về điện thoại Quản lý
-  sendManagerNotification('Đăng ký Ca Làm 📋', `Nhân viên [${staffName}] vừa nộp phiếu đăng ký lịch làm tuần mới!`);
+  sendManagerNotification('Đăng ký Ca Làm', `Nhân viên ${staffName} vừa nộp phiếu đăng ký lịch làm tuần mới!`);
 
   res.json({ success: true });
 });
