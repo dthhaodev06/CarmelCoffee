@@ -232,8 +232,7 @@
         <span class="user-badge" id="userRoleBadge">Nhân viên</span>
         <span id="userNameDisplay" style="font-weight: 700; color: #1e293b; font-size: 13.5px;"></span>
         <button class="btn-action btn-reset" style="padding: 5px 12px; font-size: 11.5px;" onclick="handleLogout()">Đăng xuất</button>
-        <button class="btn-action btn-success" style="padding: 5px 10px; font-size: 11.5px;" onclick="enablePushNotifications()">Bật Thông Báo</button>
-      </div>
+<button class="btn-action btn-success" id="btnPushNotify" style="display: none; padding: 5px 10px; font-size: 11.5px;" onclick="enablePushNotifications()">Bật Thông Báo</button>      </div>
     </header>
 
     <div class="content-container">
@@ -869,7 +868,7 @@
         if (el) el.style.display = isManager ? 'block' : 'none';
       });
 
-      ['btnResetInventory', 'btnClearSchedule', 'btnAutoBalance'].forEach(id => {
+      ['btnResetInventory', 'btnClearSchedule', 'btnAutoBalance','btnPushNotify'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = isManager ? 'inline-block' : 'none';
       });
@@ -1906,14 +1905,17 @@ async function enablePushNotifications() {
           });
         }
 
-        // 4. Gửi mã thiết bị lên máy chủ
+        // 4. Gửi mã thiết bị Quản lý lên máy chủ
         await fetch('/api/subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(subscription)
+          body: JSON.stringify({
+            subscription: subscription,
+            role: currentUser.role,
+            actor: currentUser.name
+          })
         });
-
-        alert('✅ Đã bật thông báo thành công cho thiết bị này!');
+        alert('Đã bật thông báo cho thiết bị');
       } catch (err) {
         console.error('Lỗi Push:', err);
         alert('Không thể kích hoạt thông báo: ' + err.message);
