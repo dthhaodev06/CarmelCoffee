@@ -238,7 +238,7 @@ app.post('/api/inventory', (req, res) => {
     const lowStockItems = items.filter(i => (Number(i.inQty) - Number(i.outQty)) <= 3);
     if (lowStockItems.length > 0) {
       const names = lowStockItems.map(i => `${i.name} (còn ${Math.max(0, i.inQty - i.outQty)} ${i.unit})`).join(', ');
-      sendManagerNotification('Cảnh báo Kho NVL', `${names}. Quản lý kiểm tra nhập thêm hàng!`);
+      sendManagerNotification('Cảnh báo Kho NVL', `${names}.`);
     }
   }
 
