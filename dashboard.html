@@ -914,7 +914,7 @@ async function handleLogout() {
     function promptChangeRate(staffName) {
       if (currentUser.role !== 'manager') return;
       const currentRate = getStaffHourlyRate(staffName);
-      const input = prompt(`Nhập mức lương mới cho "${staffName}" (VNĐ):`, currentRate);
+      const input = prompt(`Nhập mức lương mới cho ${staffName} (VNĐ):`, currentRate);
       if (input !== null && input.trim() !== '') {
         if (setStaffHourlyRate(staffName, input.trim())) alert(`Đã cập nhật mức lương của ${staffName}!`);
       }
