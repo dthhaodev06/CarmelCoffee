@@ -335,7 +335,6 @@ app.get('/api/logs', (req, res) => {
 });
 
 // ====================================================
-// ====================================================
 // 3. THÔNG BÁO ĐẨY (CHỈ GỬI CHO THIẾT BỊ QUẢN LÝ)
 // ====================================================
 const publicVapidKey = 'BMVrq03lPj1UYEJVVQ20pvFDTARfl_AbUpQJFoeEkmkQMzF6KTuKu0Zo28PmwLbaCRw5rv__ineMDq2bXJrjk_g';
@@ -354,7 +353,8 @@ function sendManagerNotification(title, message) {
   const subs = data.pushSubscriptions || [];
   let changed = false;
 
-  const managerSubs = subs.filter(s => s.role === 'manager' || !s.role);
+  // Chỉ lọc đúng các thiết bị có role === 'manager'
+  const managerSubs = subs.filter(s => s.role === 'manager');
 
   managerSubs.forEach(subObj => {
     const subTarget = subObj.subscription ? subObj.subscription : subObj;
@@ -378,9 +378,15 @@ function sendManagerNotification(title, message) {
   if (changed) writeData(data);
 }
 
-// API nhận đăng ký từ điện thoại Quản lý (Luôn cập nhật đè mã mới nhất)
+// API nhận đăng ký từ điện thoại Quản lý
 app.post('/api/subscribe', (req, res) => {
   const { subscription, role, actor } = req.body;
+
+  // Chặn tuyệt đối nếu không phải tài khoản Quản lý
+  if (role !== 'manager') {
+    return res.status(403).json({ success: false, message: 'Chỉ Quản lý mới được đăng ký nhận thông báo!' });
+  }
+
   const data = readData();
   if (!Array.isArray(data.pushSubscriptions)) data.pushSubscriptions = [];
 
@@ -388,15 +394,15 @@ app.post('/api/subscribe', (req, res) => {
   const endpoint = subData.endpoint;
 
   if (endpoint) {
-    // Xóa bản ghi cũ của cùng thiết bị này (nếu có) để cập nhật khóa mới nhất
+    // Xóa bản ghi cũ của cùng thiết bị này và dọn luôn các token cũ không gắn role
     data.pushSubscriptions = data.pushSubscriptions.filter(s => {
       const ep = s.subscription ? s.subscription.endpoint : s.endpoint;
-      return ep !== endpoint;
+      return ep !== endpoint && s.role === 'manager';
     });
 
     data.pushSubscriptions.push({
       subscription: subData,
-      role: role || 'manager',
+      role: 'manager',
       actor: actor || 'Quản lý'
     });
     writeData(data);
@@ -416,11 +422,30 @@ app.post('/api/subscribe', (req, res) => {
   res.status(201).json({ success: true });
 });
 
+// API hủy đăng ký Push khi bấm Đăng xuất
+app.post('/api/unsubscribe', (req, res) => {
+  const { endpoint } = req.body;
+  const data = readData();
+
+  if (endpoint && Array.isArray(data.pushSubscriptions)) {
+    data.pushSubscriptions = data.pushSubscriptions.filter(s => {
+      const ep = s.subscription ? s.subscription.endpoint : s.endpoint;
+      return ep !== endpoint;
+    });
+    writeData(data);
+    console.log('🔕 Đã gỡ thiết bị khỏi danh sách nhận thông báo:', endpoint.slice(0, 45) + '...');
+  }
+
+  res.json({ success: true });
+});
+
 // API gửi thử thông báo
 app.post('/api/test-notify', (req, res) => {
   sendManagerNotification('Carmel Coffee ☕', '🔔 Thông báo thử nghiệm: Web đã kết nối điện thoại Quản lý thành công!');
   res.json({ success: true });
-});// ====================================================
+});
+
+// ====================================================
 // 4. KHỞI CHẠY SERVER SAU KHI TẢI XONG DỮ LIỆU CLOUD
 // ====================================================
 initDatabase()
