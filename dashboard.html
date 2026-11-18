@@ -11,6 +11,57 @@
   <link rel="apple-touch-icon" href="/logocarmel.jpg">
 <link rel="icon" type="image/jpeg" href="/logocarmel.jpg">
   <style>
+    /* --- DECOR TOÀN BỘ BẢNG DANH SÁCH TRÊN ĐIỆN THOẠI: CHỮ NẰM NGANG, KHÔNG XUỐNG DÒNG --- */
+    @media (max-width: 768px) {
+      .custom-table {
+        min-width: 680px !important;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+      }
+
+      .custom-table th,
+      .custom-table td {
+        white-space: nowrap !important;
+        padding: 11px 12px !important;
+        font-size: 13px !important;
+        vertical-align: middle !important;
+      }
+
+      .custom-table th {
+        background: #f1f5f9 !important;
+        color: #334155 !important;
+        font-weight: 700 !important;
+        border-bottom: 2px solid #cbd5e1 !important;
+      }
+
+      .custom-table tbody tr:nth-child(even) {
+        background-color: #f8fafc;
+      }
+
+      /* Giữ gọn các huy hiệu bên trong bảng để không bị gãy dòng */
+      .custom-table span,
+      .custom-table button,
+      .badge-unit {
+        white-space: nowrap !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      /* Cố định cột Tên ở bảng Tài Khoản khi vuốt ngang */
+      #tab-accounts .custom-table th:nth-child(2),
+      #tab-accounts .custom-table td:nth-child(2) {
+        position: sticky;
+        left: 0;
+        background-color: #ffffff;
+        z-index: 5;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.06);
+      }
+
+      #tab-accounts .custom-table th:nth-child(2) {
+        background-color: #f1f5f9 !important;
+      }
+    }
 /* --- CHỈ DECOR PHẦN ĐẦU TAB BẢNG LỊCH LÀM TRÊN ĐIỆN THOẠI (GIỮ NGUYÊN BẢNG LỊCH BÊN DƯỚI) --- */
     @media (max-width: 768px) {
       #tab-schedule h2,
