@@ -238,7 +238,7 @@ app.post('/api/inventory', (req, res) => {
     const lowStockItems = items.filter(i => (Number(i.inQty) - Number(i.outQty)) <= 3);
     if (lowStockItems.length > 0) {
       const names = lowStockItems.map(i => `${i.name} (còn ${Math.max(0, i.inQty - i.outQty)} ${i.unit})`).join(', ');
-      sendManagerNotification('Cảnh báo Kho NVL ⚠️', `Các món sau sắp hết: ${names}. Quản lý kiểm tra nhập thêm hàng!`);
+      sendManagerNotification('Cảnh báo Kho NVL', `Các món sau sắp hết: ${names}. Quản lý kiểm tra nhập thêm hàng!`);
     }
   }
 
@@ -271,7 +271,7 @@ app.post('/api/shifts/request', (req, res) => {
 
   // Bắn thông báo về điện thoại Quản lý
   const actionText = newRequest.type === 'PASS' ? 'xin Pass ca' : 'xin Đổi ca';
-  sendManagerNotification('Yêu Cầu Ca Làm 🔄', `Nhân viên [${newRequest.from}] vừa gửi đơn ${actionText} cho [${newRequest.to}]. Quản lý vui lòng xét duyệt!`);
+  sendManagerNotification('Yêu Cầu Ca Làm', `Nhân viên ${newRequest.from} vừa gửi đơn ${actionText} cho ${newRequest.to}. Quản lý vui lòng xét duyệt!`);
 
   res.json({ success: true });
 });
