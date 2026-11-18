@@ -22,9 +22,8 @@ self.addEventListener('push', event => {
 
   const options = {
     body: data.body,
-    icon: 'https://cdn-icons-png.flaticon.com/512/924/924514.png',
-    badge: 'https://cdn-icons-png.flaticon.com/512/924/924514.png',
-    vibrate: [200, 100, 200],
+    icon: '/logocarmel.jpg',
+    badge: '/logocarmel.jpg',    vibrate: [200, 100, 200],
     tag: 'carmel-notification', // Chống trùng lặp thông báo
     renotify: true,
     data: {

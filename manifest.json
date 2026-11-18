@@ -1,15 +1,20 @@
-    {
+{
   "name": "Carmel Coffee App",
   "short_name": "Carmel",
   "start_url": "/dashboard.html",
   "display": "standalone",
-  "background_color": "#1e293b",
-  "theme_color": "#1e293b",
+  "background_color": "#463222",
+  "theme_color": "#463222",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/924/924514.png",
+      "src": "/logocarmel.jpg",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/logocarmel.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
     }
   ]
 }
