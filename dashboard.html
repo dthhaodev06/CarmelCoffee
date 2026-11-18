@@ -738,11 +738,27 @@
       window.location.href = 'index.html';
     }
 
-    function handleLogout() {
+async function handleLogout() {
+      try {
+        if ('serviceWorker' in navigator) {
+          const reg = await navigator.serviceWorker.getRegistration();
+          if (reg) {
+            const sub = await reg.pushManager.getSubscription();
+            if (sub) {
+              await fetch('/api/unsubscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ endpoint: sub.endpoint })
+              }).catch(() => {});
+              await sub.unsubscribe();
+            }
+          }
+        }
+      } catch (e) {}
+
       localStorage.removeItem('currentUser');
       window.location.href = 'index.html';
     }
-
     const daysOfWeek = [
       { key: 't2', label: 'Thứ 2' }, { key: 't3', label: 'Thứ 3' }, { key: 't4', label: 'Thứ 4' },
       { key: 't5', label: 'Thứ 5' }, { key: 't6', label: 'Thứ 6' }, { key: 't7', label: 'Thứ 7' }, { key: 'cn', label: 'Chủ Nhật' }
@@ -2024,6 +2040,9 @@ function renderRevenueTable() {
     }
 
 async function enablePushNotifications() {
+if (!currentUser || currentUser.role !== 'manager') {
+    return;
+  }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         alert('Trình duyệt chưa hỗ trợ thông báo đẩy!');
         return;
