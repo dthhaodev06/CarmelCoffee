@@ -83,6 +83,19 @@
         text-align: center !important;
         margin: 0 !important;
       }
+      #tab-schedule #btnPublishRoster {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        margin-top: 2px !important;
+        padding: 11px 12px !important;
+        border-radius: 12px !important;
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        text-align: center !important;
+        color: #ffffff !important;
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+        box-shadow: 0 4px 10px rgba(2, 132, 199, 0.22) !important;
+      }
     }     /* --- DECOR KHUNG QUY ĐỊNH & CHỌN TUẦN TRÊN ĐIỆN THOẠI --- */
     @media (max-width: 768px) {
       .shift-legend {
@@ -367,9 +380,7 @@
         <div id="pageTitle"><strong>Thống Kê Kho Nguyên Vật Liệu</strong></div>
       </div>
       <div class="user-info">
-<span class="user-badge" id="userRoleBadge" onclick="if(currentUser && currentUser.role==='manager') enablePushNotifications()" style="cursor: pointer;" title="Chạm để kích hoạt thông báo đẩy">Nhân viên</span>        <span id="userNameDisplay" style="font-weight: 700; color: #1e293b; font-size: 13.5px;"></span>
-        <button class="btn-action btn-reset" style="padding: 5px 12px; font-size: 11.5px;" onclick="handleLogout()">Đăng xuất</button>
-    </header>
+<span class="user-badge" id="userRoleBadge" onclick="enablePushNotifications()" style="cursor: pointer;" title="Chạm để kích hoạt thông báo đẩy">Nhân viên</span>    </header>
 
     <div class="content-container">
 
@@ -514,7 +525,6 @@
                   <span id="currentWeekDisplayLabel" style="font-weight: 700; font-size: 13px; color: #0f766e; min-width: 150px; text-align: center;">Tuần Hiện Tại</span>
                   <button class="week-nav-btn" onclick="changeWeek(1)">▶</button>
                   <button class="week-nav-btn" onclick="changeWeek(0, true)" style="background: #e0f2fe; color: #0369a1;">Về tuần này</button>
-                  <button class="btn-action" id="btnPublishRoster" style="background:#0284c7;" onclick="publishRosterToStaff()">Thông báo lịch làm</button>
                 </div>
               </div>
               <table class="excel-legend-table">
@@ -527,6 +537,7 @@
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
               <button class="btn-action btn-success" id="btnAutoBalance" onclick="rebalanceMasterRoster()">Chia Lịch Tự Động</button>
               <button class="btn-action btn-reset" id="btnClearSchedule" style="background:#dc2626;" onclick="clearAllSchedules()">Xóa Lịch</button>
+<button class="btn-action" id="btnPublishRoster" style="background:#0284c7; display: none;" onclick="publishRosterToStaff()">📢 Thông báo lịch làm</button>
             </div>
           </div>
           <div style="overflow-x: auto;">
@@ -1021,14 +1032,12 @@ async function handleLogout() {
         if (el) el.style.display = isManager ? 'block' : 'none';
       });
 
-      ['btnResetInventory', 'btnClearSchedule', 'btnAutoBalance',].forEach(id => {
-        const el = document.getElementById(id);
+['btnResetInventory', 'btnClearSchedule', 'btnAutoBalance', 'btnPublishRoster'].forEach(id => {        const el = document.getElementById(id);
         if (el) el.style.display = isManager ? 'inline-block' : 'none';
       });
       // Bên trong hàm updateUserInfoUI(), ngay chỗ kiểm tra role === 'manager'
 if (currentUser && currentUser.role === 'manager') {
-  ['btnResetInventory', 'btnClearSchedule', 'btnAutoBalance'].forEach(id => {
-    const el = document.getElementById(id);
+['btnResetInventory', 'btnClearSchedule', 'btnAutoBalance', 'btnPublishRoster'].forEach(id => {    const el = document.getElementById(id);
     if (el) el.style.display = 'inline-block';
   });
 
@@ -1774,27 +1783,101 @@ function initScheduleGrid() {
       }
     }
 
-    function approveRequest(reqId) {
+async function approveRequest(reqId) {
       if (currentUser.role !== 'manager') return;
       let requests = JSON.parse(localStorage.getItem('carmel_shift_requests')) || [];
       const req = requests.find(r => r.id === reqId);
       if (!req) return;
+
       req.status = 'APPROVED';
       localStorage.setItem('carmel_shift_requests', JSON.stringify(requests));
+
+      // TỰ ĐỘNG CẬP NHẬT BẢNG LỊCH LÀM (masterRoster)
+      let masterRoster = getCurrentRoster();
+      if (!masterRoster[req.from]) masterRoster[req.from] = { t2: 'Off', t3: 'Off', t4: 'Off', t5: 'Off', t6: 'Off', t7: 'Off', cn: 'Off' };
+      if (!masterRoster[req.to]) masterRoster[req.to] = { t2: 'Off', t3: 'Off', t4: 'Off', t5: 'Off', t6: 'Off', t7: 'Off', cn: 'Off' };
+
+      if (req.type === 'PASS') {
+        const fromCurrent = masterRoster[req.from][req.fromDay] || 'Off';
+        const remaining = fromCurrent.replace(req.fromShift, '').trim();
+        masterRoster[req.from][req.fromDay] = remaining || 'Off';
+
+        const toCurrent = masterRoster[req.to][req.fromDay] || 'Off';
+        if (toCurrent === 'Off') {
+          masterRoster[req.to][req.fromDay] = req.fromShift;
+        } else if (!toCurrent.includes(req.fromShift)) {
+          masterRoster[req.to][req.fromDay] = (toCurrent + req.fromShift).split('').sort().join('');
+        }
+      } else if (req.type === 'SWAP') {
+        const fromCurrent = masterRoster[req.from][req.fromDay] || 'Off';
+        const toCurrent = masterRoster[req.to][req.toDay] || 'Off';
+
+        const fromAfterRemove = fromCurrent.replace(req.fromShift, '').trim();
+        const toAfterRemove = toCurrent.replace(req.toShift, '').trim();
+
+        masterRoster[req.from][req.fromDay] = fromAfterRemove || 'Off';
+        masterRoster[req.to][req.toDay] = toAfterRemove || 'Off';
+
+        const fromAtTargetDay = masterRoster[req.from][req.toDay] || 'Off';
+        masterRoster[req.from][req.toDay] = fromAtTargetDay === 'Off'
+          ? req.toShift
+          : (fromAtTargetDay.includes(req.toShift) ? fromAtTargetDay : (fromAtTargetDay + req.toShift).split('').sort().join(''));
+
+        const toAtSourceDay = masterRoster[req.to][req.fromDay] || 'Off';
+        masterRoster[req.to][req.fromDay] = toAtSourceDay === 'Off'
+          ? req.fromShift
+          : (toAtSourceDay.includes(req.fromShift) ? toAtSourceDay : (toAtSourceDay + req.fromShift).split('').sort().join(''));
+      }
+
+      saveCurrentRoster(masterRoster);
+      renderRosterGridTable();
+      renderSalaryTable();
       renderShiftRequests();
-      alert('Đã phê duyệt ca!');
+
+      try {
+        await fetch('/api/shifts/handle-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            reqId: req.id,
+            status: 'APPROVED',
+            actor: currentUser.name,
+            masterRoster: masterRoster
+          })
+        });
+      } catch (e) {
+        console.error('Lỗi gửi duyệt ca lên server:', e);
+      }
+
+      alert('✅ Đã phê duyệt, cập nhật bảng lịch làm và gửi thông báo cho nhân viên!');
     }
 
-    function rejectRequest(reqId) {
+    async function rejectRequest(reqId) {
       if (currentUser.role !== 'manager') return;
       let requests = JSON.parse(localStorage.getItem('carmel_shift_requests')) || [];
       const req = requests.find(r => r.id === reqId);
       if (!req) return;
+
       req.status = 'REJECTED';
       localStorage.setItem('carmel_shift_requests', JSON.stringify(requests));
       renderShiftRequests();
-    }
 
+      try {
+        await fetch('/api/shifts/handle-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            reqId: req.id,
+            status: 'REJECTED',
+            actor: currentUser.name
+          })
+        });
+      } catch (e) {
+        console.error('Lỗi gửi từ chối ca lên server:', e);
+      }
+
+      alert('❌ Đã từ chối yêu cầu và gửi thông báo cho nhân viên!');
+    }
     function initRevenueTab() {
       const today = new Date();
       const dateInput = document.getElementById('revenueDateInput');
