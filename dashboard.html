@@ -563,6 +563,7 @@
         font-size: 12.5px !important;
         border-radius: 8px !important;
       }
+    }
       /* --- DECOR DANH SÁCH PASS CA & ĐỔI CA DẠNG THẺ GỌN ĐẸP TRÊN MÁY TÍNH --- */
     @media (min-width: 769px) {
       #tab-pass-shift .data-card,
@@ -693,7 +694,7 @@
         border-radius: 8px !important;
       }
     }
-    }
+    
   </style>
 </head>
 <body>
@@ -2577,26 +2578,47 @@ async function enablePushNotifications() {
       }
     }
         setInterval(syncDataFromServer, 10000);
-        // Tự động mở đúng trang khi bấm vào thông báo đẩy
-    (function openTabFromNotification() {
-      const params = new URLSearchParams(window.location.search);
-      const targetTab = params.get('tab');
-      if (targetTab) {
-        setTimeout(() => {
-          const menuBtn = document.querySelector(`[onclick*="${targetTab}"], [data-tab="${targetTab}"]`);
-          if (menuBtn) {
-            menuBtn.click();
-          } else if (typeof switchTab === 'function') {
-            switchTab(targetTab);
-          }
-          window.history.replaceState({}, document.title, '/dashboard.html');
-        }, 300);
+// Chuyển tab dựa trên URL (?tab=...) hoặc #hash từ thông báo đẩy
+    function switchTabByUrl(rawUrl) {
+      if (!rawUrl) return;
+      try {
+        const parsed = new URL(rawUrl, window.location.origin);
+        let rawTab = parsed.searchParams.get('tab') || parsed.hash.replace(/^#/, '');
+        if (!rawTab) return;
+
+        let mappedTab = rawTab.replace(/^tab-/, '');
+        if (mappedTab === 'request') mappedTab = 'pass-shift';
+
+        if (typeof showTab === 'function') {
+          showTab(mappedTab);
+        }
+        window.history.replaceState({}, document.title, '/dashboard.html');
+      } catch (e) {}
+    }
+
+    function handleNotificationDeepLink() {
+      switchTabByUrl(window.location.href);
+    }
+
+    window.addEventListener('hashchange', handleNotificationDeepLink);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        handleNotificationDeepLink();
       }
-    })();
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'OPEN_TAB_FROM_PUSH') {
+          switchTabByUrl(event.data.url);
+        }
+      });
+    }
 
     // Hàm gửi thông báo có lịch làm mới cho toàn bộ nhân viên
     async function publishRosterToStaff() {
-      const weekLabel = document.getElementById('rosterWeekDisplayLabel')?.innerText || 'tuần này';
+      if (currentUser.role !== 'manager') return;
+      const weekLabel = document.getElementById('currentWeekDisplayLabel')?.innerText || 'tuần này';
       if (!confirm(`Gửi thông báo đã có lịch làm (${weekLabel}) đến tất cả nhân viên?`)) return;
       try {
         await fetch('/api/shifts/publish-roster', {
@@ -2610,14 +2632,44 @@ async function enablePushNotifications() {
       }
     }
 
+    // Tự động gắn lại token thông báo với đúng tài khoản đang đăng nhập
+    async function autoSyncPushSubscription() {
+      if (!currentUser || !('serviceWorker' in navigator) || !('PushManager' in window)) return;
+      if (Notification.permission === 'granted') {
+        try {
+          const reg = await navigator.serviceWorker.register('/ServiceWorker.js');
+          await reg.update();
+          const registration = await navigator.serviceWorker.ready;
+          const sub = await registration.pushManager.getSubscription();
+          if (sub) {
+            await fetch('/api/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                subscription: sub,
+                role: currentUser.role,
+                actor: currentUser.name
+              })
+            });
+          }
+        } catch (e) {}
+      }
+    }
+
+    // Chạy chuyển tab NGAY LẬP TỨC trước khi chờ tải xong dữ liệu từ server
+    updateCurrentWeekDates();
+    updateUserInfoUI();
+    initScheduleGrid();
+    handleNotificationDeepLink();
+
     syncDataFromServer().then(() => {
-      updateCurrentWeekDates();
       updateUserInfoUI();
       renderTable();
-      initScheduleGrid();
       updateStaffDropdowns();
       renderShiftRequests();
       loadAuditLogs();
+      handleNotificationDeepLink();
+      autoSyncPushSubscription();
     });
   </script>
 </body>
