@@ -338,8 +338,8 @@ app.get('/api/logs', (req, res) => {
 // ====================================================
 // 3. THÔNG BÁO ĐẨY (CHỈ GỬI CHO THIẾT BỊ QUẢN LÝ)
 // ====================================================
-const publicVapidKey = 'BMiUgyG-W-R45LFuoBtX3d90RgrL3_F_fHC87UPrwZmpfMA0ITUslURt5cdWW6O2FTNpT5HxkvqxzKDYEURRMsk';
-const privateVapidKey = 'tu7Bqd0tLOS2kwiBM3ZyzoqGQHJouI5Y7M9bMdRRDUI';
+const publicVapidKey = 'BMVrq03lPj1UYEJVVQ20pvFDTARfl_AbUpQJFoeEkmkQMzF6KTuKu0Zo28PmwLbaCRw5rv__ineMDq2bXJrjk_g';
+const privateVapidKey = 'iOH9tXmt6ysad8u_UAcNtSptnzuEIhGnxMrqZVJnRCI';
 
 webpush.setVapidDetails(
   'mailto:carmelcoffee@gmail.com',
