@@ -364,6 +364,206 @@
       #tab-nvl .custom-table th:nth-child(2) {
         background-color: #f8fafc;
       }
+      /* --- DECOR GIAO DIỆN PASS CA & ĐỔI CA CHUẨN APP MOBILE --- */
+    @media (max-width: 768px) {
+      /* Giữ thanh topbar luôn full 100% chiều ngang màn hình */
+      .topbar {
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Khung grid chứa 2 card của Pass Ca & Đổi Ca */
+      #tab-pass-shift > div,
+      #tab-swap-shift > div {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 14px !important;
+        width: 100% !important;
+      }
+
+      #tab-pass-shift .data-card,
+      #tab-swap-shift .data-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 16px 14px !important;
+        border-radius: 16px !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+
+      #tab-pass-shift h3,
+      #tab-swap-shift h3 {
+        font-size: 16.5px !important;
+        color: #1e293b !important;
+        margin-bottom: 4px !important;
+      }
+
+      /* Căn chỉnh form nhập gọn gàng, không tràn viền */
+      #tab-pass-shift .filter-group,
+      #tab-swap-shift .filter-group {
+        width: 100% !important;
+        min-width: 0 !important;
+        margin-bottom: 10px !important;
+      }
+
+      #tab-pass-shift .filter-group label,
+      #tab-swap-shift .filter-group label {
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
+        color: #475569 !important;
+      }
+
+      #tab-pass-shift select,
+      #tab-swap-shift select {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 40px !important;
+        padding: 8px 12px !important;
+        font-size: 13.5px !important;
+        font-weight: 600 !important;
+        color: #0f172a !important;
+        background-color: #f8fafc !important;
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 10px !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Chia 2 cột Ngày & Ca của Đổi Ca cân đối 50/50 */
+      #tab-swap-shift div[style*="grid-template-columns: 1fr 1fr"] {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+        width: 100% !important;
+      }
+
+      #btnSubmitPass,
+      #btnSubmitSwap {
+        height: 42px !important;
+        border-radius: 12px !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        margin-top: 4px !important;
+      }
+
+      /* BIẾN BẢNG DANH SÁCH PASS/ĐỔI CA THÀNH TỪNG THẺ DỌC (KHÔNG CẦN VUỐT NGANG) */
+      #tab-pass-shift .custom-table,
+      #tab-swap-shift .custom-table {
+        min-width: 100% !important;
+        width: 100% !important;
+        display: block !important;
+      }
+
+      #tab-pass-shift .custom-table thead,
+      #tab-swap-shift .custom-table thead {
+        display: none !important;
+      }
+
+      #tab-pass-shift .custom-table tbody,
+      #tab-swap-shift .custom-table tbody {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 100% !important;
+      }
+
+      #tab-pass-shift .custom-table tr,
+      #tab-swap-shift .custom-table tr {
+        display: grid !important;
+        grid-template-columns: auto 1fr auto !important;
+        gap: 6px 8px !important;
+        align-items: center !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        padding: 12px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      #tab-pass-shift .custom-table td,
+      #tab-swap-shift .custom-table td {
+        border: none !important;
+        padding: 0 !important;
+        white-space: normal !important;
+        font-size: 13px !important;
+      }
+
+      /* Hàng 1: Badge PASS/SWAP | Người gửi -> Người nhận | Trạng thái */
+      #tab-pass-shift .custom-table td:nth-child(1),
+      #tab-swap-shift .custom-table td:nth-child(1) {
+        grid-column: 1;
+      }
+
+      #tab-pass-shift .custom-table td:nth-child(2),
+      #tab-swap-shift .custom-table td:nth-child(2) {
+        grid-column: 2;
+        font-size: 13.5px !important;
+        color: #0f172a !important;
+      }
+
+      #tab-pass-shift .custom-table td:nth-child(2)::after,
+      #tab-swap-shift .custom-table td:nth-child(2)::after {
+        content: " ➔";
+        color: #64748b;
+        font-weight: 400;
+      }
+
+      #tab-pass-shift .custom-table td:nth-child(5),
+      #tab-swap-shift .custom-table td:nth-child(5) {
+        grid-column: 3;
+        text-align: right !important;
+        font-size: 11.5px !important;
+      }
+
+      /* Hàng 2: Người nhận & Chi tiết ca */
+      #tab-pass-shift .custom-table td:nth-child(4),
+      #tab-swap-shift .custom-table td:nth-child(4) {
+        grid-column: 1 / -1;
+        font-size: 12.5px !important;
+        color: #0369a1 !important;
+      }
+
+      #tab-pass-shift .custom-table td:nth-child(4)::before {
+        content: "Người nhận: ";
+        color: #64748b;
+        font-weight: 500;
+      }
+
+      #tab-swap-shift .custom-table td:nth-child(4)::before {
+        content: "Đổi với: ";
+        color: #64748b;
+        font-weight: 500;
+      }
+
+      #tab-pass-shift .custom-table td:nth-child(3),
+      #tab-swap-shift .custom-table td:nth-child(3) {
+        grid-column: 1 / -1;
+        background: #ffffff !important;
+        padding: 7px 10px !important;
+        border-radius: 8px !important;
+        border: 1px dashed #cbd5e1 !important;
+        color: #334155 !important;
+        font-weight: 600 !important;
+        font-size: 12.5px !important;
+      }
+
+      /* Hàng 3: Nút Duyệt / Từ chối trải ngang 2 nút to rõ */
+      #tab-pass-shift .custom-table td:nth-child(6),
+      #tab-swap-shift .custom-table td:nth-child(6) {
+        grid-column: 1 / -1;
+        display: flex !important;
+        gap: 8px !important;
+        margin-top: 4px !important;
+      }
+
+      #tab-pass-shift .custom-table td:nth-child(6) button,
+      #tab-swap-shift .custom-table td:nth-child(6) button {
+        flex: 1 !important;
+        padding: 8px 10px !important;
+        font-size: 12.5px !important;
+        border-radius: 8px !important;
+      }
+    }
   </style>
 </head>
 <body>
