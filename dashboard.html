@@ -964,6 +964,173 @@
         display: none !important;
       }
     }
+    /* --- DECOR TAB THỐNG KÊ CÔNG LÀM (NHÂN VIÊN) --- */
+    .my-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .my-stat-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 16px 18px;
+      border: 1.5px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .my-stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    .my-stat-card.highlight-blue {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      border-color: #1d4ed8;
+      color: #ffffff;
+    }
+
+    .my-stat-card.highlight-emerald {
+      border-left: 5px solid #16a34a;
+    }
+
+    .my-stat-card.highlight-amber {
+      border-left: 5px solid #d97706;
+    }
+
+    .my-stat-card.highlight-sky {
+      border-left: 5px solid #0284c7;
+    }
+
+    .my-stat-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .my-stat-card.highlight-blue .my-stat-label {
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .my-stat-value {
+      font-size: 26px;
+      font-weight: 700;
+      margin-top: 8px;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    .my-stat-card.highlight-blue .my-stat-value {
+      color: #ffffff;
+    }
+
+    .my-stat-sub {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    .my-stat-card.highlight-blue .my-stat-sub {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .week-days-breakdown {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .day-work-card {
+      border-radius: 12px;
+      padding: 12px 10px;
+      text-align: center;
+      border: 1.5px solid #e2e8f0;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .day-work-card.working {
+      background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%);
+      border-color: #86efac;
+    }
+
+    .day-work-card.off {
+      background: #fff1f2;
+      border-color: #fecdd3;
+      opacity: 0.85;
+    }
+
+    .day-work-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .day-work-date {
+      font-size: 11px;
+      color: #64748b;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .day-work-badge {
+      margin-top: 4px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+      width: 100%;
+    }
+
+    .day-work-card.working .day-work-badge {
+      background: #16a34a;
+      color: #ffffff;
+    }
+
+    .day-work-card.off .day-work-badge {
+      background: #ffe4e6;
+      color: #e11d48;
+    }
+
+    .day-work-hours {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #15803d;
+    }
+
+    @media (max-width: 768px) {
+      .my-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .my-stat-card {
+        padding: 13px 12px;
+      }
+
+      .my-stat-value {
+        font-size: 21px;
+      }
+
+      .week-days-breakdown {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+    }
       </style>
 </head>
 <body>
@@ -1211,6 +1378,59 @@
               <tbody id="rosterGridBody"></tbody>
             </table>
           </div>
+        </div>
+      </section>
+      <!-- TAB RIÊNG CỦA NHÂN VIÊN: THỐNG KÊ CÔNG LÀM -->
+      <section id="tab-my-stats" style="display: none;">
+        <div class="data-card" style="margin-bottom: 16px;">
+          <div class="data-card-header" style="margin-bottom: 0;">
+            <div>
+              <h3 style="margin-bottom: 4px;">Thống Kê Công Làm: <span id="myStatsStaffName" style="color: #2563eb;">...</span></h3>
+              <span style="font-size: 12.5px; color: #64748b;">Dữ liệu được tính tự động từ Bảng Lịch Làm chính thức của quán</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <div class="week-nav-box">
+                <button class="week-nav-btn" onclick="changeWeek(-1)">◀</button>
+                <span id="myStatsWeekLabel" style="font-weight: 700; font-size: 13px; color: #0f766e; min-width: 110px; text-align: center;">Tuần này</span>
+                <button class="week-nav-btn" onclick="changeWeek(1)">▶</button>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 5px 10px; border-radius: 8px;">
+                <label style="font-size: 12.5px; font-weight: 600; color: #475569;">Tháng:</label>
+                <input type="month" id="myStatsMonthInput" onchange="renderMyWorkStats()" style="border: none; background: transparent; font-weight: 700; font-size: 12.5px; color: #0f172a; outline: none; cursor: pointer;">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="my-stats-grid">
+          <div class="my-stat-card highlight-blue">
+            <div class="my-stat-label">Ngày làm trong tuần</div>
+            <div class="my-stat-value" id="statWeekDaysCount">0 ngày</div>
+            <div class="my-stat-sub" id="statWeekDaysList">Chưa có lịch tuần này</div>
+          </div>
+          <div class="my-stat-card highlight-emerald">
+            <div class="my-stat-label">Tổng ca làm tuần</div>
+            <div class="my-stat-value" style="color: #16a34a;" id="statWeekShiftsCount">0 ca</div>
+            <div class="my-stat-sub" id="statWeekHoursSub">Tổng cộng 0 giờ trong tuần</div>
+          </div>
+          <div class="my-stat-card highlight-amber">
+            <div class="my-stat-label">Tổng ca làm tháng</div>
+            <div class="my-stat-value" style="color: #d97706;" id="statMonthShiftsCount">0 ca</div>
+            <div class="my-stat-sub" id="statMonthDaysSub">Đi làm 0 ngày trong tháng</div>
+          </div>
+          <div class="my-stat-card highlight-sky">
+            <div class="my-stat-label">Tổng tiếng làm tháng</div>
+            <div class="my-stat-value" style="color: #0284c7;" id="statMonthHoursCount">0 giờ</div>
+            <div class="my-stat-sub">Tính cả ca tiêu chuẩn & ca ghi giờ</div>
+          </div>
+        </div>
+
+        <div class="data-card">
+          <div class="data-card-header">
+            <h3>Chi Tiết Các Ngày Làm Trong Tuần</h3>
+            <span id="myStatsDateRange" style="font-size: 12.5px; font-weight: 600; color: #0f766e; background: #f0fdfa; padding: 4px 10px; border-radius: 8px; border: 1px solid #ccfbf1;">--/-- - --/--</span>
+          </div>
+          <div class="week-days-breakdown" id="myWeekDaysBreakdown"></div>
         </div>
       </section>
 
@@ -1487,6 +1707,7 @@ async function handleLogout() {
       updateCurrentWeekDates();
       renderRosterGridTable();
       renderSalaryTable();
+      renderMyWorkStats();
       loadStaffCurrentSelection();
     }
 
@@ -1605,6 +1826,7 @@ const defaultItems = [
         renderTable();
         renderRosterGridTable();
         renderSalaryTable();
+        renderMyWorkStats();
         renderShiftRequests();
         renderExpenseTable();
         renderAccountsTable();
@@ -1663,7 +1885,7 @@ const defaultItems = [
         closeSidebarMobile();
       }
 
-      ['nvl', 'shift', 'pass-shift', 'swap-shift', 'schedule', 'salary', 'revenue', 'expense', 'accounts', 'logs'].forEach(t => {
+      ['nvl', 'shift', 'pass-shift', 'swap-shift', 'schedule', 'my-stats', 'salary', 'revenue', 'expense', 'accounts', 'logs'].forEach(t => {
         const sec = document.getElementById('tab-' + t);
         if (sec) sec.style.display = (t === tab) ? 'block' : 'none';
         const menu = document.getElementById('menu-' + t);
@@ -1679,6 +1901,7 @@ const defaultItems = [
       if (tab === 'pass-shift') { title.innerHTML = '<strong>Yêu Cầu Pass Ca Làm Việc</strong>'; updateStaffDropdowns(); renderShiftRequests(); }
       if (tab === 'swap-shift') { title.innerHTML = '<strong>Yêu Cầu Đổi Ca Làm Việc</strong>'; updateStaffDropdowns(); renderShiftRequests(); }
       if (tab === 'schedule') { title.innerHTML = '<strong>Bảng Lịch Làm</strong>'; renderRosterGridTable(); }
+      if (tab === 'my-stats') { title.innerHTML = '<strong>Thống Kê Công Làm</strong>'; initMyWorkStats(); }
       if (tab === 'salary') { title.innerHTML = '<strong>Chấm Công & Tính Lương</strong>'; initSalaryTab(); }
       if (tab === 'revenue') { title.innerHTML = '<strong>Quản Lý Doanh Thu Cửa Hàng</strong>'; initRevenueTab(); }
       if (tab === 'expense') { title.innerHTML = '<strong>Quản Lý Chi Phí</strong>'; initExpenseTab(); }
@@ -1697,6 +1920,8 @@ const defaultItems = [
         roleBadge.style.background = isManager ? '#fef3c7' : '#e0f2fe';
         roleBadge.style.color = isManager ? '#b45309' : '#0369a1';
       }
+      const myStatsMenu = document.getElementById('menu-my-stats');
+      if (myStatsMenu) myStatsMenu.style.display = !isManager ? 'block' : 'none';
 
       ['menu-salary', 'menu-revenue', 'menu-expense', 'menu-accounts', 'menu-logs'].forEach(id => {
         const el = document.getElementById(id);
@@ -2207,6 +2432,124 @@ function initScheduleGrid() {
       renderRosterGridTable();
       renderSalaryTable();
     }
+    function initMyWorkStats() {
+      const today = new Date();
+      const monthInput = document.getElementById('myStatsMonthInput');
+      if (monthInput && !monthInput.value) {
+        monthInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+      }
+      renderMyWorkStats();
+    }
+
+    function renderMyWorkStats() {
+      const breakdownEl = document.getElementById('myWeekDaysBreakdown');
+      if (!breakdownEl || !currentUser) return;
+
+      const staffName = currentUser.name;
+      if (document.getElementById('myStatsStaffName')) {
+        document.getElementById('myStatsStaffName').textContent = staffName;
+      }
+
+      const monday = getMondayDate(currentWeekOffset);
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+      const monStr = `${String(monday.getDate()).padStart(2, '0')}/${String(monday.getMonth() + 1).padStart(2, '0')}`;
+      const sunStr = `${String(sunday.getDate()).padStart(2, '0')}/${String(sunday.getMonth() + 1).padStart(2, '0')}`;
+      const weekLabel = currentWeekOffset === 0 ? 'Tuần này' : `Tuần (${monStr} - ${sunStr})`;
+
+      if (document.getElementById('myStatsWeekLabel')) document.getElementById('myStatsWeekLabel').textContent = weekLabel;
+      if (document.getElementById('myStatsDateRange')) document.getElementById('myStatsDateRange').textContent = `${monStr} - ${sunStr}`;
+
+      const currentRoster = getCurrentRoster();
+      const myWeekSchedule = currentRoster[staffName] || {};
+      let weekDaysCount = 0;
+      let weekShiftsCount = 0;
+      let weekHoursCount = 0;
+      const workingDayNames = [];
+
+      breakdownEl.innerHTML = '';
+      daysOfWeek.forEach((day, index) => {
+        const dateObj = new Date(monday);
+        dateObj.setDate(monday.getDate() + index);
+        const dateStr = `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
+
+        const shiftVal = myWeekSchedule[day.key] || 'Off';
+        const hours = parseShiftHours(shiftVal);
+        const isWorking = shiftVal !== 'Off' && hours > 0;
+
+        if (isWorking) {
+          weekDaysCount++;
+          weekHoursCount += hours;
+          const shiftBlocks = shiftVal.match(/[A-C](?:\([^)]+\))?/gi);
+          weekShiftsCount += shiftBlocks ? shiftBlocks.length : (hours > 6 ? 2 : 1);
+          workingDayNames.push(day.label.replace('Thứ ', 'T').replace('Chủ Nhật', 'CN'));
+        }
+
+        const card = document.createElement('div');
+        card.className = `day-work-card ${isWorking ? 'working' : 'off'}`;
+        card.innerHTML = `
+          <div class="day-work-name">${day.label}</div>
+          <div class="day-work-date">${dateStr}</div>
+          <div class="day-work-badge">${isWorking ? escapeHtml(shiftVal) : 'Nghỉ (Off)'}</div>
+          <div class="day-work-hours">${isWorking ? hours + ' tiếng' : '0 tiếng'}</div>
+        `;
+        breakdownEl.appendChild(card);
+      });
+
+      weekHoursCount = Math.round(weekHoursCount * 10) / 10;
+
+      const monthInput = document.getElementById('myStatsMonthInput');
+      const selectedMonth = monthInput && monthInput.value
+        ? monthInput.value
+        : `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+
+      const allRostersByWeek = JSON.parse(localStorage.getItem('carmel_rosters_by_week')) || {};
+      let monthShiftsCount = 0;
+      let monthHoursCount = 0;
+      let monthDaysCount = 0;
+
+      Object.keys(allRostersByWeek).forEach(weekKey => {
+        const parts = weekKey.split('-');
+        if (parts.length !== 3) return;
+        const weekMonday = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        const weekSchedule = (allRostersByWeek[weekKey] && allRostersByWeek[weekKey][staffName]) || {};
+
+        daysOfWeek.forEach((day, idx) => {
+          const d = new Date(weekMonday);
+          d.setDate(weekMonday.getDate() + idx);
+          const dayMonthStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+
+          if (dayMonthStr === selectedMonth) {
+            const shiftVal = weekSchedule[day.key] || 'Off';
+            if (shiftVal !== 'Off') {
+              const h = parseShiftHours(shiftVal);
+              if (h > 0) {
+                monthDaysCount++;
+                monthHoursCount += h;
+                const blocks = shiftVal.match(/[A-C](?:\([^)]+\))?/gi);
+                monthShiftsCount += blocks ? blocks.length : (h > 6 ? 2 : 1);
+              }
+            }
+          }
+        });
+      });
+
+      monthHoursCount = Math.round(monthHoursCount * 10) / 10;
+
+      document.getElementById('statWeekDaysCount').textContent = `${weekDaysCount} ngày`;
+      document.getElementById('statWeekDaysList').textContent = workingDayNames.length > 0
+        ? `Làm các ngày: ${workingDayNames.join(', ')}`
+        : 'Chưa có lịch làm tuần này';
+
+      document.getElementById('statWeekShiftsCount').textContent = `${weekShiftsCount} ca`;
+      document.getElementById('statWeekHoursSub').textContent = `Tổng cộng ${weekHoursCount} tiếng trong tuần`;
+
+      document.getElementById('statMonthShiftsCount').textContent = `${monthShiftsCount} ca`;
+      document.getElementById('statMonthDaysSub').textContent = `Đi làm ${monthDaysCount} ngày trong tháng`;
+
+      document.getElementById('statMonthHoursCount').textContent = `${monthHoursCount} giờ`;
+    }
+
 
     function initSalaryTab() {
       const today = new Date();
