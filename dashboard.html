@@ -1409,17 +1409,14 @@
           <div class="my-stat-card highlight-blue">
             <div class="my-stat-label">Ngày làm trong tuần</div>
             <div class="my-stat-value" id="statWeekDaysCount">0 ngày</div>
-            <div class="my-stat-sub" id="statWeekDaysList">Chưa có lịch tuần này</div>
           </div>
           <div class="my-stat-card highlight-emerald">
             <div class="my-stat-label">Tổng ca làm tuần</div>
             <div class="my-stat-value" style="color: #16a34a;" id="statWeekShiftsCount">0 ca</div>
-            <div class="my-stat-sub" id="statWeekHoursSub">Tổng cộng 0 giờ trong tuần</div>
           </div>
           <div class="my-stat-card highlight-amber">
             <div class="my-stat-label">Tổng ca làm tháng</div>
             <div class="my-stat-value" style="color: #d97706;" id="statMonthShiftsCount">0 ca</div>
-            <div class="my-stat-sub" id="statMonthDaysSub">Đi làm 0 ngày trong tháng</div>
           </div>
           <div class="my-stat-card highlight-sky">
             <div class="my-stat-label">Tổng tiếng làm tháng</div>
@@ -2563,13 +2560,7 @@ const tr = document.createElement('tr');
       monthHoursCount = Math.round(monthHoursCount * 10) / 10;
 
       document.getElementById('statWeekDaysCount').textContent = `${weekDaysCount} ngày`;
-      document.getElementById('statWeekDaysList').textContent = workingDayNames.length > 0
-        ? `Làm các ngày: ${workingDayNames.join(', ')}`
-        : 'Chưa có lịch làm tuần này';
-
       document.getElementById('statWeekShiftsCount').textContent = `${weekShiftsCount} ca`;
-      document.getElementById('statWeekHoursSub').textContent = `Tổng cộng ${weekHoursCount} tiếng trong tuần`;
-
       document.getElementById('statMonthShiftsCount').textContent = `${monthShiftsCount} ca`;
       document.getElementById('statMonthHoursCount').textContent = `${monthHoursCount} giờ`;
     }
