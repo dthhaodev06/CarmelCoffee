@@ -867,6 +867,108 @@
         background: #e2e8f0 !important;
       }
     }
+    /* --- DECOR PHẦN ĐẦU TAB BẢNG LỊCH LÀM ĐẸP & CÂN ĐỐI TRÊN MÁY TÍNH --- */
+    @media (min-width: 769px) {
+      #tab-schedule .excel-header-box {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 14px !important;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+        border: 1.5px solid #e2e8f0 !important;
+        border-radius: 14px !important;
+        padding: 16px 20px !important;
+        margin-bottom: 18px !important;
+      }
+
+      /* Hàng 1: Tiêu đề bên trái - Chọn tuần bên phải */
+      #tab-schedule .excel-header-box > div:first-child {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 12px !important;
+        width: 100% !important;
+      }
+
+      #tab-schedule .excel-header-box > div:first-child > div:first-child {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        margin-bottom: 4px !important;
+      }
+
+      #tab-schedule h3 {
+        font-size: 18px !important;
+        color: #0f766e !important;
+        letter-spacing: 0.3px;
+      }
+
+      #tab-schedule .week-nav-box {
+        background: #ffffff !important;
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 10px !important;
+        padding: 4px 8px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+      }
+
+      #tab-schedule .week-nav-btn {
+        border-radius: 7px !important;
+        padding: 5px 12px !important;
+        transition: 0.2s;
+      }
+
+      /* Biến bảng Ghi chú ca làm (CA A, B, C) thành 3 thẻ ngang hiện đại */
+      #tab-schedule .excel-legend-table {
+        border: none !important;
+        background: transparent !important;
+        margin: 0 !important;
+      }
+
+      #tab-schedule .excel-legend-table tbody {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+      }
+
+      #tab-schedule .excel-legend-table tr:first-child {
+        display: none !important;
+      }
+
+      #tab-schedule .excel-legend-table tr:not(:first-child) {
+        display: inline-flex !important;
+        align-items: center !important;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+      }
+
+      #tab-schedule .excel-legend-table td {
+        border: none !important;
+        padding: 6px 12px !important;
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
+      }
+
+      /* Hàng nút hành động của Quản lý căn phải gọn gàng */
+      #tab-schedule .excel-header-box > div:last-child {
+        display: flex !important;
+        justify-content: flex-end !important;
+        gap: 10px !important;
+        padding-top: 12px !important;
+        border-top: 1px dashed #cbd5e1 !important;
+      }
+
+      #tab-schedule .excel-header-box > div:last-child button {
+        padding: 8px 16px !important;
+        border-radius: 9px !important;
+        font-size: 13px !important;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06) !important;
+      }
+    }
   </style>
 </head>
 <body>
