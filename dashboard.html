@@ -2,10 +2,8 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">  <title>Carmel Coffee</title>
-  <meta name="theme-color" content="#241811">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carmel Coffee</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,26 +11,7 @@
   <link rel="apple-touch-icon" href="/logocarmel.jpg">
 <link rel="icon" type="image/jpeg" href="/logocarmel.jpg">
   <style>
-html {
-      background-color: #241811 !important;
-    }
-
-    @media (max-width: 768px) {
-      body {
-        background-color: #f1f5f9 !important;
-        background-image:
-          linear-gradient(95deg, rgba(20, 14, 10, 0.72) 0%, rgba(20, 14, 10, 0.32) 55%, rgba(20, 14, 10, 0.12) 100%),
-          url('/anhcarmelcoffee.jpg') !important;
-        background-repeat: no-repeat !important;
-        background-size: 100% 165px !important;
-        background-position: top center !important;
-      }
-
-      .topbar {
-        background: transparent !important;
-        box-shadow: none !important;
-      }
-    }     /* --- DECOR TOÀN BỘ BẢNG DANH SÁCH TRÊN ĐIỆN THOẠI: CHỮ NẰM NGANG, KHÔNG XUỐNG DÒNG --- */
+    /* --- DECOR TOÀN BỘ BẢNG DANH SÁCH TRÊN ĐIỆN THOẠI: CHỮ NẰM NGANG, KHÔNG XUỐNG DÒNG --- */
     @media (max-width: 768px) {
       .custom-table {
         min-width: 680px !important;
@@ -1251,20 +1230,11 @@ html {
     }
 
     /* Tối ưu trên điện thoại: bỏ hẳn khung đen dài để lộ toàn bộ ảnh quán */
-@media (max-width: 768px) {
+    @media (max-width: 768px) {
       .topbar {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: 100% !important;
         background-position: right 35% !important;
-        padding: calc(env(safe-area-inset-top, 44px) + 8px) 14px 12px 14px !important;
+        padding: 12px 14px !important;
         gap: 12px !important;
-      }
-
-      .content-container {
-        padding-top: calc(env(safe-area-inset-top, 44px) + 108px) !important;
       }
 
       #pageTitle strong {
@@ -1280,6 +1250,7 @@ html {
         padding: 2px 0 0 0 !important;
       }
     }
+
     /* Tối ưu trên máy tính */
     @media (min-width: 769px) {
       .topbar {
