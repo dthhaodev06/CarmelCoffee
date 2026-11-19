@@ -2,8 +2,9 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carmel Coffee</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">  <title>Carmel Coffee</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1233,8 +1234,7 @@
     @media (max-width: 768px) {
       .topbar {
         background-position: right 35% !important;
-        padding: 12px 14px !important;
-        gap: 12px !important;
+padding: calc(env(safe-area-inset-top, 12px) + 10px) 14px 12px 14px !important;        gap: 12px !important;
       }
 
       #pageTitle strong {
