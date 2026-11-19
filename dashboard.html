@@ -1131,15 +1131,15 @@
         gap: 8px;
       }
     }
-    /* --- DECOR THANH TOPBAR BẰNG ẢNH THỰC TẾ CỦA QUÁN (anhcarmelcoffee.jpg) --- */
+/* --- DECOR THANH TOPBAR BẰNG ẢNH THỰC TẾ CỦA QUÁN (LỘ RÕ BIỂN HIỆU) --- */
     .topbar {
       background-image:
-        linear-gradient(95deg, rgba(28, 18, 13, 0.78) 0%, rgba(28, 18, 13, 0.55) 55%, rgba(28, 18, 13, 0.32) 100%),
+        linear-gradient(95deg, rgba(20, 14, 10, 0.72) 0%, rgba(20, 14, 10, 0.32) 55%, rgba(20, 14, 10, 0.12) 100%),
         url('/anhcarmelcoffee.jpg') !important;
       background-size: cover !important;
-      background-position: right 28% !important;
+      background-position: right 38% !important;
       background-repeat: no-repeat !important;
-      border-bottom: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.25) !important;
       box-shadow: 0 4px 16px rgba(15, 23, 42, 0.14) !important;
       color: #ffffff !important;
       position: sticky;
@@ -1151,7 +1151,7 @@
       display: flex !important;
       flex-direction: column !important;
       gap: 2px !important;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
     }
 
     #pageTitle::before {
@@ -1170,11 +1170,10 @@
       letter-spacing: 0.2px;
     }
 
-    /* Nút mở menu kính mờ trên điện thoại */
     .mobile-menu-btn {
-      background: rgba(255, 255, 255, 0.18) !important;
-      backdrop-filter: blur(8px) !important;
-      -webkit-backdrop-filter: blur(8px) !important;
+      background: rgba(20, 14, 10, 0.45) !important;
+      backdrop-filter: blur(6px) !important;
+      -webkit-backdrop-filter: blur(6px) !important;
       border: 1px solid rgba(255, 255, 255, 0.35) !important;
       color: #ffffff !important;
       border-radius: 11px !important;
@@ -1186,38 +1185,43 @@
 
     .mobile-menu-btn:active {
       transform: scale(0.95);
-      background: rgba(255, 255, 255, 0.28) !important;
+      background: rgba(20, 14, 10, 0.65) !important;
     }
 
-    /* Cụm thông tin tài khoản */
     .user-info {
       gap: 8px !important;
     }
 
     #userRoleBadge {
-      padding: 4px 11px !important;
+      padding: 4px 12px !important;
       border-radius: 20px !important;
       font-size: 11.5px !important;
       font-weight: 700 !important;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28) !important;
     }
 
     #userNameDisplay {
       color: #ffffff !important;
-      font-size: 13.5px !important;
+      font-size: 13px !important;
       font-weight: 700 !important;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      background: rgba(20, 14, 10, 0.48) !important;
+      backdrop-filter: blur(6px) !important;
+      -webkit-backdrop-filter: blur(6px) !important;
+      padding: 4px 12px !important;
+      border-radius: 20px !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     .topbar .btn-reset {
-      background: rgba(220, 38, 38, 0.85) !important;
-      backdrop-filter: blur(6px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      background: rgba(220, 38, 38, 0.9) !important;
+      border: 1px solid rgba(255, 255, 255, 0.35) !important;
       color: #ffffff !important;
       border-radius: 20px !important;
-      padding: 5px 13px !important;
+      padding: 4px 13px !important;
       font-size: 11.5px !important;
       font-weight: 700 !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28) !important;
       transition: 0.2s;
     }
 
@@ -1225,12 +1229,12 @@
       background: #dc2626 !important;
     }
 
-    /* Tối ưu riêng cho màn hình điện thoại */
+    /* Tối ưu trên điện thoại: bỏ hẳn khung đen dài để lộ toàn bộ ảnh quán */
     @media (max-width: 768px) {
       .topbar {
-        background-position: right 22% !important;
+        background-position: right 35% !important;
         padding: 12px 14px !important;
-        gap: 10px !important;
+        gap: 12px !important;
       }
 
       #pageTitle strong {
@@ -1239,12 +1243,11 @@
       }
 
       .user-info {
-        background: rgba(20, 14, 10, 0.45) !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.22) !important;
-        border-radius: 12px !important;
-        padding: 6px 10px !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: none !important;
+        padding: 2px 0 0 0 !important;
       }
     }
 
@@ -1253,10 +1256,10 @@
       .topbar {
         height: 68px !important;
         padding: 0 24px !important;
-        background-position: center 26% !important;
+        background-position: center 32% !important;
       }
     }
-      </style>
+          </style>
 </head>
 <body>
 
