@@ -791,6 +791,82 @@
         font-size: 13.5px !important;
       }
     }
+    /* --- DECOR KHUNG QUY ĐỊNH & CHỌN TUẦN ĐẸP TRÊN MÁY TÍNH --- */
+    @media (min-width: 769px) {
+      #tab-shift .shift-legend {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        background: linear-gradient(135deg, #fffdf5 0%, #fef9e7 100%) !important;
+        border: 1.5px solid #f3d078 !important;
+        border-radius: 14px !important;
+        padding: 14px 20px !important;
+        box-shadow: 0 4px 12px rgba(180, 83, 9, 0.06) !important;
+        gap: 16px !important;
+      }
+
+      #tab-shift .shift-legend-row1 {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+      }
+
+      #tab-shift .shift-legend-row1 > strong {
+        font-size: 14px !important;
+        color: #78350f !important;
+        margin-right: 4px !important;
+      }
+
+      /* Bọc từng Ca A, B, C thành thẻ trắng bo góc sang trọng */
+      #tab-shift .shift-legend-row1 > div {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        background: #ffffff !important;
+        border: 1px solid #fde68a !important;
+        border-radius: 10px !important;
+        padding: 6px 12px !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #334155 !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+      }
+
+      #tab-shift .shift-legend-row2 {
+        border-top: none !important;
+        padding-top: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+      }
+
+      #tab-shift .shift-legend-row2 > span {
+        font-size: 13.5px !important;
+        color: #92400e !important;
+      }
+
+      #tab-shift .week-nav-box {
+        background: #ffffff !important;
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 10px !important;
+        padding: 4px 8px !important;
+        gap: 12px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+      }
+
+      #tab-shift .week-nav-btn {
+        background: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 7px !important;
+        padding: 5px 12px !important;
+        color: #1e293b !important;
+        transition: 0.2s;
+      }
+
+      #tab-shift .week-nav-btn:hover {
+        background: #e2e8f0 !important;
+      }
+    }
   </style>
 </head>
 <body>
