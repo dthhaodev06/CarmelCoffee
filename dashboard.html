@@ -1433,8 +1433,21 @@
             <h3>Chi Tiết Các Ngày Làm Trong Tuần</h3>
             <span id="myStatsDateRange" style="font-size: 12.5px; font-weight: 600; color: #0f766e; background: #f0fdfa; padding: 4px 10px; border-radius: 8px; border: 1px solid #ccfbf1;">--/-- - --/--</span>
           </div>
-          <div class="week-days-breakdown" id="myWeekDaysBreakdown"></div>
-        </div>
+           <div style="overflow-x: auto;">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th style="width: 55px; text-align: center;">STT</th>
+                  <th>Thứ</th>
+                  <th>Ngày</th>
+                  <th style="text-align: center;">Ca Làm</th>
+                  <th style="text-align: center;">Số Tiếng</th>
+                  <th style="text-align: center;">Trạng Thái</th>
+                </tr>
+              </thead>
+              <tbody id="myWeekDaysBreakdown"></tbody>
+            </table>
+          </div>        </div>
       </section>
 
       <!-- TAB 4: CHẤM CÔNG -->
@@ -2488,16 +2501,27 @@ function initScheduleGrid() {
           workingDayNames.push(day.label.replace('Thứ ', 'T').replace('Chủ Nhật', 'CN'));
         }
 
-        const card = document.createElement('div');
-        card.className = `day-work-card ${isWorking ? 'working' : 'off'}`;
-        card.innerHTML = `
-          <div class="day-work-name">${day.label}</div>
-          <div class="day-work-date">${dateStr}</div>
-          <div class="day-work-badge">${isWorking ? escapeHtml(shiftVal) : 'Nghỉ (Off)'}</div>
-          <div class="day-work-hours">${isWorking ? hours + ' tiếng' : '0 tiếng'}</div>
+const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="text-align: center;"><strong>${index + 1}</strong></td>
+          <td><strong>${day.label}</strong></td>
+          <td>${dateStr}/${dateObj.getFullYear()}</td>
+          <td style="text-align: center;">
+            <span style="display: inline-block; padding: 4px 12px; border-radius: 6px; font-weight: 700; font-size: 12.5px; background: ${isWorking ? '#dcfce7' : '#ffe4e6'}; color: ${isWorking ? '#15803d' : '#e11d48'};">
+              ${isWorking ? escapeHtml(shiftVal) : 'Nghỉ (Off)'}
+            </span>
+          </td>
+          <td style="text-align: center; font-weight: 700; color: ${isWorking ? '#0284c7' : '#94a3b8'};">
+            ${isWorking ? hours + ' tiếng' : '0 tiếng'}
+          </td>
+          <td style="text-align: center;">
+            ${isWorking
+              ? '<span style="color: #16a34a; font-weight: 600;">Có lịch làm</span>'
+              : '<span style="color: #94a3b8; font-weight: 500;">Ngày nghỉ</span>'}
+          </td>
         `;
-        breakdownEl.appendChild(card);
-      });
+        breakdownEl.appendChild(tr);
+            });
 
       weekHoursCount = Math.round(weekHoursCount * 10) / 10;
 
