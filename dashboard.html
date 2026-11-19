@@ -1131,61 +1131,62 @@
         gap: 8px;
       }
     }
-    /* --- DECOR THANH TOPBAR THƯƠNG HIỆU CARMEL COFFEE SANG TRỌNG --- */
+    /* --- DECOR THANH TOPBAR SÁNG HIỆN ĐẠI CHUẨN APP iOS --- */
     .topbar {
-      background: linear-gradient(135deg, #2b1a12 0%, #462b1d 55%, #5c3a21 100%) !important;
-      border-bottom: 2px solid #d97706 !important;
-      box-shadow: 0 4px 16px rgba(43, 26, 18, 0.18) !important;
-      color: #ffffff !important;
+      background: rgba(255, 255, 255, 0.92) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04) !important;
+      color: #0f172a !important;
       position: sticky;
       top: 0;
       z-index: 900;
     }
 
-    /* Tự động hiển thị nhãn thương hiệu CARMEL COFFEE phía trên tiêu đề trang */
+    /* Nhãn thương hiệu CARMEL COFFEE thanh thoát phía trên tiêu đề */
     #pageTitle {
       display: flex !important;
       flex-direction: column !important;
-      gap: 2px !important;
+      gap: 1px !important;
     }
 
     #pageTitle::before {
-      content: "CARMEL COFFEE • HỆ THỐNG QUẢN LÝ";
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-      color: #fbbf24;
+      content: "CARMEL COFFEE";
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #92400e;
       text-transform: uppercase;
     }
 
     #pageTitle strong {
-      color: #ffffff !important;
+      color: #0f172a !important;
       font-size: 16.5px !important;
       font-weight: 700 !important;
-      letter-spacing: 0.2px;
+      letter-spacing: -0.2px;
     }
 
-    /* Nút mở menu trên mobile */
+    /* Nút mở menu trên mobile tông xanh nhạt tinh tế */
     .mobile-menu-btn {
-      background: rgba(255, 255, 255, 0.14) !important;
-      border: 1px solid rgba(255, 255, 255, 0.25) !important;
-      color: #fef3c7 !important;
-      border-radius: 10px !important;
+      background: #eff6ff !important;
+      border: 1px solid #bfdbfe !important;
+      color: #2563eb !important;
+      border-radius: 11px !important;
       width: 38px !important;
       height: 38px !important;
       font-size: 18px !important;
-      backdrop-filter: blur(4px);
       transition: 0.2s;
     }
 
     .mobile-menu-btn:active {
       transform: scale(0.95);
-      background: rgba(255, 255, 255, 0.24) !important;
+      background: #dbeafe !important;
     }
 
-    /* Cụm thông tin tài khoản bên phải / hàng dưới */
+    /* Khung thông tin tài khoản gọn gàng, sáng sủa */
     .user-info {
-      gap: 10px !important;
+      gap: 8px !important;
     }
 
     #userRoleBadge {
@@ -1193,47 +1194,47 @@
       border-radius: 20px !important;
       font-size: 11.5px !important;
       font-weight: 700 !important;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
     }
 
     #userNameDisplay {
-      color: #fef3c7 !important;
+      color: #1e293b !important;
       font-size: 13.5px !important;
       font-weight: 700 !important;
-      letter-spacing: 0.2px;
     }
 
     .topbar .btn-reset {
-      background: rgba(255, 255, 255, 0.14) !important;
-      border: 1px solid rgba(255, 255, 255, 0.25) !important;
-      color: #ffffff !important;
+      background: #fff1f2 !important;
+      border: 1px solid #fecdd3 !important;
+      color: #e11d48 !important;
       border-radius: 20px !important;
-      padding: 5px 14px !important;
+      padding: 5px 13px !important;
       font-size: 11.5px !important;
-      font-weight: 600 !important;
+      font-weight: 700 !important;
       transition: 0.2s;
     }
 
     .topbar .btn-reset:hover {
-      background: #dc2626 !important;
-      border-color: #ef4444 !important;
+      background: #e11d48 !important;
+      color: #ffffff !important;
     }
 
     /* Tối ưu riêng cho màn hình điện thoại */
     @media (max-width: 768px) {
       .topbar {
-        padding: 12px 14px !important;
-        gap: 10px !important;
+        padding: 11px 14px !important;
+        gap: 9px !important;
       }
 
       #pageTitle strong {
-        font-size: 15px !important;
-        line-height: 1.25 !important;
+        font-size: 15.5px !important;
+        line-height: 1.2 !important;
       }
 
       .user-info {
-        padding-top: 9px !important;
-        border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        padding: 6px 10px !important;
       }
     }
 
