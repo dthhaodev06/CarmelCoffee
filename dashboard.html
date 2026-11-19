@@ -2608,6 +2608,7 @@ function initScheduleGrid() {
       const workingDayNames = [];
 
       breakdownEl.innerHTML = '';
+      let stt = 1;
       daysOfWeek.forEach((day, index) => {
         const dateObj = new Date(monday);
         dateObj.setDate(monday.getDate() + index);
@@ -2624,10 +2625,10 @@ function initScheduleGrid() {
           weekShiftsCount += shiftBlocks ? shiftBlocks.length : (hours > 6 ? 2 : 1);
           workingDayNames.push(day.label.replace('Thứ ', 'T').replace('Chủ Nhật', 'CN'));
         }
-
+if (!isWorking) return;
 const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td style="text-align: center;"><strong>${index + 1}</strong></td>
+          <td style="text-align: center;"><strong>${stt++}</strong></td>
           <td><strong>${day.label}</strong></td>
           <td>${dateStr}/${dateObj.getFullYear()}</td>
           <td style="text-align: center;">
