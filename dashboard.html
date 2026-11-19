@@ -867,23 +867,24 @@
         background: #e2e8f0 !important;
       }
     }
-    /* --- DECOR PHẦN ĐẦU TAB BẢNG LỊCH LÀM ĐẸP & CÂN ĐỐI TRÊN MÁY TÍNH --- */
+/* --- DECOR PHẦN ĐẦU TAB BẢNG LỊCH LÀM PHẲNG & ĐỀU TRÊN MÁY TÍNH --- */
     @media (min-width: 769px) {
       #tab-schedule .excel-header-box {
         display: flex !important;
         flex-direction: column !important;
         align-items: stretch !important;
-        gap: 14px !important;
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+        gap: 12px !important;
+        background: #f8fafc !important;
         border: 1.5px solid #e2e8f0 !important;
         border-radius: 14px !important;
-        padding: 16px 20px !important;
-        margin-bottom: 18px !important;
+        padding: 14px 18px !important;
+        margin-bottom: 16px !important;
       }
 
-      /* Hàng 1: Tiêu đề bên trái - Chọn tuần bên phải */
+      /* Gộp tiêu đề, 3 thẻ Ca A/B/C và thanh chọn tuần nằm trên cùng 1 hàng ngang thẳng tắp */
       #tab-schedule .excel-header-box > div:first-child {
         display: flex !important;
+        flex-direction: row !important;
         flex-wrap: wrap !important;
         align-items: center !important;
         justify-content: space-between !important;
@@ -892,35 +893,19 @@
       }
 
       #tab-schedule .excel-header-box > div:first-child > div:first-child {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        width: 100% !important;
-        margin-bottom: 4px !important;
+        display: contents !important;
       }
 
       #tab-schedule h3 {
-        font-size: 18px !important;
+        order: 1;
+        margin: 0 !important;
+        font-size: 16.5px !important;
         color: #0f766e !important;
-        letter-spacing: 0.3px;
+        white-space: nowrap !important;
       }
 
-      #tab-schedule .week-nav-box {
-        background: #ffffff !important;
-        border: 1.5px solid #cbd5e1 !important;
-        border-radius: 10px !important;
-        padding: 4px 8px !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
-      }
-
-      #tab-schedule .week-nav-btn {
-        border-radius: 7px !important;
-        padding: 5px 12px !important;
-        transition: 0.2s;
-      }
-
-      /* Biến bảng Ghi chú ca làm (CA A, B, C) thành 3 thẻ ngang hiện đại */
       #tab-schedule .excel-legend-table {
+        order: 2;
         border: none !important;
         background: transparent !important;
         margin: 0 !important;
@@ -929,7 +914,7 @@
       #tab-schedule .excel-legend-table tbody {
         display: flex !important;
         align-items: center !important;
-        gap: 10px !important;
+        gap: 8px !important;
       }
 
       #tab-schedule .excel-legend-table tr:first-child {
@@ -941,35 +926,45 @@
         align-items: center !important;
         background: #ffffff !important;
         border: 1px solid #cbd5e1 !important;
-        border-radius: 10px !important;
+        border-radius: 8px !important;
         overflow: hidden !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
       }
 
       #tab-schedule .excel-legend-table td {
         border: none !important;
-        padding: 6px 12px !important;
-        font-size: 12.5px !important;
+        padding: 5px 10px !important;
+        font-size: 12px !important;
         font-weight: 600 !important;
       }
 
-      /* Hàng nút hành động của Quản lý căn phải gọn gàng */
+      #tab-schedule .week-nav-box {
+        order: 3;
+        background: #ffffff !important;
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 9px !important;
+        padding: 3px 6px !important;
+        margin-left: auto !important;
+      }
+
+      #tab-schedule .week-nav-btn {
+        border-radius: 6px !important;
+        padding: 4px 10px !important;
+      }
+
+      /* Hàng nút của Quản lý: chỉ hiện khi có nút hiển thị, tự ẩn hoàn toàn với Nhân viên */
       #tab-schedule .excel-header-box > div:last-child {
         display: flex !important;
         justify-content: flex-end !important;
-        gap: 10px !important;
-        padding-top: 12px !important;
+        gap: 8px !important;
+        padding-top: 10px !important;
         border-top: 1px dashed #cbd5e1 !important;
       }
 
-      #tab-schedule .excel-header-box > div:last-child button {
-        padding: 8px 16px !important;
-        border-radius: 9px !important;
-        font-size: 13px !important;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06) !important;
+      #tab-schedule .excel-header-box > div:last-child:not(:has(button[style*="inline-block"])) {
+        display: none !important;
       }
     }
-  </style>
+      </style>
 </head>
 <body>
 
