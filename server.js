@@ -3,9 +3,11 @@ const cors = require('cors');
 const path = require('path');
 const mongoose = require('mongoose');
 const webpush = require('web-push');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
 
 app.use(cors());
 app.use(express.json());
@@ -14,7 +16,11 @@ app.use(express.static(__dirname));
 // ====================================================
 // 1. KẾT NỐI CLOUD DATABASE (MONGODB ATLAS)
 // ====================================================
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://huyhao0620_db_user:Sy42pPnptuaa0x07@cluster0.w5ubkha.mongodb.net/carmelcoffee';
+const MONGO_URI = process.env.MONGO_URI;
+if (!MONGO_URI) {
+  console.error('❌ Thiếu biến môi trường MONGO_URI');
+  process.exit(1);
+}
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Đã kết nối Cloud Database (MongoDB) thành công!'))
@@ -27,6 +33,42 @@ const StoreSchema = new mongoose.Schema({
 const StoreModel = mongoose.model('Store', StoreSchema);
 
 let memoryCache = null;
+const activeSessions = new Map();
+
+function createSession(user) {
+  const token = crypto.randomBytes(32).toString('hex');
+  activeSessions.set(token, {
+    name: user.name,
+    role: user.role,
+    expiresAt: Date.now() + 12 * 60 * 60 * 1000
+  });
+  return token;
+}
+
+function getSession(req) {
+  const auth = req.headers.authorization || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+  const session = token ? activeSessions.get(token) : null;
+  if (!session || session.expiresAt < Date.now()) {
+    if (token) activeSessions.delete(token);
+    return null;
+  }
+  return session;
+}
+
+function requireAuth(req, res, next) {
+  const session = getSession(req);
+  if (!session) return res.status(401).json({ success: false, message: 'Phiên đăng nhập đã hết hạn!' });
+  req.auth = session;
+  next();
+}
+
+function requireManager(req, res, next) {
+  if (!req.auth || req.auth.role !== 'manager') {
+    return res.status(403).json({ success: false, message: 'Chỉ Quản lý mới có quyền thực hiện!' });
+  }
+  next();
+}
 
 function ensureDataStructure(data) {
   if (!data.users) data.users = { "Admin": { role: "manager", pass: "123456" } };
@@ -48,6 +90,10 @@ function ensureDataStructure(data) {
   if (!data.carmel_revenue_records) data.carmel_revenue_records = data.revenue;
   if (!data.carmel_expense_records) data.carmel_expense_records = data.expenses;
   if (!data.pushSubscriptions) data.pushSubscriptions = [];
+  if (!data.carmel_registrations_by_week) data.carmel_registrations_by_week = {};
+  if (!data.carmel_rosters_by_week) data.carmel_rosters_by_week = {};
+  if (!data.carmel_full_users) data.carmel_full_users = data.users;
+  if (!data.carmel_staff_rates) data.carmel_staff_rates = {};
   return data;
 }
 
@@ -97,13 +143,31 @@ function logActivity(data, actor, action, detail) {
 // 2. CÁC API QUẢN LÝ DỮ LIỆU & NHÂN SỰ
 // ====================================================
 
-app.get('/api/data', (req, res) => {
-  res.json(readData());
+app.get('/api/data', requireAuth, (req, res) => {
+  const data = JSON.parse(JSON.stringify(readData()));
+  if (req.auth.role !== 'manager') {
+    if (data.users) {
+      Object.keys(data.users).forEach(name => {
+        if (data.users[name]) data.users[name].pass = '';
+      });
+    }
+    if (data.carmel_full_users) {
+      Object.keys(data.carmel_full_users).forEach(name => {
+        if (data.carmel_full_users[name]) data.carmel_full_users[name].pass = '';
+      });
+    }
+  }
+  res.json(data);
 });
 
-app.post('/api/save-data', (req, res) => {
+app.post('/api/save-data', requireAuth, (req, res) => {
   const incomingData = req.body;
   const data = readData();
+  const managerOnlyKeys = ['users', 'carmel_full_users', 'carmel_staff_rates', 'masterRoster', 'carmel_master_roster', 'carmel_rosters_by_week', 'revenue', 'carmel_revenue_records', 'expenses', 'carmel_expense_records'];
+  if (req.auth.role !== 'manager') {
+    const attemptedManagerWrite = managerOnlyKeys.some(key => Object.prototype.hasOwnProperty.call(incomingData, key));
+    if (attemptedManagerWrite) return res.status(403).json({ success: false, message: 'Chỉ Quản lý mới được cập nhật dữ liệu này!' });
+  }
   Object.assign(data, incomingData);
 
   if (incomingData.carmel_master_roster) data.masterRoster = incomingData.carmel_master_roster;
@@ -112,6 +176,19 @@ app.post('/api/save-data', (req, res) => {
   if (incomingData.carmel_inventory) data.inventory = incomingData.carmel_inventory;
   if (incomingData.carmel_revenue_records) data.revenue = incomingData.carmel_revenue_records;
   if (incomingData.carmel_expense_records) data.expenses = incomingData.carmel_expense_records;
+  if (incomingData.carmel_full_users) {
+    data.carmel_full_users = incomingData.carmel_full_users;
+    Object.keys(incomingData.carmel_full_users).forEach(name => {
+      if (data.users[name]) {
+        data.users[name].role = incomingData.carmel_full_users[name].role;
+        data.users[name].pass = incomingData.carmel_full_users[name].pass;
+        data.users[name].hourlyRate = incomingData.carmel_full_users[name].hourlyRate;
+      }
+    });
+  }
+  if (incomingData.carmel_staff_rates) data.carmel_staff_rates = incomingData.carmel_staff_rates;
+  if (incomingData.carmel_registrations_by_week) data.carmel_registrations_by_week = incomingData.carmel_registrations_by_week;
+  if (incomingData.carmel_rosters_by_week) data.carmel_rosters_by_week = incomingData.carmel_rosters_by_week;
 
   writeData(data);
   res.json({ success: true });
@@ -135,17 +212,12 @@ app.post('/api/login', (req, res) => {
   logActivity(data, name, 'Đăng nhập', 'Vào hệ thống thành công');
   writeData(data);
 
-  res.json({
-    success: true,
-    user: {
-      name: name,
-      role: data.users[name].role
-    }
-  });
+  const user = { name, role: data.users[name].role };
+  res.json({ success: true, user, token: createSession(user) });
 });
 
-app.post('/api/users/create', (req, res) => {
-  const { name, pass, role, actor } = req.body;
+app.post('/api/users/create', requireAuth, requireManager, (req, res) => {
+  const { name, pass, role, hourlyRate, actor } = req.body;
   const data = readData();
 
   if (!name || !pass) {
@@ -158,7 +230,9 @@ app.post('/api/users/create', (req, res) => {
   }
 
   const userRole = role || 'employee';
-  data.users[staffName] = { role: userRole, pass: pass.trim() };
+  const rate = Number.isFinite(Number(hourlyRate)) ? Math.max(0, Number(hourlyRate)) : 25000;
+  data.users[staffName] = { role: userRole, pass: pass.trim(), hourlyRate: rate };
+  data.carmel_full_users = data.users;
   data.carmel_user_accounts[staffName] = userRole;
 
   if (!data.masterRoster[staffName]) {
@@ -173,7 +247,7 @@ app.post('/api/users/create', (req, res) => {
   res.json({ success: true, message: `Đã cấp tài khoản cho ${staffName} thành công!` });
 });
 
-app.delete('/api/users/:name', (req, res) => {
+app.delete('/api/users/:name', requireAuth, requireManager, (req, res) => {
   const staffName = req.params.name;
   const actor = req.query.actor || 'Admin';
   const data = readData();
@@ -184,6 +258,8 @@ app.delete('/api/users/:name', (req, res) => {
 
   if (data.users[staffName]) {
     delete data.users[staffName];
+    delete data.carmel_full_users[staffName];
+    delete data.carmel_staff_rates[staffName];
     delete data.carmel_user_accounts[staffName];
     if (data.masterRoster) delete data.masterRoster[staffName];
     if (data.carmel_master_roster) delete data.carmel_master_roster[staffName];
@@ -198,7 +274,7 @@ app.delete('/api/users/:name', (req, res) => {
   res.status(404).json({ success: false, message: 'Không tìm thấy tài khoản!' });
 });
 
-app.post('/api/shifts/clear-roster', (req, res) => {
+app.post('/api/shifts/clear-roster', requireAuth, requireManager, (req, res) => {
   const data = readData();
   const emptyRoster = {};
   Object.keys(data.users || {}).forEach(name => {
@@ -219,7 +295,7 @@ app.post('/api/shifts/clear-roster', (req, res) => {
 });
 
 // 7. Cập nhật kho -> Bắn thông báo NVL (khi bấm mở thẳng tab-nvl)
-app.post('/api/inventory', (req, res) => {
+app.post('/api/inventory', requireAuth, requireManager, (req, res) => {
   const { items, actor } = req.body;
   const data = readData();
   data.inventory = items;
@@ -244,11 +320,16 @@ app.post('/api/inventory', (req, res) => {
 });
 
 // 8. Đăng ký ca làm -> Báo Quản lý (khi bấm mở thẳng tab-shift)
-app.post('/api/shifts/register', (req, res) => {
-  const { staffName, schedule } = req.body;
+app.post('/api/shifts/register', requireAuth, (req, res) => {
+  const { staffName, schedule, weekKey } = req.body;
+  if (staffName !== req.auth.name) return res.status(403).json({ success: false, message: 'Không thể đăng ký thay nhân viên khác!' });
   const data = readData();
   data.registrations[staffName] = schedule;
   data.all_staff_registrations[staffName] = schedule;
+  if (weekKey) {
+    if (!data.carmel_registrations_by_week[weekKey]) data.carmel_registrations_by_week[weekKey] = {};
+    data.carmel_registrations_by_week[weekKey][staffName] = schedule;
+  }
   logActivity(data, staffName, 'Đăng ký ca làm', 'Nộp phiếu đăng ký tuần');
   writeData(data);
 
@@ -263,8 +344,11 @@ app.post('/api/shifts/register', (req, res) => {
 });
 
 // 9. Yêu cầu Pass / Đổi ca -> Báo Quản lý (khi bấm mở thẳng tab-request)
-app.post('/api/shifts/request', (req, res) => {
+app.post('/api/shifts/request', requireAuth, (req, res) => {
   const { newRequest } = req.body;
+  if (!newRequest || newRequest.from !== req.auth.name) {
+    return res.status(403).json({ success: false, message: 'Không thể tạo yêu cầu thay nhân viên khác!' });
+  }
   const data = readData();
   data.shiftRequests.push(newRequest);
   data.carmel_shift_requests.push(newRequest);
@@ -282,8 +366,8 @@ newRequest.type === 'SWAP' ? '/dashboard.html?tab=tab-swap-shift' : '/dashboard.
 });
 
 // 10. Duyệt / Từ chối Pass hoặc Đổi ca -> GỬI THÔNG BÁO VỀ MÁY NHÂN VIÊN LIÊN QUAN
-app.post('/api/shifts/handle-request', (req, res) => {
-  const { reqId, status, actor, masterRoster } = req.body;
+app.post('/api/shifts/handle-request', requireAuth, requireManager, (req, res) => {
+  const { reqId, status, actor, masterRoster, weekKey } = req.body;
   const data = readData();
   const targetReq = data.shiftRequests.find(r => r.id === reqId);
 
@@ -294,6 +378,10 @@ app.post('/api/shifts/handle-request', (req, res) => {
     if (masterRoster) {
       data.masterRoster = masterRoster;
       data.carmel_master_roster = masterRoster;
+      if (weekKey) {
+        if (!data.carmel_rosters_by_week) data.carmel_rosters_by_week = {};
+        data.carmel_rosters_by_week[weekKey] = masterRoster;
+      }
     }
     logActivity(data, actor, `${status === 'APPROVED' ? 'Phê duyệt' : 'Từ chối'} yêu cầu`, `Mã yêu cầu: #${reqId}`);
     writeData(data);
@@ -313,7 +401,7 @@ targetReq.type === 'SWAP' ? '/dashboard.html?tab=tab-swap-shift' : '/dashboard.h
 });
 
 // 10B. API BÁO CHO TOÀN BỘ NHÂN VIÊN KHI QUẢN LÝ ĐÃ XẾP XONG BẢNG LỊCH LÀM
-app.post('/api/shifts/publish-roster', (req, res) => {
+app.post('/api/shifts/publish-roster', requireAuth, requireManager, (req, res) => {
   const { actor, weekLabel } = req.body;
   const data = readData();
   logActivity(data, actor || 'Quản lý', 'Công bố lịch làm', `Đã hoàn tất xếp lịch (${weekLabel || 'tuần mới'})`);
@@ -330,7 +418,7 @@ app.post('/api/shifts/publish-roster', (req, res) => {
 });
 
 // 11. Doanh thu
-app.post('/api/revenue', (req, res) => {
+app.post('/api/revenue', requireAuth, requireManager, (req, res) => {
   const { date, record, actor } = req.body;
   const data = readData();
   data.revenue[date] = record;
@@ -341,7 +429,7 @@ app.post('/api/revenue', (req, res) => {
 });
 
 // 12. Chi phí
-app.post('/api/expenses', (req, res) => {
+app.post('/api/expenses', requireAuth, requireManager, (req, res) => {
   const { item, actor } = req.body;
   const data = readData();
   data.expenses.push(item);
@@ -351,7 +439,7 @@ app.post('/api/expenses', (req, res) => {
   res.json({ success: true });
 });
 
-app.delete('/api/expenses/:id', (req, res) => {
+app.delete('/api/expenses/:id', requireAuth, requireManager, (req, res) => {
   const id = parseInt(req.params.id, 10);
   const actor = req.query.actor || 'Quản lý';
   const data = readData();
@@ -363,15 +451,19 @@ app.delete('/api/expenses/:id', (req, res) => {
   res.json({ success: true });
 });
 
-app.get('/api/logs', (req, res) => {
+app.get('/api/logs', requireAuth, requireManager, (req, res) => {
   res.json(readData().auditLogs);
 });
 
 // ====================================================
 // 3. HỆ THỐNG THÔNG BÁO ĐẨY 2 CHIỀU & DEEP-LINK TAB
 // ====================================================
-const publicVapidKey = 'BMVrq03lPj1UYEJVVQ20pvFDTARfl_AbUpQJFoeEkmkQMzF6KTuKu0Zo28PmwLbaCRw5rv__ineMDq2bXJrjk_g';
-const privateVapidKey = 'iOH9tXmt6ysad8u_UAcNtSptnzuEIhGnxMrqZVJnRCI';
+const publicVapidKey = process.env.VAPID_PUBLIC_KEY;
+const privateVapidKey = process.env.VAPID_PRIVATE_KEY;
+if (!publicVapidKey || !privateVapidKey) {
+  console.error('❌ Thiếu biến môi trường VAPID_PUBLIC_KEY hoặc VAPID_PRIVATE_KEY');
+  process.exit(1);
+}
 
 webpush.setVapidDetails(
   'mailto:carmelcoffee@gmail.com',
@@ -410,7 +502,7 @@ function sendPushToTargets(filterFn, title, message, targetUrl = '/dashboard.htm
 }
 
 // API nhận đăng ký thiết bị (Lưu cả Quản lý và Nhân viên kèm tên tài khoản)
-app.post('/api/subscribe', (req, res) => {
+app.post('/api/subscribe', requireAuth, (req, res) => {
   const { subscription, role, actor } = req.body;
   const data = readData();
   if (!Array.isArray(data.pushSubscriptions)) data.pushSubscriptions = [];
@@ -438,7 +530,7 @@ app.post('/api/subscribe', (req, res) => {
 });
 
 // API hủy đăng ký Push khi bấm Đăng xuất
-app.post('/api/unsubscribe', (req, res) => {
+app.post('/api/unsubscribe', requireAuth, (req, res) => {
   const { endpoint } = req.body;
   const data = readData();
 
@@ -454,7 +546,7 @@ app.post('/api/unsubscribe', (req, res) => {
   res.json({ success: true });
 });
 
-app.post('/api/test-notify', (req, res) => {
+app.post('/api/test-notify', requireAuth, requireManager, (req, res) => {
   sendPushToTargets(
     s => s.role === 'manager',
     'Carmel Coffee ☕',

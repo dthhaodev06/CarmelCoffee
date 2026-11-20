@@ -2736,12 +2736,27 @@
   </div>
 
   <script>
+    function getLocalDateString(date = new Date()) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
     function escapeHtml(text) {
       if (text === null || text === undefined) return '';
       return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
     }
 
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    async function apiFetch(url, options = {}) {
+      const headers = new Headers(options.headers || {});
+      if (currentUser && currentUser.token) {
+        headers.set('Authorization', `Bearer ${currentUser.token}`);
+      }
+      return fetch(url, { ...options, headers });
+    }
     if (!currentUser || !currentUser.name) {
       alert('Phiên làm việc đã hết hạn. Vui lòng đăng nhập!');
       window.location.href = 'index.html';
@@ -2754,7 +2769,7 @@
           if (reg) {
             const sub = await reg.pushManager.getSubscription();
             if (sub) {
-              await fetch('/api/unsubscribe', {
+              await apiFetch('/api/unsubscribe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ endpoint: sub.endpoint })
@@ -2798,6 +2813,15 @@
       const rostersByWeek = JSON.parse(localStorage.getItem('carmel_rosters_by_week')) || {};
       if (!rostersByWeek[weekKey] && currentWeekOffset === 0) return JSON.parse(localStorage.getItem('carmel_master_roster')) || {};
       return rostersByWeek[weekKey] || {};
+    }
+
+    function getRostersForMonthCalculation() {
+      const rostersByWeek = JSON.parse(localStorage.getItem('carmel_rosters_by_week')) || {};
+      const currentWeekKey = getWeekKey(0);
+      if (!rostersByWeek[currentWeekKey]) {
+        rostersByWeek[currentWeekKey] = JSON.parse(localStorage.getItem('carmel_master_roster')) || {};
+      }
+      return rostersByWeek;
     }
 
     function saveCurrentRoster(roster) {
@@ -2918,7 +2942,7 @@
 
     async function syncDataFromServer() {
       try {
-        const res = await fetch('/api/data');
+        const res = await apiFetch('/api/data');
         if (!res.ok) return;
         const data = await res.json();
 
@@ -2960,7 +2984,7 @@
 
     async function pushDataToServer(payload) {
       try {
-        await fetch('/api/save-data', {
+        await apiFetch('/api/save-data', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -3079,7 +3103,7 @@
       let formattedName = nameInput.charAt(0).toUpperCase() + nameInput.slice(1);
 
       try {
-        const res = await fetch('/api/users/create', {
+        const res = await apiFetch('/api/users/create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: formattedName, pass: passInput, role: roleInput, hourlyRate: rateInput, actor: currentUser.name })
@@ -3149,7 +3173,7 @@
       if (currentUser.role !== 'manager') return;
       if (confirm(`Bạn có chắc muốn xóa tài khoản "${staffName}" không?`)) {
         try {
-          const res = await fetch(`/api/users/${encodeURIComponent(staffName)}?actor=${encodeURIComponent(currentUser.name)}`, { method: 'DELETE' });
+          const res = await apiFetch(`/api/users/${encodeURIComponent(staffName)}?actor=${encodeURIComponent(currentUser.name)}`, { method: 'DELETE' });
           const result = await res.json();
           if (result.success) { alert(`Đã xóa tài khoản!`); await syncDataFromServer(); }
         } catch (e) { alert('Lỗi kết nối máy chủ!'); }
@@ -3195,7 +3219,7 @@
         localStorage.setItem('carmel_inventory', JSON.stringify(inventory));
         renderTable();
         pushDataToServer({ carmel_inventory: inventory });
-        fetch('/api/inventory', {
+        apiFetch('/api/inventory', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ items: inventory, actor: currentUser.name })
@@ -3210,7 +3234,7 @@
         localStorage.setItem('carmel_inventory', JSON.stringify(inventory));
         renderTable();
         pushDataToServer({ carmel_inventory: inventory });
-        fetch('/api/inventory', {
+        apiFetch('/api/inventory', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ items: inventory, actor: currentUser.name })
@@ -3376,7 +3400,7 @@
       saveCurrentRegistrations(allReg);
 
       try {
-        await fetch('/api/shifts/register', {
+        await apiFetch('/api/shifts/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -3641,7 +3665,7 @@
         ? monthInput.value
         : `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
 
-      const allRostersByWeek = JSON.parse(localStorage.getItem('carmel_rosters_by_week')) || {};
+      const allRostersByWeek = getRostersForMonthCalculation();
       let monthShiftsCount = 0;
       let monthHoursCount = 0;
       let monthDaysCount = 0;
@@ -3702,7 +3726,7 @@
       const viewMode = document.getElementById('salaryViewMode') ? document.getElementById('salaryViewMode').value : 'week';
       const selectedMonth = document.getElementById('filterSalaryMonth') ? document.getElementById('filterSalaryMonth').value : '';
       const userAccounts = JSON.parse(localStorage.getItem('carmel_user_accounts')) || {};
-      const allRostersByWeek = JSON.parse(localStorage.getItem('carmel_rosters_by_week')) || {};
+      const allRostersByWeek = getRostersForMonthCalculation();
       const currentRoster = getCurrentRoster();
       const staffList = Object.keys(userAccounts).filter(name => name.toLowerCase() !== 'admin');
 
@@ -3784,7 +3808,18 @@
     }
 
     function exportAllSalaryToExcel() {
-      alert('Đã sẵn sàng xuất toàn bộ bảng công ra file excel!');
+      const table = document.getElementById('salaryTable');
+      if (!table) return;
+      const html = `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>${table.outerHTML}</body></html>`;
+      const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `BangChamCong_${getLocalDateString()}.xls`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     }
 
     const dayNames = { t2: 'Thứ 2', t3: 'Thứ 3', t4: 'Thứ 4', t5: 'Thứ 5', t6: 'Thứ 6', t7: 'Thứ 7', cn: 'Chủ Nhật' };
@@ -3847,7 +3882,7 @@
       localStorage.setItem('carmel_shift_requests', JSON.stringify(requests));
 
       try {
-        await fetch('/api/shifts/request', {
+        await apiFetch('/api/shifts/request', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ newRequest: newReq })
@@ -3877,7 +3912,7 @@
       localStorage.setItem('carmel_shift_requests', JSON.stringify(requests));
 
       try {
-        await fetch('/api/shifts/request', {
+        await apiFetch('/api/shifts/request', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ newRequest: newReq })
@@ -4011,14 +4046,15 @@
       renderShiftRequests();
 
       try {
-        await fetch('/api/shifts/handle-request', {
+        await apiFetch('/api/shifts/handle-request', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             reqId: req.id,
             status: 'APPROVED',
             actor: currentUser.name,
-            masterRoster: masterRoster
+            masterRoster: masterRoster,
+            weekKey: getWeekKey(currentWeekOffset)
           })
         });
       } catch (e) {
@@ -4038,7 +4074,7 @@
       renderShiftRequests();
 
       try {
-        await fetch('/api/shifts/handle-request', {
+        await apiFetch('/api/shifts/handle-request', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -4057,7 +4093,7 @@
       const today = new Date();
       const dateInput = document.getElementById('revenueDateInput');
       const monthInput = document.getElementById('filterRevenueMonth');
-      if (dateInput && !dateInput.value) dateInput.value = today.toISOString().split('T')[0];
+      if (dateInput && !dateInput.value) dateInput.value = getLocalDateString(today);
       if (monthInput && !monthInput.value) monthInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
       autoLoadExistingDateData(dateInput.value);
       renderRevenueTable();
@@ -4163,7 +4199,7 @@
       const today = new Date();
       const dateInput = document.getElementById('expenseDateInput');
       const monthInput = document.getElementById('filterExpenseMonth');
-      if (dateInput && !dateInput.value) dateInput.value = today.toISOString().split('T')[0];
+      if (dateInput && !dateInput.value) dateInput.value = getLocalDateString(today);
       if (monthInput && !monthInput.value) monthInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
       renderExpenseTable();
     }
@@ -4197,7 +4233,7 @@
       const selectedMonth = monthInput ? monthInput.value : '';
       const expenses = JSON.parse(localStorage.getItem('carmel_expense_records')) || [];
 
-      const todayStr = new Date().toISOString().split('T')[0];
+      const todayStr = getLocalDateString();
       let monthlyTotal = 0;
       let todayTotal = 0;
 
@@ -4353,7 +4389,7 @@
     }
     async function loadAuditLogs() {
       try {
-        const res = await fetch('/api/logs');
+        const res = await apiFetch('/api/logs');
         const logs = await res.json();
         const tbody = document.getElementById('logsTableBody');
         if (!tbody) return;
@@ -4416,7 +4452,7 @@
         });
 
         // 4. Gửi mã thiết bị Quản lý lên máy chủ
-        const res = await fetch('/api/subscribe', {
+        const res = await apiFetch('/api/subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -4477,7 +4513,7 @@
       const weekLabel = document.getElementById('currentWeekDisplayLabel')?.innerText || 'tuần này';
       if (!confirm(`Gửi thông báo đã có lịch làm (${weekLabel}) đến tất cả nhân viên?`)) return;
       try {
-        await fetch('/api/shifts/publish-roster', {
+        await apiFetch('/api/shifts/publish-roster', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ actor: currentUser.name, weekLabel })
@@ -4498,7 +4534,7 @@
           const registration = await navigator.serviceWorker.ready;
           const sub = await registration.pushManager.getSubscription();
           if (sub) {
-            await fetch('/api/subscribe', {
+            await apiFetch('/api/subscribe', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({

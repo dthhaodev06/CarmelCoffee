@@ -363,11 +363,13 @@
         }
 
         // Lưu thông tin phiên đăng nhập hợp lệ
-        localStorage.setItem('currentUser', JSON.stringify(result.user));
+        localStorage.setItem('currentUser', JSON.stringify({ ...result.user, token: result.token }));
 
         // Tải toàn bộ dữ liệu mới nhất từ server về lưu vào localStorage trước khi mở trang
         try {
-          const syncRes = await fetch('/api/data');
+          const syncRes = await fetch('/api/data', {
+            headers: result.token ? { 'Authorization': `Bearer ${result.token}` } : {}
+          });
           if (syncRes.ok) {
             const data = await syncRes.json();
             const keys = [
