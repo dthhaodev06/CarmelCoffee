@@ -463,7 +463,9 @@ app.post('/api/test-notify', (req, res) => {
   );
   res.json({ success: true });
 });
-
+app.get('/ping', (req, res) => {
+  res.status(200).send('OK');
+});
 // ====================================================
 // 4. KHỞI CHẠY SERVER
 // ====================================================
