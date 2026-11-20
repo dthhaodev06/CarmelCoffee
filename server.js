@@ -319,7 +319,42 @@ app.post('/api/shifts/clear-roster', requireAuth, requireManager, (req, res) => 
 
 // 7. Cập nhật kho -> Bắn thông báo NVL (khi bấm mở thẳng tab-nvl)
 app.post('/api/inventory', requireAuth, async (req, res) => {
+  const inventoryRules = {
+    "Hạt Robusta": { unit: "Kg", minStock: 7 },
+    "Hạt Cầu Đất": { unit: "Kg", minStock: 1 },
+    "Hạt Núi Min": { unit: "Kg", minStock: 1 },
+    "Sữa Đặc": { unit: "hộp", minStock: 4 },
+    "Sữa Tươi": { unit: "bịch", minStock: 2 },
+    "Syrup Đào": { unit: "chai", minStock: 2 },
+    "Syrup Sơri": { unit: "chai", minStock: 1 },
+    "Syrup Thơm": { unit: "chai", minStock: 2 },
+    "Syrup Vải": { unit: "chai", minStock: 2 },
+    "Đường": { unit: "Kg", minStock: 2 },
+    "Trân Châu OK": { unit: "bịch", minStock: 2 },
+    "Hũ Đào": { unit: "hũ", minStock: 2 },
+    "Hũ Vải": { unit: "hũ", minStock: 2 },
+    "Bịch Dâu Tằm": { unit: "Kg", minStock: 0.3 },
+    "Bịch Đác Thơm": { unit: "Kg", minStock: 0.3 },
+    "Bịch Đác": { unit: "Kg", minStock: 0.3 },
+    "Muối": { unit: "Kg", minStock: 0.3 },
+    "Matcha": { unit: "Kg", minStock: 0.25 },
+    "Chocolate": { unit: "Kg", minStock: 0.25 },
+    "Trà Nhài": { unit: "Kg", minStock: 0.3 },
+    "Trà Bá Tước": { unit: "Kg", minStock: 0.3 },
+    "Trà Olong": { unit: "Kg", minStock: 0.2 },
+    "Trà Gạo Rang": { unit: "Kg", minStock: 0.2 },
+    "Bột Béo": { unit: "Kg", minStock: 0.3 }
+  };
   const { items, actor } = req.body;
+  if (Array.isArray(items)) {
+    items.forEach(item => {
+      const rule = inventoryRules[item.name];
+      if (rule) {
+        item.unit = rule.unit;
+        item.minStock = rule.minStock;
+      }
+    });
+  }
   const data = readData();
   data.inventory = items;
   data.carmel_inventory = items;
@@ -327,9 +362,16 @@ app.post('/api/inventory', requireAuth, async (req, res) => {
   writeData(data);
 
   if (Array.isArray(items)) {
-    const lowStockItems = items.filter(i => (Number(i.inQty) - Number(i.outQty)) <= 3);
+    const lowStockItems = items.filter(i => {
+      const stock = Math.max(0, Number(i.inQty) - Number(i.outQty));
+      const minimumStock = Number.isFinite(Number(i.minStock)) ? Number(i.minStock) : 3;
+      return stock <= minimumStock;
+    });
     if (lowStockItems.length > 0) {
-      const names = lowStockItems.map(i => `${i.name} (còn ${Math.max(0, i.inQty - i.outQty)} ${i.unit})`).join(', ');
+      const names = lowStockItems.map(i => {
+        const stock = Math.max(0, Number(i.inQty) - Number(i.outQty));
+        return `${i.name} (còn ${Number(stock.toFixed(2))} ${i.unit})`;
+      }).join(', ');
       await sendPushToTargets(
         s => s.role === 'manager',
         'Cảnh báo Kho NVL',
