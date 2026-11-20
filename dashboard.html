@@ -2047,6 +2047,9 @@
       <li class="menu-item" id="menu-expense" style="display: none;">
         <a onclick="showTab('expense')"><span class="menu-text">Chi Phí</span></a>
       </li>
+      <li class="menu-item" id="menu-profit" style="display: none;">
+        <a onclick="showTab('profit')"><span class="menu-text">Lợi Nhuận</span></a>
+      </li>
       <li class="menu-item" id="menu-accounts" style="display: none;">
         <a onclick="showTab('accounts')"><span class="menu-text">Tài Khoản</span></a>
       </li>
@@ -2647,6 +2650,63 @@
           </div>
         </div>
       </section>
+      <!-- TAB 7: LỢI NHUẬN (CHỈ QUẢN LÝ) -->
+      <section id="tab-profit" style="display: none;">
+        <div class="data-card" style="margin-bottom: 16px;">
+          <div class="data-card-header" style="margin-bottom: 0;">
+            <div>
+              <h3 style="margin-bottom: 4px;">Báo Cáo Lợi Nhuận Tháng</h3>
+              <span style="font-size: 12.5px; color: #64748b;">Tự động tính từ Tổng Doanh Thu trừ Tổng Chi Phí theo
+                tháng</span>
+            </div>
+            <div
+              style="display: flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px;">
+              <label style="font-size: 13px; font-weight: 600; color: #475569;">Chọn tháng:</label>
+              <input type="month" id="filterProfitMonth" onchange="renderProfitReport()"
+                style="border: none; background: transparent; font-weight: 700; font-size: 13px; color: #0f172a; outline: none; cursor: pointer;">
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px;">
+          <div class="data-card" style="border-left: 4px solid #16a34a;">
+            <div style="font-size: 13px; color: #64748b; font-weight: 600;">TỔNG DOANH THU THÁNG</div>
+            <div id="profitMonthRevenue" style="font-size: 22px; font-weight: 700; color: #16a34a; margin-top: 6px;">0 đ
+            </div>
+          </div>
+          <div class="data-card" style="border-left: 4px solid #dc2626;">
+            <div style="font-size: 13px; color: #64748b; font-weight: 600;">TỔNG CHI PHÍ THÁNG</div>
+            <div id="profitMonthExpense" style="font-size: 22px; font-weight: 700; color: #dc2626; margin-top: 6px;">0 đ
+            </div>
+          </div>
+          <div class="data-card" id="profitNetCard"
+            style="background: linear-gradient(135deg, #065f46, #059669); color: #fff;">
+            <div style="font-size: 13px; opacity: 0.92; font-weight: 600;">LỢI NHUẬN RÒNG (THU - CHI)</div>
+            <div id="profitMonthNet" style="font-size: 24px; font-weight: 700; margin-top: 6px;">0 đ</div>
+          </div>
+        </div>
+
+        <div class="data-card">
+          <div class="data-card-header">
+            <h3>Chi Tiết Thu - Chi Từng Ngày Trong Tháng</h3>
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px; text-align: center;">STT</th>
+                  <th>Ngày</th>
+                  <th style="text-align: right; color: #16a34a;">Doanh Thu</th>
+                  <th style="text-align: right; color: #dc2626;">Chi Phí</th>
+                  <th style="text-align: right; color: #0f172a;">Lợi Nhuận Ngày</th>
+                </tr>
+              </thead>
+              <tbody id="profitDailyTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
     </div>
   </main>
@@ -2940,7 +3000,7 @@
 
     // CHUYỂN TAB VÀ TỰ ĐỘNG ĐÓNG MENU
     function showTab(tab) {
-      if (['salary', 'revenue', 'expense', 'logs', 'accounts'].includes(tab) && currentUser.role !== 'manager') {
+      if (['salary', 'revenue', 'expense', 'profit', 'logs', 'accounts'].includes(tab) && currentUser.role !== 'manager') {
         alert('Mục này chỉ dành riêng cho Quản lý!');
         return;
       }
@@ -2950,7 +3010,7 @@
         closeSidebarMobile();
       }
 
-      ['nvl', 'shift', 'pass-shift', 'swap-shift', 'schedule', 'my-stats', 'salary', 'revenue', 'expense', 'accounts', 'logs'].forEach(t => {
+      ['nvl', 'shift', 'pass-shift', 'swap-shift', 'schedule', 'my-stats', 'salary', 'revenue', 'expense', 'accounts', 'profit', 'logs'].forEach(t => {
         const sec = document.getElementById('tab-' + t);
         if (sec) sec.style.display = (t === tab) ? 'block' : 'none';
         const menu = document.getElementById('menu-' + t);
@@ -2972,6 +3032,7 @@
       if (tab === 'expense') { title.innerHTML = '<strong>Quản Lý Chi Phí</strong>'; initExpenseTab(); }
       if (tab === 'accounts') { title.innerHTML = '<strong>Quản Lý & Cấp Mức Lương</strong>'; renderAccountsTable(); }
       if (tab === 'logs') { title.innerHTML = '<strong>Nhật Ký Hoạt Động</strong>'; loadAuditLogs(); }
+      if (tab === 'profit') { title.innerHTML = '<strong>Báo Cáo Lợi Nhuận</strong>'; initProfitTab(); }
     }
 
     function updateUserInfoUI() {
@@ -2988,7 +3049,7 @@
       const myStatsMenu = document.getElementById('menu-my-stats');
       if (myStatsMenu) myStatsMenu.style.display = !isManager ? 'block' : 'none';
 
-      ['menu-salary', 'menu-revenue', 'menu-expense', 'menu-accounts', 'menu-logs'].forEach(id => {
+      ['menu-salary', 'menu-revenue', 'menu-expense', 'menu-profit', 'menu-accounts', 'menu-logs'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = isManager ? 'block' : 'none';
       });
@@ -4204,7 +4265,94 @@
         renderExpenseTable();
       }
     }
+    function initProfitTab() {
+      const today = new Date();
+      const monthInput = document.getElementById('filterProfitMonth');
+      if (monthInput && !monthInput.value) {
+        monthInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+      }
+      renderProfitReport();
+    }
 
+    function renderProfitReport() {
+      const tbody = document.getElementById('profitDailyTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const monthInput = document.getElementById('filterProfitMonth');
+      const selectedMonth = monthInput && monthInput.value
+        ? monthInput.value
+        : `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+
+      const revenueData = JSON.parse(localStorage.getItem('carmel_revenue_records')) || {};
+      const expenses = JSON.parse(localStorage.getItem('carmel_expense_records')) || [];
+
+      let totalRev = 0;
+      let totalExp = 0;
+      const dailyMap = {};
+
+      // Gom doanh thu theo ngày trong tháng
+      Object.keys(revenueData).forEach(dateStr => {
+        if (!selectedMonth || dateStr.startsWith(selectedMonth)) {
+          const rev = revenueData[dateStr].total || 0;
+          totalRev += rev;
+          if (!dailyMap[dateStr]) dailyMap[dateStr] = { rev: 0, exp: 0 };
+          dailyMap[dateStr].rev += rev;
+        }
+      });
+
+      // Gom chi phí theo ngày trong tháng
+      expenses.forEach(item => {
+        if (item.date && (!selectedMonth || item.date.startsWith(selectedMonth))) {
+          const exp = item.cost || 0;
+          totalExp += exp;
+          if (!dailyMap[item.date]) dailyMap[item.date] = { rev: 0, exp: 0 };
+          dailyMap[item.date].exp += exp;
+        }
+      });
+
+      const netProfit = totalRev - totalExp;
+
+      // Cập nhật 3 thẻ tổng quan
+      document.getElementById('profitMonthRevenue').textContent = totalRev.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('profitMonthExpense').textContent = totalExp.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('profitMonthNet').textContent = netProfit.toLocaleString('vi-VN') + ' đ';
+
+      // Đổi màu thẻ Lợi Nhuận Ròng sang đỏ nếu âm, xanh ngọc nếu dương
+      const netCard = document.getElementById('profitNetCard');
+      if (netCard) {
+        netCard.style.background = netProfit >= 0
+          ? 'linear-gradient(135deg, #065f46, #059669)'
+          : 'linear-gradient(135deg, #991b1b, #dc2626)';
+      }
+
+      // Render bảng chi tiết từng ngày
+      const sortedDates = Object.keys(dailyMap).sort((a, b) => new Date(b) - new Date(a));
+      if (sortedDates.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 20px;">Chưa có dữ liệu thu chi trong tháng này.</td></tr>`;
+        return;
+      }
+
+      sortedDates.forEach((dateStr, idx) => {
+        const parts = dateStr.split('-');
+        const displayDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+        const dayRev = dailyMap[dateStr].rev;
+        const dayExp = dailyMap[dateStr].exp;
+        const dayNet = dayRev - dayExp;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="text-align: center;"><strong>${idx + 1}</strong></td>
+          <td><strong>${displayDate}</strong></td>
+          <td style="text-align: right; color: #16a34a; font-weight: 600;">${dayRev.toLocaleString('vi-VN')} đ</td>
+          <td style="text-align: right; color: #dc2626; font-weight: 600;">${dayExp.toLocaleString('vi-VN')} đ</td>
+          <td style="text-align: right; font-weight: 700; color: ${dayNet >= 0 ? '#059669' : '#dc2626'};">
+            ${dayNet > 0 ? '+' : ''}${dayNet.toLocaleString('vi-VN')} đ
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
     async function loadAuditLogs() {
       try {
         const res = await fetch('/api/logs');
