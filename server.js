@@ -18,15 +18,23 @@ app.use(express.static(__dirname));
 // ====================================================
 // 1. KẾT NỐI CLOUD DATABASE (MONGODB ATLAS)
 // ====================================================
-const MONGO_URI = process.env.MONGO_URI;
+const rawMongoUri = process.env.MONGO_URI;
+const MONGO_URI = rawMongoUri
+  ? rawMongoUri.trim()
+      .replace(/^['"]|['"]$/g, '')
+      .replace(/^\[|\]$/g, '')
+      .trim()
+  : '';
+
 if (!MONGO_URI) {
   console.error('❌ Thiếu biến môi trường MONGO_URI');
   process.exit(1);
 }
 
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ Đã kết nối Cloud Database (MongoDB) thành công!'))
-  .catch(err => console.error('❌ Lỗi kết nối MongoDB:', err));
+if (!/^mongodb(?:\+srv)?:\/\//.test(MONGO_URI)) {
+  console.error('❌ MONGO_URI không hợp lệ: chuỗi phải bắt đầu bằng mongodb:// hoặc mongodb+srv://');
+  process.exit(1);
+}
 
 const StoreSchema = new mongoose.Schema({
   key: { type: String, default: 'main_store' },
@@ -544,14 +552,24 @@ function sendPushToTargets(filterFn, title, message, targetUrl = '/dashboard.htm
   if (changed) writeData(data);
 }
 
+app.get('/api/vapid-public-key', (req, res) => {
+  res.json({ publicKey: process.env.VAPID_PUBLIC_KEY });
+});
+
 // API nhận đăng ký thiết bị (Lưu cả Quản lý và Nhân viên kèm tên tài khoản)
 app.post('/api/subscribe', requireAuth, (req, res) => {
-  const { subscription, role, actor } = req.body;
+  const { subscription } = req.body;
+  const role = req.auth.role;
+  const actor = req.auth.name;
   const data = readData();
   if (!Array.isArray(data.pushSubscriptions)) data.pushSubscriptions = [];
 
   const subData = subscription || req.body;
   const endpoint = subData.endpoint;
+
+  if (!endpoint || !subData.keys) {
+    return res.status(400).json({ success: false, message: 'Subscription Push không hợp lệ!' });
+  }
 
   if (endpoint && role && actor) {
     // Xóa bản ghi cũ của cùng thiết bị này để cập nhật đúng người đang đăng nhập
@@ -604,14 +622,21 @@ app.get('/ping', (req, res) => {
 // ====================================================
 // 4. KHỞI CHẠY SERVER
 // ====================================================
-initDatabase()
-  .then(() => {
+async function startServer() {
+  try {
+    await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 10000 });
+    console.log('✅ Đã kết nối Cloud Database (MongoDB) thành công!');
+
+    await initDatabase();
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`====================================================`);
       console.log(`🚀 Máy chủ Carmel Coffee đang chạy trên Port ${PORT}`);
       console.log(`====================================================`);
     });
-  })
-  .catch(err => {
-    console.error('❌ Không thể khởi động server:', err);
-  });
+  } catch (err) {
+    console.error('❌ Không thể kết nối MongoDB:', err.message || err);
+    process.exit(1);
+  }
+}
+
+startServer();

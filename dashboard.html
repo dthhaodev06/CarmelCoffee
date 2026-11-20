@@ -4458,7 +4458,15 @@
       } catch (e) { console.error("Lỗi tải logs:", e); }
     }
 
-    const PUBLIC_VAPID_KEY = 'BMVrq03lPj1UYEJVVQ20pvFDTARfl_AbUpQJFoeEkmkQMzF6KTuKu0Zo28PmwLbaCRw5rv__ineMDq2bXJrjk_g';
+    let PUBLIC_VAPID_KEY = '';
+
+    async function loadPublicVapidKey() {
+      const res = await fetch('/api/vapid-public-key');
+      if (!res.ok) throw new Error('Không thể tải khóa thông báo');
+      const result = await res.json();
+      if (!result.publicKey) throw new Error('Máy chủ chưa cấu hình khóa thông báo');
+      PUBLIC_VAPID_KEY = result.publicKey;
+    }
 
     function urlBase64ToUint8Array(base64String) {
       const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -4482,6 +4490,8 @@
       }
 
       try {
+        await loadPublicVapidKey();
+
         // 1. Đăng ký và cập nhật Service Worker bản mới nhất
         const reg = await navigator.serviceWorker.register('/ServiceWorker.js');
         await reg.update();
@@ -4510,7 +4520,16 @@
           })
         });
 
-        if (!res.ok) throw new Error('Server từ chối lưu thiết bị');
+        if (!res.ok) {
+          const error = await res.json().catch(() => ({}));
+          if (res.status === 401) {
+            localStorage.removeItem('currentUser');
+            alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại rồi kích hoạt thông báo!');
+            window.location.href = 'index.html';
+            return;
+          }
+          throw new Error(error.message || 'Server từ chối lưu thiết bị');
+        }
         alert('✅ Đã làm mới và bật thông báo đẩy thành công! Chờ 1 giây để nhận tin nhắn thử nghiệm...');
       } catch (err) {
         console.error('Lỗi Push:', err);
@@ -4587,7 +4606,7 @@
           const registration = await navigator.serviceWorker.ready;
           const sub = await registration.pushManager.getSubscription();
           if (sub) {
-            await apiFetch('/api/subscribe', {
+            const subscribeRes = await apiFetch('/api/subscribe', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -4596,6 +4615,10 @@
                 actor: currentUser.name
               })
             });
+            if (subscribeRes.status === 401) {
+              localStorage.removeItem('currentUser');
+              window.location.href = 'index.html';
+            }
           }
         } catch (e) { }
       }
