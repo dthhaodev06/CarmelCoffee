@@ -2878,7 +2878,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ carmel_full_users: users, carmel_staff_rates: customRates })
-      }).catch(() => {});
+      }).catch(() => { });
       renderSalaryTable();
       renderAccountsTable();
       return true;
@@ -3849,15 +3849,19 @@
         dayNames[d.key] = `${d.label} (${dateStr})`;
       });
 
-      const passSelect = document.getElementById('passDaySelect');
-      if (passSelect) {
-        passSelect.innerHTML = '';
+      ['passDaySelect', 'swapMyDay', 'swapTargetDay'].forEach(selectId => {
+        const sel = document.getElementById(selectId);
+        if (!sel) return;
+        const prevVal = sel.value;
+        sel.innerHTML = '';
         daysOfWeek.forEach(d => {
           const opt = document.createElement('option');
-          opt.value = d.key; opt.textContent = dayNames[d.key];
-          passSelect.appendChild(opt);
+          opt.value = d.key;
+          opt.textContent = dayNames[d.key];
+          sel.appendChild(opt);
         });
-      }
+        if (prevVal) sel.value = prevVal;
+      });
     }
 
     function updateStaffDropdowns() {
