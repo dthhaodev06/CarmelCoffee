@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/logocarmel.jpg">
-<link rel="icon" type="image/jpeg" href="/logocarmel.jpg">
+  <link rel="icon" type="image/jpeg" href="/logocarmel.jpg">
   <style>
     /* --- DECOR TOÀN BỘ BẢNG DANH SÁCH TRÊN ĐIỆN THOẠI: CHỮ NẰM NGANG, KHÔNG XUỐNG DÒNG --- */
     @media (max-width: 768px) {
@@ -62,8 +63,10 @@
         background-color: #f1f5f9 !important;
       }
     }
-/* --- CHỈ DECOR PHẦN ĐẦU TAB BẢNG LỊCH LÀM TRÊN ĐIỆN THOẠI (GIỮ NGUYÊN BẢNG LỊCH BÊN DƯỚI) --- */
+
+    /* --- CHỈ DECOR PHẦN ĐẦU TAB BẢNG LỊCH LÀM TRÊN ĐIỆN THOẠI (GIỮ NGUYÊN BẢNG LỊCH BÊN DƯỚI) --- */
     @media (max-width: 768px) {
+
       #tab-schedule h2,
       #tab-schedule h3 {
         text-align: center !important;
@@ -134,6 +137,7 @@
         text-align: center !important;
         margin: 0 !important;
       }
+
       #tab-schedule #btnPublishRoster {
         flex: 1 1 100% !important;
         width: 100% !important;
@@ -147,7 +151,9 @@
         background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
         box-shadow: 0 4px 10px rgba(2, 132, 199, 0.22) !important;
       }
-    }     /* --- DECOR KHUNG QUY ĐỊNH & CHỌN TUẦN TRÊN ĐIỆN THOẠI --- */
+    }
+
+    /* --- DECOR KHUNG QUY ĐỊNH & CHỌN TUẦN TRÊN ĐIỆN THOẠI --- */
     @media (max-width: 768px) {
       .shift-legend {
         background: linear-gradient(180deg, #fffdf5 0%, #fef9e7 100%) !important;
@@ -164,14 +170,14 @@
         width: 100% !important;
       }
 
-      .shift-legend-row1 > strong {
+      .shift-legend-row1>strong {
         grid-column: 1 / -1 !important;
         margin-bottom: 4px !important;
         font-size: 13.5px !important;
         color: #1e293b !important;
       }
 
-      .shift-legend-row1 > div {
+      .shift-legend-row1>div {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
@@ -212,160 +218,795 @@
         font-weight: 700 !important;
       }
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-    html, body { min-height: 100%; background: #f1f5f9; color: #1e293b; }
-    body { display: flex; height: 100vh; overflow: hidden; }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
 
     /* LỚP PHỦ NỀN MỜ TRÊN MOBILE ĐỂ BẤM RA NGOÀI TỰ ĐÓNG MENU */
     #sidebarOverlay {
       display: none;
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: rgba(0, 0, 0, 0.45);
       z-index: 9998;
     }
 
     /* SIDEBAR */
-    .sidebar { width: 250px; background: #212529; color: #94a3b8; display: flex; flex-direction: column; transition: width 0.3s; position: relative; flex-shrink: 0; overflow-y: auto; }
-    .sidebar.collapsed { width: 68px; }
-    .sidebar-header { padding: 16px 20px; display: flex; align-items: center; gap: 12px; background: #181b1e; border-bottom: 1px solid #2d3238; }
-.brand-icon { width: 32px; height: 32px; background: #5c3a21; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }    .brand-title { color: #fff; font-size: 15px; font-weight: 700; white-space: nowrap; transition: opacity 0.2s; }
-    .sidebar.collapsed .brand-title, .sidebar.collapsed .menu-group-title, .sidebar.collapsed .menu-text { opacity: 0; pointer-events: none; }
-    .menu-group-title { font-size: 11px; text-transform: uppercase; font-weight: 700; color: #64748b; padding: 16px 20px 8px; white-space: nowrap; }
-    .menu-list, .submenu-list { list-style: none; }
-    .menu-item a { display: flex; align-items: center; gap: 14px; padding: 12px 20px; color: #cbd5e1; text-decoration: none; font-size: 13.5px; transition: 0.2s; white-space: nowrap; cursor: pointer; }
-    .menu-item a:hover { background: #2d3238; color: #fff; }
-    .menu-item.active > a { background: #2563eb; color: #fff; font-weight: 600; }
-    .submenu-list { background: #1a1d20; }
-    .submenu-item a { padding: 10px 20px 10px 42px !important; font-size: 12.5px !important; color: #94a3b8 !important; }
-    .submenu-item a:hover { background: #282d33 !important; color: #fff !important; }
-    .submenu-item.active a { background: #1d4ed8 !important; color: #fff !important; font-weight: 600 !important; }
-    .toggle-sidebar-btn { position: absolute; top: 50%; right: -12px; transform: translateY(-50%); width: 24px; height: 24px; background: #3b82f6; color: #fff; border: 2px solid #fff; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; z-index: 10; }
+    .sidebar {
+      width: 250px;
+      background: #212529;
+      color: #94a3b8;
+      display: flex;
+      flex-direction: column;
+      transition: width 0.3s;
+      position: relative;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    .sidebar.collapsed {
+      width: 68px;
+    }
+
+    .sidebar-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #181b1e;
+      border-bottom: 1px solid #2d3238;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: #5c3a21;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+
+    .sidebar.collapsed .brand-title,
+    .sidebar.collapsed .menu-group-title,
+    .sidebar.collapsed .menu-text {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .menu-group-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #64748b;
+      padding: 16px 20px 8px;
+      white-space: nowrap;
+    }
+
+    .menu-list,
+    .submenu-list {
+      list-style: none;
+    }
+
+    .menu-item a {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 20px;
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 13.5px;
+      transition: 0.2s;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .menu-item a:hover {
+      background: #2d3238;
+      color: #fff;
+    }
+
+    .menu-item.active>a {
+      background: #2563eb;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .submenu-list {
+      background: #1a1d20;
+    }
+
+    .submenu-item a {
+      padding: 10px 20px 10px 42px !important;
+      font-size: 12.5px !important;
+      color: #94a3b8 !important;
+    }
+
+    .submenu-item a:hover {
+      background: #282d33 !important;
+      color: #fff !important;
+    }
+
+    .submenu-item.active a {
+      background: #1d4ed8 !important;
+      color: #fff !important;
+      font-weight: 600 !important;
+    }
+
+    .toggle-sidebar-btn {
+      position: absolute;
+      top: 50%;
+      right: -12px;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      background: #3b82f6;
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      z-index: 10;
+    }
 
     /* MAIN AREA */
-    .main-area { flex: 1; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; height: 100%; }
-    .topbar { height: 56px; background: #fff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
-    .topbar-left { display: flex; align-items: center; gap: 12px; }
-    .user-info { display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 500; }
-    .user-badge { font-size: 11.5px; padding: 4px 10px; border-radius: 14px; background: #e0f2fe; color: #0369a1; font-weight: 600; }
-    .content-container { padding: 24px 24px 120px; flex: 1; }
+    .main-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: 100%;
+    }
 
-    .btn-action { padding: 8px 16px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-    .btn-action:hover { background: #1d4ed8; }
-    .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-reset { background: #64748b; }
-    .btn-reset:hover { background: #475569; }
-    .btn-success { background: #16a34a; }
-    .btn-success:hover { background: #15803d; }
+    .topbar {
+      height: 56px;
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
 
-    .data-card { background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px; }
-    .data-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
-    .filter-card { background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 16px 20px; display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 24px; }
-    .filter-group { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; }
-    .filter-group input, .filter-group select { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #f8fafc; outline: none; }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-    .custom-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-    .custom-table th, .custom-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
-    .custom-table th { background-color: #f8fafc; color: #475569; font-weight: 600; }
-    .badge-unit { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
-    .qty-input { width: 90px; padding: 6px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; text-align: center; outline: none; }
-    .input-in { color: #16a34a; background: #f0fdf4; }
-    .input-out { color: #dc2626; background: #fef2f2; }
-    .stock-badge { display: inline-block; min-width: 45px; padding: 6px 12px; border-radius: 6px; font-size: 14px; font-weight: 700; text-align: center; color: #2563eb; background: #dbeafe; }
-    .stock-warning { color: #dc2626; background: #fee2e2; }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      font-weight: 500;
+    }
 
-    .shift-legend { display: flex; flex-direction: column; gap: 12px; background: #fffbeb; border: 1px solid #fef3c7; padding: 14px 18px; border-radius: 10px; margin-bottom: 20px; font-size: 13.5px; }
-    .shift-legend-row1 { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .shift-legend-row2 { display: flex; align-items: center; justify-content: space-between; border-top: 1px dashed #fde68a; padding-top: 10px; flex-wrap: wrap; gap: 10px; }
-    .shift-tag { font-weight: 700; padding: 3px 8px; border-radius: 4px; color: #fff; font-size: 12px; }
-    .shift-tag-a { background: #16a34a; }
-    .shift-tag-b { background: #d97706; }
-    .shift-tag-c { background: #64748b; }
+    .user-badge {
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 14px;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-weight: 600;
+    }
 
-    .schedule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .day-box { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; background: #f8fafc; text-align: center; }
-    .day-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: #0f172a; }
-    .shift-checkboxes { display: flex; flex-direction: column; gap: 8px; text-align: left; font-size: 13px; }
-    .shift-checkboxes label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-    .shift-summary-badge { display: inline-block; margin-top: 10px; font-size: 12.5px; font-weight: 700; padding: 4px 8px; background: #ffe4e6; color: #e11d48; border-radius: 6px; word-break: break-word; }
+    .content-container {
+      padding: 24px 24px 120px;
+      flex: 1;
+    }
 
-    .excel-header-box { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; flex-wrap: wrap; gap: 16px; }
-    .excel-legend-table { border-collapse: collapse; font-size: 12px; background: #fff; border: 1px solid #94a3b8; }
-    .excel-legend-table th, .excel-legend-table td { border: 1px solid #94a3b8; padding: 4px 10px; text-align: center; }
-    .excel-legend-table th { background: #e2e8f0; font-weight: 700; }
+    .btn-action {
+      padding: 8px 16px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-    .roster-grid-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; background: #fff; }
-    .roster-grid-table th, .roster-grid-table td { border: 1px solid #cbd5e1; padding: 0; vertical-align: middle; }
-    .th-green-header { background: #0f766e; color: #fff; font-weight: 700; padding: 12px 6px; font-size: 13.5px; border: 1px solid #115e59 !important; }
-    .th-date-sub { display: inline-block; margin-top: 4px; font-size: 11.5px; font-weight: 500; color: #ccfbf1; background: rgba(255, 255, 255, 0.15); padding: 2px 8px; border-radius: 12px; }
+    .btn-action:hover {
+      background: #1d4ed8;
+    }
 
-    .cell-shift-a { background-color: #dcfce7; color: #15803d !important; }
-    .cell-shift-b { background-color: #fef3c7; color: #b45309 !important; }
-    .cell-shift-c { background-color: #f1f5f9; color: #475569 !important; }
-    .cell-shift-combo { background-color: #bae6fd; color: #0369a1 !important; }
-    .cell-shift-off { background-color: #ffe4e6; color: #e11d48 !important; }
+    .btn-action:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
-    .shift-cell-select { width: 100%; height: 100%; padding: 10px 4px; border: none; font-size: 13px; font-weight: 700; text-align: center; background: transparent; outline: none; cursor: pointer; appearance: none; -webkit-appearance: none; color: inherit !important; }
-    .shift-cell-text { width: 100%; height: 100%; padding: 10px 4px; font-size: 13px; font-weight: 700; text-align: center; user-select: none; }
+    .btn-reset {
+      background: #64748b;
+    }
 
-    .mobile-menu-btn { display: none; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-size: 18px; cursor: pointer; align-items: center; justify-content: center; width: 34px; height: 34px; }
-    .week-nav-box { display: flex; align-items: center; gap: 6px; background: #fff; padding: 4px 8px; border-radius: 8px; border: 1px solid #cbd5e1; }
-    .week-nav-btn { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 5px; padding: 4px 10px; font-size: 12px; font-weight: 700; cursor: pointer; }
-    .week-nav-btn:hover { background: #e2e8f0; }
+    .btn-reset:hover {
+      background: #475569;
+    }
 
-    .custom-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); z-index: 10000; align-items: center; justify-content: center; padding: 16px; }
-    .custom-modal.active { display: flex; }
-    .modal-box { background: #fff; border-radius: 12px; max-width: 380px; width: 100%; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+    .btn-success {
+      background: #16a34a;
+    }
+
+    .btn-success:hover {
+      background: #15803d;
+    }
+
+    .data-card {
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      margin-bottom: 24px;
+    }
+
+    .data-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .filter-card {
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      padding: 16px 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .filter-group input,
+    .filter-group select {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 13px;
+      background: #f8fafc;
+      outline: none;
+    }
+
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    .custom-table th,
+    .custom-table td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: middle;
+    }
+
+    .custom-table th {
+      background-color: #f8fafc;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    .badge-unit {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+
+    .qty-input {
+      width: 90px;
+      padding: 6px 10px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      outline: none;
+    }
+
+    .input-in {
+      color: #16a34a;
+      background: #f0fdf4;
+    }
+
+    .input-out {
+      color: #dc2626;
+      background: #fef2f2;
+    }
+
+    .stock-badge {
+      display: inline-block;
+      min-width: 45px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      color: #2563eb;
+      background: #dbeafe;
+    }
+
+    .stock-warning {
+      color: #dc2626;
+      background: #fee2e2;
+    }
+
+    .shift-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 13.5px;
+    }
+
+    .shift-legend-row1 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .shift-legend-row2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px dashed #fde68a;
+      padding-top: 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .shift-tag {
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .shift-tag-a {
+      background: #16a34a;
+    }
+
+    .shift-tag-b {
+      background: #d97706;
+    }
+
+    .shift-tag-c {
+      background: #64748b;
+    }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .day-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      background: #f8fafc;
+      text-align: center;
+    }
+
+    .day-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+
+    .shift-checkboxes {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .shift-checkboxes label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .shift-summary-badge {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 4px 8px;
+      background: #ffe4e6;
+      color: #e11d48;
+      border-radius: 6px;
+      word-break: break-word;
+    }
+
+    .excel-header-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .excel-legend-table {
+      border-collapse: collapse;
+      font-size: 12px;
+      background: #fff;
+      border: 1px solid #94a3b8;
+    }
+
+    .excel-legend-table th,
+    .excel-legend-table td {
+      border: 1px solid #94a3b8;
+      padding: 4px 10px;
+      text-align: center;
+    }
+
+    .excel-legend-table th {
+      background: #e2e8f0;
+      font-weight: 700;
+    }
+
+    .roster-grid-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: center;
+      background: #fff;
+    }
+
+    .roster-grid-table th,
+    .roster-grid-table td {
+      border: 1px solid #cbd5e1;
+      padding: 0;
+      vertical-align: middle;
+    }
+
+    .th-green-header {
+      background: #0f766e;
+      color: #fff;
+      font-weight: 700;
+      padding: 12px 6px;
+      font-size: 13.5px;
+      border: 1px solid #115e59 !important;
+    }
+
+    .th-date-sub {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #ccfbf1;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .cell-shift-a {
+      background-color: #dcfce7;
+      color: #15803d !important;
+    }
+
+    .cell-shift-b {
+      background-color: #fef3c7;
+      color: #b45309 !important;
+    }
+
+    .cell-shift-c {
+      background-color: #f1f5f9;
+      color: #475569 !important;
+    }
+
+    .cell-shift-combo {
+      background-color: #bae6fd;
+      color: #0369a1 !important;
+    }
+
+    .cell-shift-off {
+      background-color: #ffe4e6;
+      color: #e11d48 !important;
+    }
+
+    .shift-cell-select {
+      width: 100%;
+      height: 100%;
+      padding: 10px 4px;
+      border: none;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      background: transparent;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      color: inherit !important;
+    }
+
+    .shift-cell-text {
+      width: 100%;
+      height: 100%;
+      padding: 10px 4px;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      user-select: none;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 18px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+    }
+
+    .week-nav-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .week-nav-btn {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .week-nav-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .custom-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .custom-modal.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 380px;
+      width: 100%;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
 
     /* RESPONSIVE & MOBILE STICKY */
     @media (max-width: 768px) {
-      body { height: auto; min-height: 100vh; overflow-y: auto; }
-      .main-area { height: auto; min-height: 100vh; overflow: visible; width: 100%; }
-      .content-container { padding: 12px 10px 140px; }
-      .sidebar { position: fixed; left: -260px; top: 0; bottom: 0; height: 100vh; z-index: 9999; transition: left 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.3); }
-      .sidebar.mobile-open { left: 0; }
-      .toggle-sidebar-btn { display: none !important; }
+      body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+      }
 
-      .topbar { height: auto; padding: 12px 14px; flex-direction: column; align-items: stretch; gap: 10px; }
-      .topbar-left { display: flex; align-items: center; gap: 10px; }
-      .mobile-menu-btn { display: inline-flex !important; }
-      .user-info { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 8px; border-top: 1px solid #f1f5f9; flex-wrap: wrap; }
-      .data-card { padding: 14px 10px; margin-bottom: 14px; }
-      .filter-card { padding: 12px; margin-bottom: 14px; flex-direction: column; align-items: stretch; }
-      .filter-group { width: 100% !important; min-width: 0 !important; }
-      .schedule-grid { grid-template-columns: 1fr; }
-      div[style*="grid-template-columns: 380px 1fr"] { grid-template-columns: 1fr !important; }
+      .main-area {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+        width: 100%;
+      }
+
+      .content-container {
+        padding: 12px 10px 140px;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: -260px;
+        top: 0;
+        bottom: 0;
+        height: 100vh;
+        z-index: 9999;
+        transition: left 0.3s;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .sidebar.mobile-open {
+        left: 0;
+      }
+
+      .toggle-sidebar-btn {
+        display: none !important;
+      }
+
+      .topbar {
+        height: auto;
+        padding: 12px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .mobile-menu-btn {
+        display: inline-flex !important;
+      }
+
+      .user-info {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #f1f5f9;
+        flex-wrap: wrap;
+      }
+
+      .data-card {
+        padding: 14px 10px;
+        margin-bottom: 14px;
+      }
+
+      .filter-card {
+        padding: 12px;
+        margin-bottom: 14px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-group {
+        width: 100% !important;
+        min-width: 0 !important;
+      }
+
+      .schedule-grid {
+        grid-template-columns: 1fr;
+      }
+
+      div[style*="grid-template-columns: 380px 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
 
       .roster-grid-table th:nth-child(2),
       .roster-grid-table td:nth-child(2) {
-        position: sticky; left: 0; background-color: #fff; z-index: 5; box-shadow: 2px 0 5px rgba(0,0,0,0.06);
+        position: sticky;
+        left: 0;
+        background-color: #fff;
+        z-index: 5;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.06);
       }
-      .roster-grid-table th:nth-child(2) { background-color: #0f766e; }
+
+      .roster-grid-table th:nth-child(2) {
+        background-color: #0f766e;
+      }
 
       #salaryTable th:nth-child(2),
       #salaryTable td:nth-child(2) {
-        position: sticky; left: 0; background-color: #fff; z-index: 5; box-shadow: 2px 0 5px rgba(0,0,0,0.06);
-      }
-      #salaryTable th:nth-child(2) { background-color: #f8fafc; }
-
-      .roster-grid-table, #salaryTable { min-width: 650px !important; }
-    }
-    /* CỐ ĐỊNH CỘT TÊN NGUYÊN VẬT LIỆU KHI CUỘN NGANG */
-      #tab-nvl .custom-table { min-width: 650px !important; }
-      #tab-nvl .custom-table th:nth-child(2),
-      #tab-nvl .custom-table td:nth-child(2) {
         position: sticky;
         left: 0;
-        background-color: #ffffff;
+        background-color: #fff;
         z-index: 5;
-        box-shadow: 2px 0 5px rgba(0,0,0,0.08);
-        white-space: nowrap;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.06);
       }
-      #tab-nvl .custom-table th:nth-child(2) {
+
+      #salaryTable th:nth-child(2) {
         background-color: #f8fafc;
       }
-      /* --- DECOR GIAO DIỆN PASS CA & ĐỔI CA CHUẨN APP MOBILE --- */
+
+      .roster-grid-table,
+      #salaryTable {
+        min-width: 650px !important;
+      }
+    }
+
+    /* CỐ ĐỊNH CỘT TÊN NGUYÊN VẬT LIỆU KHI CUỘN NGANG */
+    #tab-nvl .custom-table {
+      min-width: 650px !important;
+    }
+
+    #tab-nvl .custom-table th:nth-child(2),
+    #tab-nvl .custom-table td:nth-child(2) {
+      position: sticky;
+      left: 0;
+      background-color: #ffffff;
+      z-index: 5;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.08);
+      white-space: nowrap;
+    }
+
+    #tab-nvl .custom-table th:nth-child(2) {
+      background-color: #f8fafc;
+    }
+
+    /* --- DECOR GIAO DIỆN PASS CA & ĐỔI CA CHUẨN APP MOBILE --- */
     @media (max-width: 768px) {
+
       /* Giữ thanh topbar luôn full 100% chiều ngang màn hình */
       .topbar {
         width: 100% !important;
@@ -373,8 +1014,8 @@
       }
 
       /* Khung grid chứa 2 card của Pass Ca & Đổi Ca */
-      #tab-pass-shift > div,
-      #tab-swap-shift > div {
+      #tab-pass-shift>div,
+      #tab-swap-shift>div {
         display: flex !important;
         flex-direction: column !important;
         gap: 14px !important;
@@ -564,8 +1205,10 @@
         border-radius: 8px !important;
       }
     }
-      /* --- DECOR DANH SÁCH PASS CA & ĐỔI CA DẠNG THẺ GỌN ĐẸP TRÊN MÁY TÍNH --- */
+
+    /* --- DECOR DANH SÁCH PASS CA & ĐỔI CA DẠNG THẺ GỌN ĐẸP TRÊN MÁY TÍNH --- */
     @media (min-width: 769px) {
+
       #tab-pass-shift .data-card,
       #tab-swap-shift .data-card {
         border-radius: 14px !important;
@@ -694,7 +1337,8 @@
         border-radius: 8px !important;
       }
     }
-/* --- NÂNG CẤP GIAO DIỆN PHIẾU ĐĂNG KÝ CA LÀM (DẠNG LIST HIỆN ĐẠI, ĐỒNG BỘ TÔNG CÀ PHÊ) --- */
+
+    /* --- NÂNG CẤP GIAO DIỆN PHIẾU ĐĂNG KÝ CA LÀM (DẠNG LIST HIỆN ĐẠI, ĐỒNG BỘ TÔNG CÀ PHÊ) --- */
     #tab-shift .data-card {
       border-radius: 18px !important;
       border: 1.5px solid #e2e8f0 !important;
@@ -801,7 +1445,7 @@
       gap: 9px !important;
     }
 
-    #tab-shift .shift-checkboxes > div {
+    #tab-shift .shift-checkboxes>div {
       background: #f8fafc !important;
       border: 1.5px solid #e2e8f0 !important;
       border-radius: 12px !important;
@@ -810,7 +1454,7 @@
     }
 
     /* Hiệu ứng nổi bật tông vàng cà phê khi tích chọn ca */
-    #tab-shift .shift-checkboxes > div:has(input[type="checkbox"]:checked) {
+    #tab-shift .shift-checkboxes>div:has(input[type="checkbox"]:checked) {
       background: #fffbeb !important;
       border-color: #f59e0b !important;
       box-shadow: 0 3px 10px rgba(245, 158, 11, 0.14) !important;
@@ -825,7 +1469,7 @@
       margin: 0 !important;
     }
 
-    #tab-shift .shift-checkboxes > div:has(input[type="checkbox"]:checked) label {
+    #tab-shift .shift-checkboxes>div:has(input[type="checkbox"]:checked) label {
       color: #92400e !important;
     }
 
@@ -851,7 +1495,7 @@
     }
 
     /* Hàng nút Xóa & Gửi Đăng Ký ở cuối phiếu */
-    #tab-shift .data-card > div:last-child {
+    #tab-shift .data-card>div:last-child {
       display: flex !important;
       gap: 10px !important;
       margin-top: 18px !important;
@@ -859,7 +1503,7 @@
       border-top: 1.5px solid #f1f5f9 !important;
     }
 
-    #tab-shift .data-card > div:last-child button {
+    #tab-shift .data-card>div:last-child button {
       padding: 12px 18px !important;
       border-radius: 12px !important;
       font-size: 14px !important;
@@ -872,10 +1516,12 @@
     }
 
     @media (max-width: 768px) {
-      #tab-shift .data-card > div:last-child button {
+      #tab-shift .data-card>div:last-child button {
         flex: 1 !important;
       }
-    }    /* --- DECOR KHUNG QUY ĐỊNH & CHỌN TUẦN ĐẸP TRÊN MÁY TÍNH --- */
+    }
+
+    /* --- DECOR KHUNG QUY ĐỊNH & CHỌN TUẦN ĐẸP TRÊN MÁY TÍNH --- */
     @media (min-width: 769px) {
       #tab-shift .shift-legend {
         flex-direction: row !important;
@@ -895,14 +1541,14 @@
         gap: 10px !important;
       }
 
-      #tab-shift .shift-legend-row1 > strong {
+      #tab-shift .shift-legend-row1>strong {
         font-size: 14px !important;
         color: #78350f !important;
         margin-right: 4px !important;
       }
 
       /* Bọc từng Ca A, B, C thành thẻ trắng bo góc sang trọng */
-      #tab-shift .shift-legend-row1 > div {
+      #tab-shift .shift-legend-row1>div {
         display: inline-flex !important;
         align-items: center !important;
         gap: 8px !important;
@@ -924,7 +1570,7 @@
         gap: 12px !important;
       }
 
-      #tab-shift .shift-legend-row2 > span {
+      #tab-shift .shift-legend-row2>span {
         font-size: 13.5px !important;
         color: #92400e !important;
       }
@@ -951,7 +1597,8 @@
         background: #e2e8f0 !important;
       }
     }
-/* --- DECOR PHẦN ĐẦU TAB BẢNG LỊCH LÀM PHẲNG & ĐỀU TRÊN MÁY TÍNH --- */
+
+    /* --- DECOR PHẦN ĐẦU TAB BẢNG LỊCH LÀM PHẲNG & ĐỀU TRÊN MÁY TÍNH --- */
     @media (min-width: 769px) {
       #tab-schedule .excel-header-box {
         display: flex !important;
@@ -966,7 +1613,7 @@
       }
 
       /* Gộp tiêu đề, 3 thẻ Ca A/B/C và thanh chọn tuần nằm trên cùng 1 hàng ngang thẳng tắp */
-      #tab-schedule .excel-header-box > div:first-child {
+      #tab-schedule .excel-header-box>div:first-child {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
@@ -976,7 +1623,7 @@
         width: 100% !important;
       }
 
-      #tab-schedule .excel-header-box > div:first-child > div:first-child {
+      #tab-schedule .excel-header-box>div:first-child>div:first-child {
         display: contents !important;
       }
 
@@ -1036,7 +1683,7 @@
       }
 
       /* Hàng nút của Quản lý: chỉ hiện khi có nút hiển thị, tự ẩn hoàn toàn với Nhân viên */
-      #tab-schedule .excel-header-box > div:last-child {
+      #tab-schedule .excel-header-box>div:last-child {
         display: flex !important;
         justify-content: flex-end !important;
         gap: 8px !important;
@@ -1044,10 +1691,11 @@
         border-top: 1px dashed #cbd5e1 !important;
       }
 
-      #tab-schedule .excel-header-box > div:last-child:not(:has(button[style*="inline-block"])) {
+      #tab-schedule .excel-header-box>div:last-child:not(:has(button[style*="inline-block"])) {
         display: none !important;
       }
     }
+
     /* --- DECOR TAB THỐNG KÊ CÔNG LÀM (NHÂN VIÊN) --- */
     .my-stats-grid {
       display: grid;
@@ -1215,7 +1863,8 @@
         gap: 8px;
       }
     }
-/* --- DECOR THANH TOPBAR BẰNG ẢNH THỰC TẾ CỦA QUÁN (LỘ RÕ BIỂN HIỆU) --- */
+
+    /* --- DECOR THANH TOPBAR BẰNG ẢNH THỰC TẾ CỦA QUÁN (LỘ RÕ BIỂN HIỆU) --- */
     .topbar {
       background-image:
         linear-gradient(95deg, rgba(20, 14, 10, 0.72) 0%, rgba(20, 14, 10, 0.32) 55%, rgba(20, 14, 10, 0.12) 100%),
@@ -1343,8 +1992,9 @@
         background-position: center 32% !important;
       }
     }
-          </style>
+  </style>
 </head>
+
 <body>
 
   <!-- LỚP PHỦ MỜ (BẤM RA NGOÀI ĐỂ ĐÓNG MENU) -->
@@ -1353,13 +2003,14 @@
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <button class="toggle-sidebar-btn" id="toggleBtn" onclick="toggleSidebar()">◀</button>
-<div class="sidebar-header">
+    <div class="sidebar-header">
       <div class="brand-icon" style="overflow: hidden; padding: 0;">
-        <img src="/logocarmel.jpg" alt="Carmel Logo" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+        <img src="/logocarmel.jpg" alt="Carmel Logo"
+          style="width: 100%; height: 100%; object-fit: cover; display: block;">
       </div>
       <span class="brand-title">CARMEL COFFEE</span>
     </div>
-        <div class="menu-group-title">QUẢN LÝ KHO</div>
+    <div class="menu-group-title">QUẢN LÝ KHO</div>
     <ul class="menu-list">
       <li class="menu-item active" id="menu-nvl">
         <a onclick="showTab('nvl')"><span class="menu-text">Nguyên Vật Liệu</span></a>
@@ -1412,26 +2063,32 @@
         <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
         <div id="pageTitle"><strong>Thống Kê Kho Nguyên Vật Liệu</strong></div>
       </div>
-<div class="user-info">
-        <span class="user-badge" id="userRoleBadge" onclick="enablePushNotifications()" style="cursor: pointer;" title="Chạm để kích hoạt thông báo đẩy">Nhân viên</span>
+      <div class="user-info">
+        <span class="user-badge" id="userRoleBadge" onclick="enablePushNotifications()" style="cursor: pointer;"
+          title="Chạm để kích hoạt thông báo đẩy">Nhân viên</span>
         <span id="userNameDisplay" style="font-weight: 700; color: #1e293b; font-size: 13.5px;"></span>
-        <button class="btn-action btn-reset" style="padding: 5px 12px; font-size: 11.5px;" onclick="handleLogout()">Đăng xuất</button>
+        <button class="btn-action btn-reset" style="padding: 5px 12px; font-size: 11.5px;" onclick="handleLogout()">Đăng
+          xuất</button>
       </div>
     </header>
-        <div class="content-container">
+    <div class="content-container">
 
       <!-- TAB 1: NVL -->
       <section id="tab-nvl">
         <div class="filter-card">
           <div class="filter-group">
             <label>Chi nhánh:</label>
-            <select><option>Carmel Coffee - Cơ sở chính</option><option>Carmel Coffee - Cơ sở 2</option></select>
+            <select>
+              <option>Carmel Coffee - Cơ sở chính</option>
+              <option>Carmel Coffee - Cơ sở 2</option>
+            </select>
           </div>
           <div class="filter-group" style="flex: 1; min-width: 220px;">
             <label for="searchInput">Tìm kiếm NVL:</label>
             <input type="text" id="searchInput" placeholder="Nhập tên NVL..." oninput="handleSearch(this.value)">
           </div>
-          <button class="btn-action btn-reset" id="btnResetInventory" style="display: none;" onclick="resetDefaultData()">Đặt Lại Mặc Định</button>
+          <button class="btn-action btn-reset" id="btnResetInventory" style="display: none;"
+            onclick="resetDefaultData()">Đặt Lại Mặc Định</button>
         </div>
         <div class="data-card">
           <div class="data-card-header">
@@ -1442,9 +2099,13 @@
             <table class="custom-table">
               <thead>
                 <tr>
-                  <th>STT</th><th>Tên Nguyên Vật Liệu</th><th>Đơn Vị Tính</th>
-                  <th>Số Lượng Nhập Vào (+)</th><th>Số Lượng Lấy Ra (-)</th>
-                  <th>Tồn Kho</th><th>Tình Trạng</th>
+                  <th>STT</th>
+                  <th>Tên Nguyên Vật Liệu</th>
+                  <th>Đơn Vị Tính</th>
+                  <th>Số Lượng Nhập Vào (+)</th>
+                  <th>Số Lượng Lấy Ra (-)</th>
+                  <th>Tồn Kho</th>
+                  <th>Tình Trạng</th>
                 </tr>
               </thead>
               <tbody id="inventoryTableBody"></tbody>
@@ -1466,7 +2127,8 @@
             <span style="font-weight: 700; color: #b45309;">Đăng ký cho tuần:</span>
             <div class="week-nav-box">
               <button class="week-nav-btn" onclick="changeWeek(-1)">◀</button>
-              <span id="shiftWeekDisplayLabel" style="font-weight: 700; font-size: 13px; color: #0f766e;">Tuần này</span>
+              <span id="shiftWeekDisplayLabel" style="font-weight: 700; font-size: 13px; color: #0f766e;">Tuần
+                này</span>
               <button class="week-nav-btn" onclick="changeWeek(1)">▶</button>
             </div>
           </div>
@@ -1477,9 +2139,11 @@
             <span id="submissionStatusBadge" style="font-size: 13px; font-weight: 600;"></span>
           </div>
           <div class="schedule-grid" id="scheduleGrid"></div>
-          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px; border-top: 1px solid #f1f5f9; padding-top: 16px;">
+          <div
+            style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px; border-top: 1px solid #f1f5f9; padding-top: 16px;">
             <button class="btn-action btn-reset" onclick="resetShiftForm()">Xóa</button>
-            <button class="btn-action btn-success" id="btnSubmitShift" onclick="saveShiftSchedule()">Gửi Đăng Ký</button>
+            <button class="btn-action btn-success" id="btnSubmitShift" onclick="saveShiftSchedule()">Gửi Đăng
+              Ký</button>
           </div>
         </div>
       </section>
@@ -1489,7 +2153,8 @@
         <div style="display: grid; grid-template-columns: 380px 1fr; gap: 20px;">
           <div class="data-card">
             <h3>Yêu Cầu Pass Ca</h3>
-            <p style="font-size: 12.5px; color: #64748b; margin-bottom: 14px;">Chuyển 1 ca làm của bạn cho bạn khác nhận giúp.</p>
+            <p style="font-size: 12.5px; color: #64748b; margin-bottom: 14px;">Chuyển 1 ca làm của bạn cho bạn khác nhận
+              giúp.</p>
             <div class="filter-group" style="margin-bottom: 10px;">
               <label>Ngày cần pass:</label>
               <select id="passDaySelect"></select>
@@ -1506,13 +2171,23 @@
               <label>Nhân viên nhận ca:</label>
               <select id="passTargetStaff"></select>
             </div>
-            <button class="btn-action btn-success" id="btnSubmitPass" style="width: 100%;" onclick="submitPassShift()">Gửi Yêu Cầu Pass Ca</button>
+            <button class="btn-action btn-success" id="btnSubmitPass" style="width: 100%;"
+              onclick="submitPassShift()">Gửi Yêu Cầu Pass Ca</button>
           </div>
           <div class="data-card">
             <h3>Danh Sách Yêu Cầu Pass Ca</h3>
             <div style="overflow-x: auto; margin-top: 12px;">
               <table class="custom-table" style="font-size: 13px;">
-                <thead><tr><th>Loại</th><th>Người gửi</th><th>Chi tiết</th><th>Người nhận</th><th>Trạng thái</th><th style="text-align:center;">Hành động</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Loại</th>
+                    <th>Người gửi</th>
+                    <th>Chi tiết</th>
+                    <th>Người nhận</th>
+                    <th>Trạng thái</th>
+                    <th style="text-align:center;">Hành động</th>
+                  </tr>
+                </thead>
                 <tbody id="passRequestsTableBody"></tbody>
               </table>
             </div>
@@ -1525,23 +2200,59 @@
         <div style="display: grid; grid-template-columns: 380px 1fr; gap: 20px;">
           <div class="data-card">
             <h3>Yêu Cầu Đổi Ca</h3>
-            <p style="font-size: 12.5px; color: #64748b; margin-bottom: 14px;">Hoán đổi ca làm việc của bạn với bạn khác.</p>
+            <p style="font-size: 12.5px; color: #64748b; margin-bottom: 14px;">Hoán đổi ca làm việc của bạn với bạn
+              khác.</p>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-              <div class="filter-group"><label>Ngày của bạn:</label><select id="swapMyDay"><option value="t2">Thứ 2</option><option value="t3">Thứ 3</option><option value="t4">Thứ 4</option><option value="t5">Thứ 5</option><option value="t6">Thứ 6</option><option value="t7">Thứ 7</option><option value="cn">Chủ Nhật</option></select></div>
-              <div class="filter-group"><label>Ca của bạn:</label><select id="swapMyShift"><option value="A">Ca A</option><option value="B">Ca B</option><option value="C">Ca C</option></select></div>
+              <div class="filter-group"><label>Ngày của bạn:</label><select id="swapMyDay">
+                  <option value="t2">Thứ 2</option>
+                  <option value="t3">Thứ 3</option>
+                  <option value="t4">Thứ 4</option>
+                  <option value="t5">Thứ 5</option>
+                  <option value="t6">Thứ 6</option>
+                  <option value="t7">Thứ 7</option>
+                  <option value="cn">Chủ Nhật</option>
+                </select></div>
+              <div class="filter-group"><label>Ca của bạn:</label><select id="swapMyShift">
+                  <option value="A">Ca A</option>
+                  <option value="B">Ca B</option>
+                  <option value="C">Ca C</option>
+                </select></div>
             </div>
-            <div class="filter-group" style="margin-bottom: 10px;"><label>Đổi với bạn:</label><select id="swapTargetStaff"></select></div>
+            <div class="filter-group" style="margin-bottom: 10px;"><label>Đổi với bạn:</label><select
+                id="swapTargetStaff"></select></div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
-              <div class="filter-group"><label>Ngày của bạn đó:</label><select id="swapTargetDay"><option value="t2">Thứ 2</option><option value="t3">Thứ 3</option><option value="t4">Thứ 4</option><option value="t5">Thứ 5</option><option value="t6">Thứ 6</option><option value="t7">Thứ 7</option><option value="cn">Chủ Nhật</option></select></div>
-              <div class="filter-group"><label>Ca của bạn đó:</label><select id="swapTargetShift"><option value="A">Ca A</option><option value="B">Ca B</option><option value="C">Ca C</option></select></div>
+              <div class="filter-group"><label>Ngày của bạn đó:</label><select id="swapTargetDay">
+                  <option value="t2">Thứ 2</option>
+                  <option value="t3">Thứ 3</option>
+                  <option value="t4">Thứ 4</option>
+                  <option value="t5">Thứ 5</option>
+                  <option value="t6">Thứ 6</option>
+                  <option value="t7">Thứ 7</option>
+                  <option value="cn">Chủ Nhật</option>
+                </select></div>
+              <div class="filter-group"><label>Ca của bạn đó:</label><select id="swapTargetShift">
+                  <option value="A">Ca A</option>
+                  <option value="B">Ca B</option>
+                  <option value="C">Ca C</option>
+                </select></div>
             </div>
-            <button class="btn-action" id="btnSubmitSwap" style="width: 100%;" onclick="submitSwapShift()">Gửi Yêu Cầu Đổi Ca</button>
+            <button class="btn-action" id="btnSubmitSwap" style="width: 100%;" onclick="submitSwapShift()">Gửi Yêu Cầu
+              Đổi Ca</button>
           </div>
           <div class="data-card">
             <h3>Danh Sách Yêu Cầu Đổi Ca</h3>
             <div style="overflow-x: auto; margin-top: 12px;">
               <table class="custom-table" style="font-size: 13px;">
-                <thead><tr><th>Loại</th><th>Người gửi</th><th>Chi tiết</th><th>Người đổi</th><th>Trạng thái</th><th style="text-align:center;">Hành động</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Loại</th>
+                    <th>Người gửi</th>
+                    <th>Chi tiết</th>
+                    <th>Người đổi</th>
+                    <th>Trạng thái</th>
+                    <th style="text-align:center;">Hành động</th>
+                  </tr>
+                </thead>
                 <tbody id="swapRequestsTableBody"></tbody>
               </table>
             </div>
@@ -1558,36 +2269,68 @@
                 <h3 style="margin-bottom: 0;">BẢNG LỊCH LÀM CARMEL COFFEE</h3>
                 <div class="week-nav-box">
                   <button class="week-nav-btn" onclick="changeWeek(-1)">◀</button>
-                  <span id="currentWeekDisplayLabel" style="font-weight: 700; font-size: 13px; color: #0f766e; min-width: 150px; text-align: center;">Tuần Hiện Tại</span>
+                  <span id="currentWeekDisplayLabel"
+                    style="font-weight: 700; font-size: 13px; color: #0f766e; min-width: 150px; text-align: center;">Tuần
+                    Hiện Tại</span>
                   <button class="week-nav-btn" onclick="changeWeek(1)">▶</button>
-                  <button class="week-nav-btn" onclick="changeWeek(0, true)" style="background: #e0f2fe; color: #0369a1;">Về tuần này</button>
+                  <button class="week-nav-btn" onclick="changeWeek(0, true)"
+                    style="background: #e0f2fe; color: #0369a1;">Về tuần này</button>
                 </div>
               </div>
               <table class="excel-legend-table">
-                <tr><th colspan="2">Ghi chú ca làm</th></tr>
-                <tr><td style="font-weight: 700; background: #dcfce7; color: #15803d;">CA A</td><td>6h - 12h</td></tr>
-                <tr><td style="font-weight: 700; background: #fef3c7; color: #b45309;">CA B</td><td>11h - 17h</td></tr>
-                <tr><td style="font-weight: 700; background: #f1f5f9; color: #475569;">CA C</td><td>16h - 22h</td></tr>
+                <tr>
+                  <th colspan="2">Ghi chú ca làm</th>
+                </tr>
+                <tr>
+                  <td style="font-weight: 700; background: #dcfce7; color: #15803d;">CA A</td>
+                  <td>6h - 12h</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 700; background: #fef3c7; color: #b45309;">CA B</td>
+                  <td>11h - 17h</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 700; background: #f1f5f9; color: #475569;">CA C</td>
+                  <td>16h - 22h</td>
+                </tr>
               </table>
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button class="btn-action btn-success" id="btnAutoBalance" onclick="rebalanceMasterRoster()">Chia Lịch Tự Động</button>
-              <button class="btn-action btn-reset" id="btnClearSchedule" style="background:#dc2626;" onclick="clearAllSchedules()">Xóa Lịch</button>
-<button class="btn-action" id="btnPublishRoster" style="background:#0284c7; display: none;" onclick="publishRosterToStaff()">Thông báo lịch làm</button>
+              <button class="btn-action btn-success" id="btnAutoBalance" onclick="rebalanceMasterRoster()">Chia Lịch Tự
+                Động</button>
+              <button class="btn-action btn-reset" id="btnClearSchedule" style="background:#dc2626;"
+                onclick="clearAllSchedules()">Xóa Lịch</button>
+              <button class="btn-action" id="btnPublishRoster" style="background:#0284c7; display: none;"
+                onclick="publishRosterToStaff()">Thông báo lịch làm</button>
             </div>
           </div>
           <div style="overflow-x: auto;">
             <table class="roster-grid-table">
               <thead>
                 <tr class="th-green-header">
-                  <th style="width: 50px;">STT</th><th style="width: 160px;">Họ và tên</th>
-                  <th><div>Thứ 2</div><span class="th-date-sub" id="date-t2">--/--</span></th>
-                  <th><div>Thứ 3</div><span class="th-date-sub" id="date-t3">--/--</span></th>
-                  <th><div>Thứ 4</div><span class="th-date-sub" id="date-t4">--/--</span></th>
-                  <th><div>Thứ 5</div><span class="th-date-sub" id="date-t5">--/--</span></th>
-                  <th><div>Thứ 6</div><span class="th-date-sub" id="date-t6">--/--</span></th>
-                  <th><div>Thứ 7</div><span class="th-date-sub" id="date-t7">--/--</span></th>
-                  <th style="background-color: #047857;"><div>Chủ Nhật</div><span class="th-date-sub" id="date-cn">--/--</span></th>
+                  <th style="width: 50px;">STT</th>
+                  <th style="width: 160px;">Họ và tên</th>
+                  <th>
+                    <div>Thứ 2</div><span class="th-date-sub" id="date-t2">--/--</span>
+                  </th>
+                  <th>
+                    <div>Thứ 3</div><span class="th-date-sub" id="date-t3">--/--</span>
+                  </th>
+                  <th>
+                    <div>Thứ 4</div><span class="th-date-sub" id="date-t4">--/--</span>
+                  </th>
+                  <th>
+                    <div>Thứ 5</div><span class="th-date-sub" id="date-t5">--/--</span>
+                  </th>
+                  <th>
+                    <div>Thứ 6</div><span class="th-date-sub" id="date-t6">--/--</span>
+                  </th>
+                  <th>
+                    <div>Thứ 7</div><span class="th-date-sub" id="date-t7">--/--</span>
+                  </th>
+                  <th style="background-color: #047857;">
+                    <div>Chủ Nhật</div><span class="th-date-sub" id="date-cn">--/--</span>
+                  </th>
                 </tr>
               </thead>
               <tbody id="rosterGridBody"></tbody>
@@ -1600,18 +2343,24 @@
         <div class="data-card" style="margin-bottom: 16px;">
           <div class="data-card-header" style="margin-bottom: 0;">
             <div>
-              <h3 style="margin-bottom: 4px;">Thống Kê Công Làm: <span id="myStatsStaffName" style="color: #2563eb;">...</span></h3>
-              <span style="font-size: 12.5px; color: #64748b;">Dữ liệu được tính tự động từ Bảng Lịch Làm chính thức của quán</span>
+              <h3 style="margin-bottom: 4px;">Thống Kê Công Làm: <span id="myStatsStaffName"
+                  style="color: #2563eb;">...</span></h3>
+              <span style="font-size: 12.5px; color: #64748b;">Dữ liệu được tính tự động từ Bảng Lịch Làm chính thức của
+                quán</span>
             </div>
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
               <div class="week-nav-box">
                 <button class="week-nav-btn" onclick="changeWeek(-1)">◀</button>
-                <span id="myStatsWeekLabel" style="font-weight: 700; font-size: 13px; color: #0f766e; min-width: 110px; text-align: center;">Tuần này</span>
+                <span id="myStatsWeekLabel"
+                  style="font-weight: 700; font-size: 13px; color: #0f766e; min-width: 110px; text-align: center;">Tuần
+                  này</span>
                 <button class="week-nav-btn" onclick="changeWeek(1)">▶</button>
               </div>
-              <div style="display: flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 5px 10px; border-radius: 8px;">
+              <div
+                style="display: flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 5px 10px; border-radius: 8px;">
                 <label style="font-size: 12.5px; font-weight: 600; color: #475569;">Tháng:</label>
-                <input type="month" id="myStatsMonthInput" onchange="renderMyWorkStats()" style="border: none; background: transparent; font-weight: 700; font-size: 12.5px; color: #0f172a; outline: none; cursor: pointer;">
+                <input type="month" id="myStatsMonthInput" onchange="renderMyWorkStats()"
+                  style="border: none; background: transparent; font-weight: 700; font-size: 12.5px; color: #0f172a; outline: none; cursor: pointer;">
               </div>
             </div>
           </div>
@@ -1639,9 +2388,11 @@
         <div class="data-card">
           <div class="data-card-header">
             <h3>Lịch Sử Công Làm</h3>
-            <span id="myStatsDateRange" style="font-size: 12.5px; font-weight: 600; color: #0f766e; background: #f0fdfa; padding: 4px 10px; border-radius: 8px; border: 1px solid #ccfbf1;">--/-- - --/--</span>
+            <span id="myStatsDateRange"
+              style="font-size: 12.5px; font-weight: 600; color: #0f766e; background: #f0fdfa; padding: 4px 10px; border-radius: 8px; border: 1px solid #ccfbf1;">--/--
+              - --/--</span>
           </div>
-           <div style="overflow-x: auto;">
+          <div style="overflow-x: auto;">
             <table class="custom-table">
               <thead>
                 <tr>
@@ -1655,7 +2406,8 @@
               </thead>
               <tbody id="myWeekDaysBreakdown"></tbody>
             </table>
-          </div>        </div>
+          </div>
+        </div>
       </section>
 
       <!-- TAB 4: CHẤM CÔNG -->
@@ -1664,13 +2416,16 @@
           <div class="data-card-header">
             <h3>BẢNG CHẤM CÔNG</h3>
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-              <div style="display: flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px;">
+              <div
+                style="display: flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px;">
                 <label style="font-size: 13px; font-weight: 600; color: #475569;">Xem công:</label>
-                <select id="salaryViewMode" onchange="handleSalaryViewModeChange()" style="border:none; background:transparent; font-weight:600; font-size:13px; outline:none; cursor:pointer;">
+                <select id="salaryViewMode" onchange="handleSalaryViewModeChange()"
+                  style="border:none; background:transparent; font-weight:600; font-size:13px; outline:none; cursor:pointer;">
                   <option value="week">Theo Tuần Đang Chọn</option>
                   <option value="month">Cả Tháng (Tích Luỹ)</option>
                 </select>
-                <input type="month" id="filterSalaryMonth" onchange="renderSalaryTable()" style="display: none; padding: 2px 6px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                <input type="month" id="filterSalaryMonth" onchange="renderSalaryTable()"
+                  style="display: none; padding: 2px 6px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 4px;">
               </div>
               <button class="btn-action btn-success" onclick="exportAllSalaryToExcel()">Xuất Bảng Excel</button>
             </div>
@@ -1679,10 +2434,14 @@
             <table class="custom-table" id="salaryTable">
               <thead>
                 <tr style="background-color: #f8fafc;">
-                  <th style="width: 40px; text-align: center;">STT</th><th>Họ và tên</th>
-                  <th style="text-align: center;">Số Ca Làm</th><th style="text-align: center;">Tổng Giờ</th>
-                  <th style="text-align: center;">Mức Lương/h</th><th style="text-align: right;">Tổng Lương</th>
-                  <th style="text-align: center;">Trạng Thái</th><th style="text-align: center;">Xuất Excel</th>
+                  <th style="width: 40px; text-align: center;">STT</th>
+                  <th>Họ và tên</th>
+                  <th style="text-align: center;">Số Ca Làm</th>
+                  <th style="text-align: center;">Tổng Giờ</th>
+                  <th style="text-align: center;">Mức Lương/h</th>
+                  <th style="text-align: right;">Tổng Lương</th>
+                  <th style="text-align: center;">Trạng Thái</th>
+                  <th style="text-align: center;">Xuất Excel</th>
                 </tr>
               </thead>
               <tbody id="salaryTableBody"></tbody>
@@ -1693,38 +2452,64 @@
 
       <!-- TAB 5: DOANH THU -->
       <section id="tab-revenue" style="display: none;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px;">
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px;">
           <div class="data-card" style="background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff;">
             <div style="font-size: 13px; opacity: 0.9;">TỔNG DOANH THU THÁNG</div>
             <div id="statMonthlyTotal" style="font-size: 24px; font-weight: 700; margin-top: 6px;">0 đ</div>
           </div>
           <div class="data-card" style="border-left: 4px solid #16a34a;">
             <div style="font-size: 13px; color: #64748b;">Tổng Tiền Mặt Tháng</div>
-            <div id="statMonthlyCash" style="font-size: 20px; font-weight: 700; color: #16a34a; margin-top: 6px;">0 đ</div>
+            <div id="statMonthlyCash" style="font-size: 20px; font-weight: 700; color: #16a34a; margin-top: 6px;">0 đ
+            </div>
           </div>
           <div class="data-card" style="border-left: 4px solid #0284c7;">
             <div style="font-size: 13px; color: #64748b;">Tổng Chuyển Khoản Tháng</div>
-            <div id="statMonthlyBank" style="font-size: 20px; font-weight: 700; color: #0284c7; margin-top: 6px;">0 đ</div>
+            <div id="statMonthlyBank" style="font-size: 20px; font-weight: 700; color: #0284c7; margin-top: 6px;">0 đ
+            </div>
           </div>
         </div>
         <div class="data-card">
-          <div class="data-card-header"><h3>Nhập Số Liệu Doanh Thu Hàng Ngày</h3></div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
-            <div class="filter-group"><label>Ngày ghi nhận:</label><input type="date" id="revenueDateInput" onchange="autoLoadExistingDateData(this.value)"></div>
-            <div class="filter-group"><label>Tiền mặt (VNĐ):</label><input type="number" id="cashInput" min="0" placeholder="0" oninput="calculateDailyTotalPreview()"></div>
-            <div class="filter-group"><label>Tiền chuyển khoản (VNĐ):</label><input type="number" id="bankInput" min="0" placeholder="0" oninput="calculateDailyTotalPreview()"></div>
-            <div class="filter-group"><label>Tổng ngày:</label><div id="dailyTotalPreview" style="padding: 9px 12px; background: #f1f5f9; border-radius: 6px; font-weight: 700; color: #16a34a;">0 đ</div></div>
-            <div><button class="btn-action btn-success" style="width: 100%; height: 38px;" onclick="saveDailyRevenue()">Lưu Doanh Thu</button></div>
+          <div class="data-card-header">
+            <h3>Nhập Số Liệu Doanh Thu Hàng Ngày</h3>
+          </div>
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
+            <div class="filter-group"><label>Ngày ghi nhận:</label><input type="date" id="revenueDateInput"
+                onchange="autoLoadExistingDateData(this.value)"></div>
+            <div class="filter-group"><label>Tiền mặt (VNĐ):</label><input type="number" id="cashInput" min="0"
+                placeholder="0" oninput="calculateDailyTotalPreview()"></div>
+            <div class="filter-group"><label>Tiền chuyển khoản (VNĐ):</label><input type="number" id="bankInput" min="0"
+                placeholder="0" oninput="calculateDailyTotalPreview()"></div>
+            <div class="filter-group"><label>Tổng ngày:</label>
+              <div id="dailyTotalPreview"
+                style="padding: 9px 12px; background: #f1f5f9; border-radius: 6px; font-weight: 700; color: #16a34a;">0
+                đ</div>
+            </div>
+            <div><button class="btn-action btn-success" style="width: 100%; height: 38px;"
+                onclick="saveDailyRevenue()">Lưu Doanh Thu</button></div>
           </div>
         </div>
         <div class="data-card">
           <div class="data-card-header">
             <h3>Lịch Sử Doanh Thu</h3>
-            <div style="display: flex; align-items: center; gap: 6px;"><label style="font-size: 13px; font-weight: 600;">Tháng:</label><input type="month" id="filterRevenueMonth" onchange="renderRevenueTable()" style="padding: 4px 8px; font-size: 12.5px; border: 1px solid #cbd5e1; border-radius: 6px;"></div>
+            <div style="display: flex; align-items: center; gap: 6px;"><label
+                style="font-size: 13px; font-weight: 600;">Tháng:</label><input type="month" id="filterRevenueMonth"
+                onchange="renderRevenueTable()"
+                style="padding: 4px 8px; font-size: 12.5px; border: 1px solid #cbd5e1; border-radius: 6px;"></div>
           </div>
           <div style="overflow-x: auto;">
             <table class="custom-table">
-              <thead><tr><th>STT</th><th>Ngày</th><th style="text-align:right;">Tiền mặt</th><th style="text-align:right;">Chuyển khoản</th><th style="text-align:right; color:#16a34a;">Tổng cộng</th><th style="text-align:center;">Thao tác</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Ngày</th>
+                  <th style="text-align:right;">Tiền mặt</th>
+                  <th style="text-align:right;">Chuyển khoản</th>
+                  <th style="text-align:right; color:#16a34a;">Tổng cộng</th>
+                  <th style="text-align:center;">Thao tác</th>
+                </tr>
+              </thead>
               <tbody id="revenueTableBody"></tbody>
             </table>
           </div>
@@ -1733,38 +2518,61 @@
 
       <!-- TAB 6: CHI PHÍ -->
       <section id="tab-expense" style="display: none;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px;">
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px;">
           <div class="data-card" style="background: linear-gradient(135deg, #b91c1c, #ef4444); color: #fff;">
             <div style="font-size: 13px; opacity: 0.9;">TỔNG CHI PHÍ THÁNG NÀY</div>
             <div id="statMonthlyExpense" style="font-size: 24px; font-weight: 700; margin-top: 6px;">0 đ</div>
           </div>
           <div class="data-card" style="border-left: 4px solid #f97316;">
             <div style="font-size: 13px; color: #64748b;">Tổng Chi Hôm Nay</div>
-            <div id="statTodayExpense" style="font-size: 20px; font-weight: 700; color: #ea580c; margin-top: 6px;">0 đ</div>
+            <div id="statTodayExpense" style="font-size: 20px; font-weight: 700; color: #ea580c; margin-top: 6px;">0 đ
+            </div>
           </div>
           <div class="data-card" style="border-left: 4px solid #64748b;">
             <div style="font-size: 13px; color: #64748b;">Số Khoản Chi Tháng</div>
-            <div id="statCountExpense" style="font-size: 20px; font-weight: 700; color: #334155; margin-top: 6px;">0 khoản</div>
+            <div id="statCountExpense" style="font-size: 20px; font-weight: 700; color: #334155; margin-top: 6px;">0
+              khoản</div>
           </div>
         </div>
         <div class="data-card">
-          <div class="data-card-header"><h3>Nhập Khoản Chi Phí</h3></div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
+          <div class="data-card-header">
+            <h3>Nhập Khoản Chi Phí</h3>
+          </div>
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
             <div class="filter-group"><label>Ngày chi:</label><input type="date" id="expenseDateInput"></div>
-            <div class="filter-group" style="flex: 1.5;"><label>Tên vật liệu / Nội dung:</label><input type="text" id="expenseItemInput" placeholder="Vd: Đá viên, Túi bóng..."></div>
-            <div class="filter-group" style="max-width: 130px;"><label>Số lượng:</label><input type="text" id="expenseQtyInput" placeholder="2 bao..."></div>
-            <div class="filter-group"><label>Số tiền (VNĐ):</label><input type="number" id="expenseCostInput" min="0" placeholder="0"></div>
-            <div><button class="btn-action btn-success" style="width: 100%; height: 38px; background: #dc2626;" onclick="saveExpenseItem()">Thêm Khoản Chi</button></div>
+            <div class="filter-group" style="flex: 1.5;"><label>Tên vật liệu / Nội dung:</label><input type="text"
+                id="expenseItemInput" placeholder="Vd: Đá viên, Túi bóng..."></div>
+            <div class="filter-group" style="max-width: 130px;"><label>Số lượng:</label><input type="text"
+                id="expenseQtyInput" placeholder="2 bao..."></div>
+            <div class="filter-group"><label>Số tiền (VNĐ):</label><input type="number" id="expenseCostInput" min="0"
+                placeholder="0"></div>
+            <div><button class="btn-action btn-success" style="width: 100%; height: 38px; background: #dc2626;"
+                onclick="saveExpenseItem()">Thêm Khoản Chi</button></div>
           </div>
         </div>
         <div class="data-card">
           <div class="data-card-header">
             <h3>Lịch Sử Khoản Chi</h3>
-            <div style="display: flex; align-items: center; gap: 6px;"><label style="font-size: 13px; font-weight: 600;">Tháng:</label><input type="month" id="filterExpenseMonth" onchange="renderExpenseTable()" style="padding: 4px 8px; font-size: 12.5px; border: 1px solid #cbd5e1; border-radius: 6px;"></div>
+            <div style="display: flex; align-items: center; gap: 6px;"><label
+                style="font-size: 13px; font-weight: 600;">Tháng:</label><input type="month" id="filterExpenseMonth"
+                onchange="renderExpenseTable()"
+                style="padding: 4px 8px; font-size: 12.5px; border: 1px solid #cbd5e1; border-radius: 6px;"></div>
           </div>
           <div style="overflow-x: auto;">
             <table class="custom-table">
-              <thead><tr><th>STT</th><th>Ngày</th><th>Tên vật liệu</th><th style="text-align:center;">Số lượng</th><th style="text-align:right;">Chi phí</th><th style="text-align:right; color:#b91c1c;">Tổng ngày</th><th style="text-align:center;">Thao tác</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Ngày</th>
+                  <th>Tên vật liệu</th>
+                  <th style="text-align:center;">Số lượng</th>
+                  <th style="text-align:right;">Chi phí</th>
+                  <th style="text-align:right; color:#b91c1c;">Tổng ngày</th>
+                  <th style="text-align:center;">Thao tác</th>
+                </tr>
+              </thead>
               <tbody id="expenseTableBody"></tbody>
             </table>
           </div>
@@ -1778,19 +2586,38 @@
             <h3>Cấp Tài Khoản Nhân Viên Mới</h3>
             <span style="font-size: 12.5px; color: #64748b;">Chỉ Quản lý mới có quyền tạo</span>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
-            <div class="filter-group"><label>Tên nhân viên:</label><input type="text" id="newStaffNameInput" placeholder="Vd: Tuấn, Mai..."></div>
-            <div class="filter-group"><label>Mật khẩu cấp:</label><input type="text" id="newStaffPassInput" placeholder="Nhập mật khẩu..."></div>
-            <div class="filter-group"><label>Lương/giờ (VNĐ):</label><input type="number" id="newStaffRateInput" value="25000" step="1000"></div>
-            <div class="filter-group"><label>Vai trò:</label><select id="newStaffRoleSelect"><option value="employee">Nhân viên</option><option value="manager">Quản lý</option></select></div>
-            <div><button class="btn-action btn-success" style="width: 100%; height: 38px;" onclick="createNewAccountByAdmin()">Tạo & Cấp Tài Khoản</button></div>
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
+            <div class="filter-group"><label>Tên nhân viên:</label><input type="text" id="newStaffNameInput"
+                placeholder="Vd: Tuấn, Mai..."></div>
+            <div class="filter-group"><label>Mật khẩu cấp:</label><input type="text" id="newStaffPassInput"
+                placeholder="Nhập mật khẩu..."></div>
+            <div class="filter-group"><label>Lương/giờ (VNĐ):</label><input type="number" id="newStaffRateInput"
+                value="25000" step="1000"></div>
+            <div class="filter-group"><label>Vai trò:</label><select id="newStaffRoleSelect">
+                <option value="employee">Nhân viên</option>
+                <option value="manager">Quản lý</option>
+              </select></div>
+            <div><button class="btn-action btn-success" style="width: 100%; height: 38px;"
+                onclick="createNewAccountByAdmin()">Tạo & Cấp Tài Khoản</button></div>
           </div>
         </div>
         <div class="data-card">
-          <div class="data-card-header"><h3>Danh Sách Tài Khoản</h3></div>
+          <div class="data-card-header">
+            <h3>Danh Sách Tài Khoản</h3>
+          </div>
           <div style="overflow-x: auto;">
             <table class="custom-table">
-              <thead><tr><th>STT</th><th>Tên tài khoản</th><th style="text-align:center;">Vai trò</th><th style="text-align:center;">Mức Lương</th><th style="text-align:center;">Mật khẩu</th><th style="text-align:center;">Thao tác</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Tên tài khoản</th>
+                  <th style="text-align:center;">Vai trò</th>
+                  <th style="text-align:center;">Mức Lương</th>
+                  <th style="text-align:center;">Mật khẩu</th>
+                  <th style="text-align:center;">Thao tác</th>
+                </tr>
+              </thead>
               <tbody id="accountsTableBody"></tbody>
             </table>
           </div>
@@ -1806,7 +2633,15 @@
           </div>
           <div style="overflow-x: auto;">
             <table class="custom-table">
-              <thead><tr><th>STT</th><th>Thời gian</th><th>Người thực hiện</th><th>Hành động</th><th>Chi tiết</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Thời gian</th>
+                  <th>Người thực hiện</th>
+                  <th>Hành động</th>
+                  <th>Chi tiết</th>
+                </tr>
+              </thead>
               <tbody id="logsTableBody"></tbody>
             </table>
           </div>
@@ -1823,11 +2658,17 @@
       <p id="customModalStaffLabel" style="font-size: 12.5px; color: #64748b; margin-bottom: 14px;"></p>
       <div class="filter-group" style="margin-bottom: 12px;">
         <label>Chọn Ca:</label>
-        <select id="modalShiftType"><option value="A">Ca A (06h - 12h)</option><option value="B">Ca B (11h - 17h)</option><option value="C">Ca C (16h - 22h)</option></select>
+        <select id="modalShiftType">
+          <option value="A">Ca A (06h - 12h)</option>
+          <option value="B">Ca B (11h - 17h)</option>
+          <option value="C">Ca C (16h - 22h)</option>
+        </select>
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
-        <div class="filter-group"><label>Giờ vào:</label><input type="text" id="modalStartTime" placeholder="Vd: 7h hoặc 7:30"></div>
-        <div class="filter-group"><label>Giờ về:</label><input type="text" id="modalEndTime" placeholder="Vd: 12h hoặc 17h"></div>
+        <div class="filter-group"><label>Giờ vào:</label><input type="text" id="modalStartTime"
+            placeholder="Vd: 7h hoặc 7:30"></div>
+        <div class="filter-group"><label>Giờ về:</label><input type="text" id="modalEndTime"
+            placeholder="Vd: 12h hoặc 17h"></div>
       </div>
       <div style="display: flex; justify-content: flex-end; gap: 8px;">
         <button class="btn-action btn-reset" onclick="closeCustomShiftModal()">Hủy</button>
@@ -1848,7 +2689,7 @@
       window.location.href = 'index.html';
     }
 
-async function handleLogout() {
+    async function handleLogout() {
       try {
         if ('serviceWorker' in navigator) {
           const reg = await navigator.serviceWorker.getRegistration();
@@ -1859,12 +2700,12 @@ async function handleLogout() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ endpoint: sub.endpoint })
-              }).catch(() => {});
+              }).catch(() => { });
               await sub.unsubscribe();
             }
           }
         }
-      } catch (e) {}
+      } catch (e) { }
 
       localStorage.removeItem('currentUser');
       window.location.href = 'index.html';
@@ -1874,7 +2715,7 @@ async function handleLogout() {
       { key: 't5', label: 'Thứ 5' }, { key: 't6', label: 'Thứ 6' }, { key: 't7', label: 'Thứ 7' }, { key: 'cn', label: 'Chủ Nhật' }
     ];
 
-    let currentWeekOffset = 0; 
+    let currentWeekOffset = 0;
 
     function getMondayDate(offset = 0) {
       const now = new Date();
@@ -1988,7 +2829,7 @@ async function handleLogout() {
       return Math.round(totalHours * 10) / 10;
     }
 
-const defaultItems = [
+    const defaultItems = [
       { id: 1, name: "Hạt Robusta", unit: "bịch", inQty: 0, outQty: 5 },
       { id: 2, name: "Hạt Cầu Đất", unit: "bịch", inQty: 15, outQty: 3 },
       { id: 3, name: "Hạt Núi Min", unit: "bịch", inQty: 10, outQty: 2 },
@@ -2022,7 +2863,7 @@ const defaultItems = [
         const res = await fetch('/api/data');
         if (!res.ok) return;
         const data = await res.json();
-        
+
         if (data.users) {
           const userAccounts = {};
           Object.keys(data.users).forEach(u => userAccounts[u] = data.users[u].role);
@@ -2035,7 +2876,7 @@ const defaultItems = [
         if (data.masterRoster) localStorage.setItem('carmel_master_roster', JSON.stringify(data.masterRoster));
         if (data.carmel_rosters_by_week) localStorage.setItem('carmel_rosters_by_week', JSON.stringify(data.carmel_rosters_by_week));
         if (data.shiftRequests) localStorage.setItem('carmel_shift_requests', JSON.stringify(data.shiftRequests));
-        
+
         const serverInv = data.inventory && data.inventory.length > 0 ? data.inventory : null;
         if (serverInv) {
           inventory = serverInv;
@@ -2152,16 +2993,18 @@ const defaultItems = [
         if (el) el.style.display = isManager ? 'block' : 'none';
       });
 
-['btnResetInventory', 'btnClearSchedule', 'btnAutoBalance', 'btnPublishRoster'].forEach(id => {        const el = document.getElementById(id);
+      ['btnResetInventory', 'btnClearSchedule', 'btnAutoBalance', 'btnPublishRoster'].forEach(id => {
+        const el = document.getElementById(id);
         if (el) el.style.display = isManager ? 'inline-block' : 'none';
       });
       // Bên trong hàm updateUserInfoUI(), ngay chỗ kiểm tra role === 'manager'
-if (currentUser && currentUser.role === 'manager') {
-['btnResetInventory', 'btnClearSchedule', 'btnAutoBalance', 'btnPublishRoster'].forEach(id => {    const el = document.getElementById(id);
-    if (el) el.style.display = 'inline-block';
-  });
+      if (currentUser && currentUser.role === 'manager') {
+        ['btnResetInventory', 'btnClearSchedule', 'btnAutoBalance', 'btnPublishRoster'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = 'inline-block';
+        });
 
-}
+      }
 
 
     }
@@ -2301,7 +3144,7 @@ if (currentUser && currentUser.role === 'manager') {
       }
     }
 
-function resetDefaultData() {
+    function resetDefaultData() {
       if (currentUser.role !== 'manager') return;
       if (confirm('Khôi phục toàn bộ 23 nguyên vật liệu chuẩn của quán về số lượng ban đầu?')) {
         inventory = JSON.parse(JSON.stringify(defaultItems));
@@ -2315,7 +3158,7 @@ function resetDefaultData() {
         }).catch(e => console.error("Lỗi cập nhật kho:", e));
       }
     }
-function initScheduleGrid() {
+    function initScheduleGrid() {
       const grid = document.getElementById('scheduleGrid');
       grid.innerHTML = '';
       daysOfWeek.forEach(day => {
@@ -2709,8 +3552,8 @@ function initScheduleGrid() {
           weekShiftsCount += shiftBlocks ? shiftBlocks.length : (hours > 6 ? 2 : 1);
           workingDayNames.push(day.label.replace('Thứ ', 'T').replace('Chủ Nhật', 'CN'));
         }
-if (!isWorking) return;
-const tr = document.createElement('tr');
+        if (!isWorking) return;
+        const tr = document.createElement('tr');
         tr.innerHTML = `
           <td style="text-align: center;"><strong>${stt++}</strong></td>
           <td><strong>${day.label}</strong></td>
@@ -2725,12 +3568,12 @@ const tr = document.createElement('tr');
           </td>
           <td style="text-align: center;">
             ${isWorking
-              ? '<span style="color: #16a34a; font-weight: 600;">Có lịch làm</span>'
-              : '<span style="color: #94a3b8; font-weight: 500;">Ngày nghỉ</span>'}
+            ? '<span style="color: #16a34a; font-weight: 600;">Có lịch làm</span>'
+            : '<span style="color: #94a3b8; font-weight: 500;">Ngày nghỉ</span>'}
           </td>
         `;
         breakdownEl.appendChild(tr);
-            });
+      });
 
       weekHoursCount = Math.round(weekHoursCount * 10) / 10;
 
@@ -2809,37 +3652,55 @@ const tr = document.createElement('tr');
         return;
       }
 
+      // Hàm đếm chuẩn số ca trong 1 ô lịch (kể cả ca có ghi giờ trễ)
+      function countShiftsInCell(shiftVal, hours) {
+        if (!shiftVal || shiftVal === 'Off' || hours <= 0) return 0;
+        const blocks = shiftVal.match(/[A-C](?:\([^)]+\))?/gi);
+        return blocks ? blocks.length : (hours > 6 ? 2 : 1);
+      }
+
       staffList.forEach((staffName, index) => {
         const staffRate = getStaffHourlyRate(staffName);
         let totalHours = 0, totalShifts = 0;
 
         if (viewMode === 'month') {
           Object.keys(allRostersByWeek).forEach(weekKey => {
-            if (weekKey.startsWith(selectedMonth)) {
-              const weekSchedule = (allRostersByWeek[weekKey] && allRostersByWeek[weekKey][staffName]) || {};
-              daysOfWeek.forEach(day => {
+            const parts = weekKey.split('-');
+            if (parts.length !== 3) return;
+            const weekMonday = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+            const weekSchedule = (allRostersByWeek[weekKey] && allRostersByWeek[weekKey][staffName]) || {};
+
+            daysOfWeek.forEach((day, idx) => {
+              const d = new Date(weekMonday);
+              d.setDate(weekMonday.getDate() + idx);
+              const dayMonthStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+
+              // Kiểm tra từng ngày thực tế thuộc tháng đang chọn (không bị sót tuần giao tháng)
+              if (dayMonthStr === selectedMonth) {
                 const shiftVal = weekSchedule[day.key] || 'Off';
-                if (shiftVal !== 'Off') {
-                  const h = parseShiftHours(shiftVal);
+                const h = parseShiftHours(shiftVal);
+                if (h > 0) {
                   totalHours += h;
-                  if (h > 0) totalShifts += (h > 6 ? 2 : 1);
+                  totalShifts += countShiftsInCell(shiftVal, h);
                 }
-              });
-            }
+              }
+            });
           });
         } else {
           const staffSchedule = currentRoster[staffName] || {};
           daysOfWeek.forEach(day => {
             const shiftVal = staffSchedule[day.key] || 'Off';
-            if (shiftVal !== 'Off') {
-              const h = parseShiftHours(shiftVal);
+            const h = parseShiftHours(shiftVal);
+            if (h > 0) {
               totalHours += h;
-              if (h > 0) totalShifts += (h > 6 ? 2 : 1);
+              totalShifts += countShiftsInCell(shiftVal, h);
             }
           });
         }
 
-        const totalSalary = totalHours * staffRate;
+        totalHours = Math.round(totalHours * 10) / 10;
+        const totalSalary = Math.round(totalHours * staffRate);
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td style="text-align: center; color: #64748b;"><strong>${index + 1}</strong></td>
@@ -2854,7 +3715,6 @@ const tr = document.createElement('tr');
         tbody.appendChild(tr);
       });
     }
-
     function exportSingleStaffSalaryExcel(staffName, shifts, hours, rate, salary) {
       const template = `<html><head><meta charset="utf-8"/></head><body><h3>PHIẾU LƯƠNG: ${staffName}</h3><p>Số ca: ${shifts}</p><p>Tổng giờ: ${hours}</p><p>Mức lương: ${rate}</p><p><strong>Tổng tiền: ${salary} VNĐ</strong></p></body></html>`;
       const blob = new Blob([template], { type: 'application/vnd.ms-excel;charset=utf-8;' });
@@ -3029,51 +3889,62 @@ const tr = document.createElement('tr');
       }
     }
 
-async function approveRequest(reqId) {
+    async function approveRequest(reqId) {
       if (currentUser.role !== 'manager') return;
       let requests = JSON.parse(localStorage.getItem('carmel_shift_requests')) || [];
       const req = requests.find(r => r.id === reqId);
       if (!req) return;
 
-      req.status = 'APPROVED';
-      localStorage.setItem('carmel_shift_requests', JSON.stringify(requests));
+      // Hàm phụ tách chuỗi ca thành mảng các block (vd: "A(7h-12h)B" -> ["A(7h-12h)", "B"])
+      function splitShiftBlocks(str) {
+        if (!str || str === 'Off') return [];
+        return str.match(/[A-C](?:\([^)]+\))?/gi) || [];
+      }
 
-      // TỰ ĐỘNG CẬP NHẬT BẢNG LỊCH LÀM (masterRoster)
+      // Hàm phụ nối lại các block ca theo thứ tự A -> B -> C
+      function joinShiftBlocks(blocks) {
+        if (!blocks || blocks.length === 0) return 'Off';
+        const unique = Array.from(new Set(blocks)).sort((a, b) => a.charAt(0).localeCompare(b.charAt(0)));
+        return unique.join('');
+      }
+
       let masterRoster = getCurrentRoster();
       if (!masterRoster[req.from]) masterRoster[req.from] = { t2: 'Off', t3: 'Off', t4: 'Off', t5: 'Off', t6: 'Off', t7: 'Off', cn: 'Off' };
       if (!masterRoster[req.to]) masterRoster[req.to] = { t2: 'Off', t3: 'Off', t4: 'Off', t5: 'Off', t6: 'Off', t7: 'Off', cn: 'Off' };
 
       if (req.type === 'PASS') {
-        const fromCurrent = masterRoster[req.from][req.fromDay] || 'Off';
-        const remaining = fromCurrent.replace(req.fromShift, '').trim();
-        masterRoster[req.from][req.fromDay] = remaining || 'Off';
+        const fromBlocks = splitShiftBlocks(masterRoster[req.from][req.fromDay]);
+        const matchedBlock = fromBlocks.find(b => b.startsWith(req.fromShift)) || req.fromShift;
+        const remainingFrom = fromBlocks.filter(b => !b.startsWith(req.fromShift));
+        masterRoster[req.from][req.fromDay] = joinShiftBlocks(remainingFrom);
 
-        const toCurrent = masterRoster[req.to][req.fromDay] || 'Off';
-        if (toCurrent === 'Off') {
-          masterRoster[req.to][req.fromDay] = req.fromShift;
-        } else if (!toCurrent.includes(req.fromShift)) {
-          masterRoster[req.to][req.fromDay] = (toCurrent + req.fromShift).split('').sort().join('');
+        const toBlocks = splitShiftBlocks(masterRoster[req.to][req.fromDay]);
+        if (!toBlocks.some(b => b.startsWith(req.fromShift))) {
+          toBlocks.push(matchedBlock);
         }
+        masterRoster[req.to][req.fromDay] = joinShiftBlocks(toBlocks);
+
       } else if (req.type === 'SWAP') {
-        const fromCurrent = masterRoster[req.from][req.fromDay] || 'Off';
-        const toCurrent = masterRoster[req.to][req.toDay] || 'Off';
+        const fromBlocks = splitShiftBlocks(masterRoster[req.from][req.fromDay]);
+        const toBlocks = splitShiftBlocks(masterRoster[req.to][req.toDay]);
 
-        const fromAfterRemove = fromCurrent.replace(req.fromShift, '').trim();
-        const toAfterRemove = toCurrent.replace(req.toShift, '').trim();
+        const fromMatched = fromBlocks.find(b => b.startsWith(req.fromShift)) || req.fromShift;
+        const toMatched = toBlocks.find(b => b.startsWith(req.toShift)) || req.toShift;
 
-        masterRoster[req.from][req.fromDay] = fromAfterRemove || 'Off';
-        masterRoster[req.to][req.toDay] = toAfterRemove || 'Off';
+        masterRoster[req.from][req.fromDay] = joinShiftBlocks(fromBlocks.filter(b => !b.startsWith(req.fromShift)));
+        masterRoster[req.to][req.toDay] = joinShiftBlocks(toBlocks.filter(b => !b.startsWith(req.toShift)));
 
-        const fromAtTargetDay = masterRoster[req.from][req.toDay] || 'Off';
-        masterRoster[req.from][req.toDay] = fromAtTargetDay === 'Off'
-          ? req.toShift
-          : (fromAtTargetDay.includes(req.toShift) ? fromAtTargetDay : (fromAtTargetDay + req.toShift).split('').sort().join(''));
+        const fromNewTargetBlocks = splitShiftBlocks(masterRoster[req.from][req.toDay]);
+        if (!fromNewTargetBlocks.some(b => b.startsWith(req.toShift))) fromNewTargetBlocks.push(toMatched);
+        masterRoster[req.from][req.toDay] = joinShiftBlocks(fromNewTargetBlocks);
 
-        const toAtSourceDay = masterRoster[req.to][req.fromDay] || 'Off';
-        masterRoster[req.to][req.fromDay] = toAtSourceDay === 'Off'
-          ? req.fromShift
-          : (toAtSourceDay.includes(req.fromShift) ? toAtSourceDay : (toAtSourceDay + req.fromShift).split('').sort().join(''));
+        const toNewSourceBlocks = splitShiftBlocks(masterRoster[req.to][req.fromDay]);
+        if (!toNewSourceBlocks.some(b => b.startsWith(req.fromShift))) toNewSourceBlocks.push(fromMatched);
+        masterRoster[req.to][req.fromDay] = joinShiftBlocks(toNewSourceBlocks);
       }
+
+      req.status = 'APPROVED';
+      localStorage.setItem('carmel_shift_requests', JSON.stringify(requests));
 
       saveCurrentRoster(masterRoster);
       renderRosterGridTable();
@@ -3095,9 +3966,8 @@ async function approveRequest(reqId) {
         console.error('Lỗi gửi duyệt ca lên server:', e);
       }
 
-      alert('✅ Đã phê duyệt, cập nhật bảng lịch làm và gửi thông báo cho nhân viên!');
+      alert('Đã phê duyệt, cập nhật bảng lịch làm, tính lại chấm công và gửi thông báo cho nhân viên!');
     }
-
     async function rejectRequest(reqId) {
       if (currentUser.role !== 'manager') return;
       let requests = JSON.parse(localStorage.getItem('carmel_shift_requests')) || [];
@@ -3163,7 +4033,7 @@ async function approveRequest(reqId) {
       renderRevenueTable();
     }
 
-function renderRevenueTable() {
+    function renderRevenueTable() {
       const tbody = document.getElementById('revenueTableBody');
       if (!tbody) return;
       tbody.innerHTML = '';
@@ -3322,7 +4192,7 @@ function renderRevenueTable() {
       if (document.getElementById('statCountExpense')) {
         document.getElementById('statCountExpense').textContent = monthExpenses.length + ' khoản';
       }
-    }    
+    }
 
     function deleteExpense(id) {
       if (currentUser.role !== 'manager') return;
@@ -3369,7 +4239,7 @@ function renderRevenueTable() {
       return outputArray;
     }
 
-async function enablePushNotifications() {
+    async function enablePushNotifications() {
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         alert('Trình duyệt chưa hỗ trợ thông báo đẩy!');
         return;
@@ -3417,8 +4287,8 @@ async function enablePushNotifications() {
         alert('❌ Không thể kích hoạt thông báo: ' + err.message);
       }
     }
-        setInterval(syncDataFromServer, 10000);
-// Chuyển tab dựa trên URL (?tab=...) hoặc #hash từ thông báo đẩy
+    setInterval(syncDataFromServer, 10000);
+    // Chuyển tab dựa trên URL (?tab=...) hoặc #hash từ thông báo đẩy
     function switchTabByUrl(rawUrl) {
       if (!rawUrl) return;
       try {
@@ -3433,7 +4303,7 @@ async function enablePushNotifications() {
           showTab(mappedTab);
         }
         window.history.replaceState({}, document.title, '/dashboard.html');
-      } catch (e) {}
+      } catch (e) { }
     }
 
     function handleNotificationDeepLink() {
@@ -3492,7 +4362,7 @@ async function enablePushNotifications() {
               })
             });
           }
-        } catch (e) {}
+        } catch (e) { }
       }
     }
 
@@ -3513,4 +4383,5 @@ async function enablePushNotifications() {
     });
   </script>
 </body>
+
 </html>
