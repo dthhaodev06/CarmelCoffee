@@ -694,104 +694,188 @@
         border-radius: 8px !important;
       }
     }
-    /* --- NÂNG CẤP GIAO DIỆN THẺ ĐĂNG KÝ CA LÀM (GIỮ NGUYÊN BỐ CỤC, ĐẸP & DỄ BẤM HƠN) --- */
-    #tab-shift .day-box {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+/* --- NÂNG CẤP GIAO DIỆN PHIẾU ĐĂNG KÝ CA LÀM (DẠNG LIST HIỆN ĐẠI, ĐỒNG BỘ TÔNG CÀ PHÊ) --- */
+    #tab-shift .data-card {
+      border-radius: 18px !important;
       border: 1.5px solid #e2e8f0 !important;
-      border-radius: 16px !important;
-      padding: 16px 14px !important;
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05) !important;
+      padding: 18px 16px !important;
     }
 
-    #tab-shift .day-box:hover {
-      border-color: #cbd5e1 !important;
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.07) !important;
+    #tab-shift .data-card-header {
+      padding-bottom: 14px !important;
+      margin-bottom: 16px !important;
+      border-bottom: 1.5px solid #f1f5f9 !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+    #tab-shift .data-card-header h3 {
+      font-size: 16.5px !important;
+      color: #1e293b !important;
+      margin: 0 !important;
+    }
+
+    #tab-shift #submissionStatusBadge span {
+      display: inline-flex !important;
+      align-items: center !important;
+      padding: 5px 12px !important;
+      border-radius: 20px !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      background: #fef2f2 !important;
+      border: 1px solid #fecaca !important;
+    }
+
+    #tab-shift #submissionStatusBadge span[style*="#16a34a"] {
+      background: #f0fdf4 !important;
+      border-color: #bbf7d0 !important;
+    }
+
+    #tab-shift .schedule-grid {
+      gap: 14px !important;
+    }
+
+    /* Card từng ngày: Tiêu đề bên trái - Huy hiệu trạng thái bên phải - Danh sách ca bên dưới */
+    #tab-shift .day-box {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      background: #ffffff !important;
+      border: 1.5px solid #e2e8f0 !important;
+      border-radius: 16px !important;
+      padding: 14px 14px 16px !important;
+      box-shadow: 0 4px 12px rgba(36, 24, 17, 0.04) !important;
+      transition: all 0.2s ease !important;
+    }
+
+    /* Đổi viền thẻ ngày sang tông ấm khi đã chọn ít nhất 1 ca */
+    #tab-shift .day-box:has(input[type="checkbox"]:checked) {
+      border-color: #f3d078 !important;
+      background: linear-gradient(180deg, #fffdf8 0%, #ffffff 100%) !important;
+      box-shadow: 0 6px 16px rgba(180, 83, 9, 0.08) !important;
     }
 
     #tab-shift .day-title {
+      order: 1;
       font-size: 15.5px !important;
+      font-weight: 800 !important;
+      color: #241811 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+    #tab-shift .day-title::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #b45309;
+      display: inline-block;
+    }
+
+    /* Huy hiệu Nghỉ (Off) / Ca đã chọn đưa lên góc phải ngang hàng với Thứ */
+    #tab-shift .shift-summary-badge {
+      order: 2;
+      margin: 0 !important;
+      padding: 4px 12px !important;
+      border-radius: 20px !important;
+      font-size: 12px !important;
       font-weight: 700 !important;
-      color: #0f172a !important;
-      padding-bottom: 10px !important;
-      margin-bottom: 12px !important;
-      border-bottom: 1.5px dashed #e2e8f0 !important;
       letter-spacing: 0.2px;
     }
 
+    /* Danh sách dọc Ca A, Ca B, Ca C nằm full chiều ngang bên dưới */
     #tab-shift .shift-checkboxes {
+      order: 3;
+      flex: 1 1 100% !important;
+      width: 100% !important;
+      margin-top: 12px !important;
+      padding-top: 12px !important;
+      border-top: 1px dashed #e2e8f0 !important;
       gap: 9px !important;
     }
 
-    /* Biến từng dòng Ca A, Ca B, Ca C thành khung nút bấm gọn gàng */
     #tab-shift .shift-checkboxes > div {
-      background: #ffffff;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 11px;
-      padding: 9px 12px;
-      transition: all 0.2s ease;
+      background: #f8fafc !important;
+      border: 1.5px solid #e2e8f0 !important;
+      border-radius: 12px !important;
+      padding: 11px 14px !important;
+      transition: all 0.2s ease !important;
     }
 
-    /* Hiệu ứng nổi bật khi tích chọn ca */
+    /* Hiệu ứng nổi bật tông vàng cà phê khi tích chọn ca */
     #tab-shift .shift-checkboxes > div:has(input[type="checkbox"]:checked) {
-      background: #eff6ff !important;
-      border-color: #3b82f6 !important;
-      box-shadow: 0 2px 6px rgba(59, 130, 246, 0.12);
+      background: #fffbeb !important;
+      border-color: #f59e0b !important;
+      box-shadow: 0 3px 10px rgba(245, 158, 11, 0.14) !important;
     }
 
     #tab-shift .shift-checkboxes label {
-      font-size: 14px !important;
-      font-weight: 600 !important;
+      font-size: 14.5px !important;
+      font-weight: 700 !important;
       color: #334155 !important;
-      gap: 10px !important;
-      width: 100%;
+      gap: 12px !important;
+      width: 100% !important;
+      margin: 0 !important;
     }
 
     #tab-shift .shift-checkboxes > div:has(input[type="checkbox"]:checked) label {
-      color: #1d4ed8 !important;
+      color: #92400e !important;
     }
 
     #tab-shift .shift-checkboxes input[type="checkbox"] {
-      width: 18px !important;
-      height: 18px !important;
-      accent-color: #2563eb;
+      width: 19px !important;
+      height: 19px !important;
+      accent-color: #b45309 !important;
       cursor: pointer;
     }
 
-    /* Ô nhập giờ trễ bên trong thẻ ca */
+    /* Ô nhập giờ trễ khi mở rộng */
+    #tab-shift .shift-checkboxes div[id^="custom-time-"] {
+      margin: 8px 0 2px 31px !important;
+    }
+
     #tab-shift .shift-checkboxes input[type="text"] {
-      margin-top: 6px !important;
-      padding: 7px 10px !important;
-      font-size: 12.5px !important;
-      border: 1px solid #93c5fd !important;
-      border-radius: 8px !important;
+      padding: 8px 11px !important;
+      font-size: 13px !important;
+      border: 1.5px solid #fcd34d !important;
+      border-radius: 9px !important;
       background: #ffffff !important;
+      color: #1e293b !important;
     }
 
-    /* Huy hiệu Nghỉ (Off) / Ca đã chọn */
-    #tab-shift .shift-summary-badge {
-      margin-top: 14px !important;
-      padding: 6px 16px !important;
-      border-radius: 20px !important;
-      font-size: 12.5px !important;
+    /* Hàng nút Xóa & Gửi Đăng Ký ở cuối phiếu */
+    #tab-shift .data-card > div:last-child {
+      display: flex !important;
+      gap: 10px !important;
+      margin-top: 18px !important;
+      padding-top: 16px !important;
+      border-top: 1.5px solid #f1f5f9 !important;
+    }
+
+    #tab-shift .data-card > div:last-child button {
+      padding: 12px 18px !important;
+      border-radius: 12px !important;
+      font-size: 14px !important;
       font-weight: 700 !important;
-      letter-spacing: 0.2px;
     }
 
-    /* 2 nút Xóa Chọn Lại & Gửi Đăng Ký cân đối trên mobile */
+    #tab-shift #btnSubmitShift {
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25) !important;
+    }
+
     @media (max-width: 768px) {
-      #tab-shift .data-card > div:last-child {
-        display: flex !important;
-        gap: 10px !important;
-      }
       #tab-shift .data-card > div:last-child button {
         flex: 1 !important;
-        padding: 12px 10px !important;
-        border-radius: 12px !important;
-        font-size: 13.5px !important;
       }
-    }
-    /* --- DECOR KHUNG QUY ĐỊNH & CHỌN TUẦN ĐẸP TRÊN MÁY TÍNH --- */
+    }    /* --- DECOR KHUNG QUY ĐỊNH & CHỌN TUẦN ĐẸP TRÊN MÁY TÍNH --- */
     @media (min-width: 769px) {
       #tab-shift .shift-legend {
         flex-direction: row !important;
