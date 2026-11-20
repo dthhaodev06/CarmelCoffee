@@ -27,12 +27,12 @@ const MONGO_URI = rawMongoUri
   : '';
 
 if (!MONGO_URI) {
-  console.error('❌ Thiếu biến môi trường MONGO_URI');
+  console.error('Thiếu biến môi trường MONGO_URI');
   process.exit(1);
 }
 
 if (!/^mongodb(?:\+srv)?:\/\//.test(MONGO_URI)) {
-  console.error('❌ MONGO_URI không hợp lệ: chuỗi phải bắt đầu bằng mongodb:// hoặc mongodb+srv://');
+  console.error('MONGO_URI không hợp lệ: chuỗi phải bắt đầu bằng mongodb:// hoặc mongodb+srv://');
   process.exit(1);
 }
 
@@ -318,7 +318,7 @@ app.post('/api/shifts/clear-roster', requireAuth, requireManager, (req, res) => 
 });
 
 // 7. Cập nhật kho -> Bắn thông báo NVL (khi bấm mở thẳng tab-nvl)
-app.post('/api/inventory', requireAuth, requireManager, async (req, res) => {
+app.post('/api/inventory', requireAuth, async (req, res) => {
   const { items, actor } = req.body;
   const data = readData();
   data.inventory = items;
