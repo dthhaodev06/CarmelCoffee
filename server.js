@@ -192,6 +192,19 @@ app.post('/api/save-data', requireAuth, (req, res) => {
   if (incomingData.carmel_registrations_by_week) data.carmel_registrations_by_week = incomingData.carmel_registrations_by_week;
   if (incomingData.carmel_rosters_by_week) data.carmel_rosters_by_week = incomingData.carmel_rosters_by_week;
 
+  if (incomingData.carmel_revenue_records) {
+    logActivity(data, req.auth.name, 'Cập nhật doanh thu', `Đã đồng bộ dữ liệu doanh thu (${Object.keys(incomingData.carmel_revenue_records).length} ngày)`);
+  }
+  if (incomingData.carmel_expense_records) {
+    logActivity(data, req.auth.name, 'Cập nhật chi phí', `Đã đồng bộ ${incomingData.carmel_expense_records.length} khoản chi`);
+  }
+  if (incomingData.carmel_full_users || incomingData.carmel_staff_rates) {
+    logActivity(data, req.auth.name, 'Cập nhật tài khoản/lương', 'Đã lưu mức lương hoặc thông tin tài khoản');
+  }
+  if (incomingData.carmel_rosters_by_week || incomingData.carmel_master_roster) {
+    logActivity(data, req.auth.name, 'Cập nhật lịch làm', 'Đã lưu thay đổi bảng lịch làm');
+  }
+
   writeData(data);
   res.json({ success: true });
 });
@@ -445,6 +458,20 @@ app.post('/api/revenue', requireAuth, requireManager, (req, res) => {
 });
 
 // 12. Chi phí
+app.delete('/api/revenue/:date', requireAuth, requireManager, (req, res) => {
+  const date = req.params.date;
+  const actor = req.auth.name;
+  const data = readData();
+  if (!data.revenue[date] && !data.carmel_revenue_records[date]) {
+    return res.status(404).json({ success: false, message: 'Không tìm thấy dữ liệu doanh thu!' });
+  }
+  delete data.revenue[date];
+  delete data.carmel_revenue_records[date];
+  logActivity(data, actor, 'Xóa doanh thu', `Ngày ${date}`);
+  writeData(data);
+  res.json({ success: true });
+});
+
 app.post('/api/expenses', requireAuth, requireManager, (req, res) => {
   const { item, actor } = req.body;
   const data = readData();

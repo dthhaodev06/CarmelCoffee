@@ -2874,6 +2874,11 @@
       const users = JSON.parse(localStorage.getItem('carmel_full_users')) || {};
       if (users[staffName]) { users[staffName].hourlyRate = rateNum; localStorage.setItem('carmel_full_users', JSON.stringify(users)); }
       pushDataToServer({ carmel_full_users: users, carmel_staff_rates: customRates });
+      apiFetch('/api/save-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ carmel_full_users: users, carmel_staff_rates: customRates })
+      }).catch(() => {});
       renderSalaryTable();
       renderAccountsTable();
       return true;
@@ -4148,7 +4153,11 @@
       let revenueData = JSON.parse(localStorage.getItem('carmel_revenue_records')) || {};
       revenueData[dateStr] = { cash, bank, total: cash + bank };
       localStorage.setItem('carmel_revenue_records', JSON.stringify(revenueData));
-      pushDataToServer({ carmel_revenue_records: revenueData });
+      await apiFetch('/api/revenue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date: dateStr, record: revenueData[dateStr], actor: currentUser.name })
+      });
       alert('Đã lưu doanh thu!');
       renderRevenueTable();
     }
@@ -4209,14 +4218,19 @@
       }
     }
 
-    function deleteRevenue(dateStr) {
+    async function deleteRevenue(dateStr) {
       if (currentUser.role !== 'manager') return;
       if (confirm('Xóa ngày này?')) {
-        let revenueData = JSON.parse(localStorage.getItem('carmel_revenue_records')) || {};
-        delete revenueData[dateStr];
-        localStorage.setItem('carmel_revenue_records', JSON.stringify(revenueData));
-        pushDataToServer({ carmel_revenue_records: revenueData });
-        renderRevenueTable();
+        try {
+          const res = await apiFetch(`/api/revenue/${encodeURIComponent(dateStr)}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Không thể xóa doanh thu');
+          let revenueData = JSON.parse(localStorage.getItem('carmel_revenue_records')) || {};
+          delete revenueData[dateStr];
+          localStorage.setItem('carmel_revenue_records', JSON.stringify(revenueData));
+          renderRevenueTable();
+        } catch (e) {
+          alert('Lỗi xóa doanh thu!');
+        }
       }
     }
 
@@ -4241,7 +4255,11 @@
       let expenses = JSON.parse(localStorage.getItem('carmel_expense_records')) || [];
       expenses.push(newItem);
       localStorage.setItem('carmel_expense_records', JSON.stringify(expenses));
-      pushDataToServer({ carmel_expense_records: expenses });
+      await apiFetch('/api/expenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ item: newItem, actor: currentUser.name })
+      });
 
       document.getElementById('expenseItemInput').value = '';
       document.getElementById('expenseCostInput').value = '';
@@ -4314,14 +4332,19 @@
       }
     }
 
-    function deleteExpense(id) {
+    async function deleteExpense(id) {
       if (currentUser.role !== 'manager') return;
       if (confirm('Xóa khoản chi này?')) {
-        let expenses = JSON.parse(localStorage.getItem('carmel_expense_records')) || [];
-        expenses = expenses.filter(i => i.id !== id);
-        localStorage.setItem('carmel_expense_records', JSON.stringify(expenses));
-        pushDataToServer({ carmel_expense_records: expenses });
-        renderExpenseTable();
+        try {
+          const res = await apiFetch(`/api/expenses/${encodeURIComponent(id)}?actor=${encodeURIComponent(currentUser.name)}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Không thể xóa khoản chi');
+          let expenses = JSON.parse(localStorage.getItem('carmel_expense_records')) || [];
+          expenses = expenses.filter(i => i.id !== id);
+          localStorage.setItem('carmel_expense_records', JSON.stringify(expenses));
+          renderExpenseTable();
+        } catch (e) {
+          alert('Lỗi xóa khoản chi!');
+        }
       }
     }
     function initProfitTab() {
@@ -4494,7 +4517,12 @@
         alert('❌ Không thể kích hoạt thông báo: ' + err.message);
       }
     }
-    setInterval(syncDataFromServer, 10000);
+    setInterval(() => {
+      syncDataFromServer();
+      if (document.getElementById('tab-logs')?.style.display !== 'none') {
+        loadAuditLogs();
+      }
+    }, 10000);
     // Chuyển tab dựa trên URL (?tab=...) hoặc #hash từ thông báo đẩy
     function switchTabByUrl(rawUrl) {
       if (!rawUrl) return;
