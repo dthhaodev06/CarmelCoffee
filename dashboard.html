@@ -2976,6 +2976,8 @@
         renderMyWorkStats();
         renderShiftRequests();
         renderExpenseTable();
+        renderRevenueTable();
+        renderProfitReport();
         renderAccountsTable();
       } catch (e) {
         console.warn("Lỗi đồng bộ:", e);
@@ -3876,7 +3878,7 @@
       const targetStaff = document.getElementById('passTargetStaff').value;
       if (!targetStaff) { alert('Chưa có nhân viên nhận ca!'); if (btn) btn.disabled = false; return; }
 
-      const newReq = { id: Date.now(), type: 'PASS', from: currentUser.name, to: targetStaff, fromDay: day, fromShift: shift, status: 'PENDING' };
+      const newReq = { id: Date.now(), type: 'PASS', from: currentUser.name, to: targetStaff, fromDay: day, fromShift: shift, status: 'PENDING', weekKey: getWeekKey(currentWeekOffset) };
       let requests = JSON.parse(localStorage.getItem('carmel_shift_requests')) || [];
       requests.push(newReq);
       localStorage.setItem('carmel_shift_requests', JSON.stringify(requests));
@@ -3906,7 +3908,7 @@
 
       if (!targetStaff) { alert('Chưa chọn nhân viên đổi ca!'); if (btn) btn.disabled = false; return; }
 
-      const newReq = { id: Date.now(), type: 'SWAP', from: currentUser.name, to: targetStaff, fromDay: myDay, fromShift: myShift, toDay: targetDay, toShift: targetShift, status: 'PENDING' };
+      const newReq = { id: Date.now(), type: 'SWAP', from: currentUser.name, to: targetStaff, fromDay: myDay, fromShift: myShift, toDay: targetDay, toShift: targetShift, status: 'PENDING', weekKey: getWeekKey(currentWeekOffset) };
       let requests = JSON.parse(localStorage.getItem('carmel_shift_requests')) || [];
       requests.push(newReq);
       localStorage.setItem('carmel_shift_requests', JSON.stringify(requests));
@@ -4002,13 +4004,22 @@
         return unique.join('');
       }
 
-      let masterRoster = getCurrentRoster();
+      const requestWeekKey = req.weekKey || getWeekKey(0);
+      const rostersByWeek = JSON.parse(localStorage.getItem('carmel_rosters_by_week')) || {};
+      let masterRoster = JSON.parse(JSON.stringify(
+        rostersByWeek[requestWeekKey]
+        || (requestWeekKey === getWeekKey(0) ? JSON.parse(localStorage.getItem('carmel_master_roster')) || {} : {})
+      ));
       if (!masterRoster[req.from]) masterRoster[req.from] = { t2: 'Off', t3: 'Off', t4: 'Off', t5: 'Off', t6: 'Off', t7: 'Off', cn: 'Off' };
       if (!masterRoster[req.to]) masterRoster[req.to] = { t2: 'Off', t3: 'Off', t4: 'Off', t5: 'Off', t6: 'Off', t7: 'Off', cn: 'Off' };
 
       if (req.type === 'PASS') {
         const fromBlocks = splitShiftBlocks(masterRoster[req.from][req.fromDay]);
-        const matchedBlock = fromBlocks.find(b => b.startsWith(req.fromShift)) || req.fromShift;
+        const matchedBlock = fromBlocks.find(b => b.startsWith(req.fromShift));
+        if (!matchedBlock) {
+          alert(`Nhân viên ${req.from} không còn Ca ${req.fromShift} trong tuần yêu cầu. Yêu cầu không thể duyệt.`);
+          return;
+        }
         const remainingFrom = fromBlocks.filter(b => !b.startsWith(req.fromShift));
         masterRoster[req.from][req.fromDay] = joinShiftBlocks(remainingFrom);
 
@@ -4022,8 +4033,12 @@
         const fromBlocks = splitShiftBlocks(masterRoster[req.from][req.fromDay]);
         const toBlocks = splitShiftBlocks(masterRoster[req.to][req.toDay]);
 
-        const fromMatched = fromBlocks.find(b => b.startsWith(req.fromShift)) || req.fromShift;
-        const toMatched = toBlocks.find(b => b.startsWith(req.toShift)) || req.toShift;
+        const fromMatched = fromBlocks.find(b => b.startsWith(req.fromShift));
+        const toMatched = toBlocks.find(b => b.startsWith(req.toShift));
+        if (!fromMatched || !toMatched) {
+          alert('Ca nguồn không còn trong lịch chính thức. Yêu cầu đổi ca không thể duyệt.');
+          return;
+        }
 
         masterRoster[req.from][req.fromDay] = joinShiftBlocks(fromBlocks.filter(b => !b.startsWith(req.fromShift)));
         masterRoster[req.to][req.toDay] = joinShiftBlocks(toBlocks.filter(b => !b.startsWith(req.toShift)));
@@ -4040,7 +4055,16 @@
       req.status = 'APPROVED';
       localStorage.setItem('carmel_shift_requests', JSON.stringify(requests));
 
-      saveCurrentRoster(masterRoster);
+      rostersByWeek[requestWeekKey] = masterRoster;
+      localStorage.setItem('carmel_rosters_by_week', JSON.stringify(rostersByWeek));
+      if (requestWeekKey === getWeekKey(0)) {
+        localStorage.setItem('carmel_master_roster', JSON.stringify(masterRoster));
+      }
+      pushDataToServer({
+        carmel_rosters_by_week: rostersByWeek,
+        ...(requestWeekKey === getWeekKey(0) ? { carmel_master_roster: masterRoster } : {})
+      });
+
       renderRosterGridTable();
       renderSalaryTable();
       renderShiftRequests();
@@ -4054,7 +4078,7 @@
             status: 'APPROVED',
             actor: currentUser.name,
             masterRoster: masterRoster,
-            weekKey: getWeekKey(currentWeekOffset)
+            weekKey: requestWeekKey
           })
         });
       } catch (e) {
@@ -4080,7 +4104,8 @@
           body: JSON.stringify({
             reqId: req.id,
             status: 'REJECTED',
-            actor: currentUser.name
+            actor: currentUser.name,
+            weekKey: req.weekKey || getWeekKey(0)
           })
         });
       } catch (e) {

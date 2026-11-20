@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -366,21 +368,35 @@ newRequest.type === 'SWAP' ? '/dashboard.html?tab=tab-swap-shift' : '/dashboard.
 });
 
 // 10. Duyệt / Từ chối Pass hoặc Đổi ca -> GỬI THÔNG BÁO VỀ MÁY NHÂN VIÊN LIÊN QUAN
+function getCurrentWeekKey() {
+  const now = new Date();
+  const currentDay = now.getDay();
+  const diff = (currentDay === 0 ? -6 : 1) - currentDay;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + diff);
+  monday.setHours(0, 0, 0, 0);
+  return `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`;
+}
+
 app.post('/api/shifts/handle-request', requireAuth, requireManager, (req, res) => {
   const { reqId, status, actor, masterRoster, weekKey } = req.body;
   const data = readData();
   const targetReq = data.shiftRequests.find(r => r.id === reqId);
 
   if (targetReq) {
+    if (targetReq.status !== 'PENDING') {
+      return res.status(409).json({ success: false, message: 'Yêu cầu đã được xử lý!' });
+    }
+    const requestWeekKey = targetReq.weekKey || weekKey || getCurrentWeekKey();
     targetReq.status = status;
     const carmelTarget = data.carmel_shift_requests.find(r => r.id === reqId);
     if (carmelTarget) carmelTarget.status = status;
-    if (masterRoster) {
-      data.masterRoster = masterRoster;
-      data.carmel_master_roster = masterRoster;
-      if (weekKey) {
-        if (!data.carmel_rosters_by_week) data.carmel_rosters_by_week = {};
-        data.carmel_rosters_by_week[weekKey] = masterRoster;
+    if (status === 'APPROVED' && masterRoster) {
+      if (!data.carmel_rosters_by_week) data.carmel_rosters_by_week = {};
+      data.carmel_rosters_by_week[requestWeekKey] = masterRoster;
+      if (requestWeekKey === getCurrentWeekKey()) {
+        data.masterRoster = masterRoster;
+        data.carmel_master_roster = masterRoster;
       }
     }
     logActivity(data, actor, `${status === 'APPROVED' ? 'Phê duyệt' : 'Từ chối'} yêu cầu`, `Mã yêu cầu: #${reqId}`);
