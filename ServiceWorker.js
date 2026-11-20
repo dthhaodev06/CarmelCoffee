@@ -25,9 +25,8 @@ self.addEventListener('push', (event) => {
     data: { url: data.url || '/dashboard.html' }
   };
 
-  event.waitUntil(
-    self.registration.showNotification(data.title, options)
-  );
+  const notificationPromise = self.registration.showNotification(data.title, options);
+  event.waitUntil(notificationPromise);
 });
 
 // Xử lý khi người dùng chạm vào banner thông báo

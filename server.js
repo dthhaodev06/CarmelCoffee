@@ -318,7 +318,7 @@ app.post('/api/shifts/clear-roster', requireAuth, requireManager, (req, res) => 
 });
 
 // 7. Cập nhật kho -> Bắn thông báo NVL (khi bấm mở thẳng tab-nvl)
-app.post('/api/inventory', requireAuth, requireManager, (req, res) => {
+app.post('/api/inventory', requireAuth, requireManager, async (req, res) => {
   const { items, actor } = req.body;
   const data = readData();
   data.inventory = items;
@@ -330,7 +330,7 @@ app.post('/api/inventory', requireAuth, requireManager, (req, res) => {
     const lowStockItems = items.filter(i => (Number(i.inQty) - Number(i.outQty)) <= 3);
     if (lowStockItems.length > 0) {
       const names = lowStockItems.map(i => `${i.name} (còn ${Math.max(0, i.inQty - i.outQty)} ${i.unit})`).join(', ');
-      sendPushToTargets(
+      await sendPushToTargets(
         s => s.role === 'manager',
         'Cảnh báo Kho NVL',
         `${names}.`,
@@ -343,7 +343,7 @@ app.post('/api/inventory', requireAuth, requireManager, (req, res) => {
 });
 
 // 8. Đăng ký ca làm -> Báo Quản lý (khi bấm mở thẳng tab-shift)
-app.post('/api/shifts/register', requireAuth, (req, res) => {
+app.post('/api/shifts/register', requireAuth, async (req, res) => {
   const { staffName, schedule, weekKey } = req.body;
   if (staffName !== req.auth.name) return res.status(403).json({ success: false, message: 'Không thể đăng ký thay nhân viên khác!' });
   const data = readData();
@@ -356,7 +356,7 @@ app.post('/api/shifts/register', requireAuth, (req, res) => {
   logActivity(data, staffName, 'Đăng ký ca làm', 'Nộp phiếu đăng ký tuần');
   writeData(data);
 
-  sendPushToTargets(
+  await sendPushToTargets(
     s => s.role === 'manager',
     'Đăng ký Ca Làm',
     `Nhân viên ${staffName} vừa nộp phiếu đăng ký lịch làm tuần mới!`,
@@ -367,7 +367,7 @@ app.post('/api/shifts/register', requireAuth, (req, res) => {
 });
 
 // 9. Yêu cầu Pass / Đổi ca -> Báo Quản lý (khi bấm mở thẳng tab-request)
-app.post('/api/shifts/request', requireAuth, (req, res) => {
+app.post('/api/shifts/request', requireAuth, async (req, res) => {
   const { newRequest } = req.body;
   if (!newRequest || newRequest.from !== req.auth.name) {
     return res.status(403).json({ success: false, message: 'Không thể tạo yêu cầu thay nhân viên khác!' });
@@ -379,7 +379,7 @@ app.post('/api/shifts/request', requireAuth, (req, res) => {
   writeData(data);
 
   const actionText = newRequest.type === 'PASS' ? 'xin Pass ca' : 'xin Đổi ca';
-  sendPushToTargets(
+  await sendPushToTargets(
     s => s.role === 'manager',
     'Yêu Cầu Ca Làm',
     `Nhân viên ${newRequest.from} vừa gửi đơn ${actionText} cho ${newRequest.to}. Quản lý vui lòng xét duyệt!`,
@@ -399,7 +399,7 @@ function getCurrentWeekKey() {
   return `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`;
 }
 
-app.post('/api/shifts/handle-request', requireAuth, requireManager, (req, res) => {
+app.post('/api/shifts/handle-request', requireAuth, requireManager, async (req, res) => {
   const { reqId, status, actor, masterRoster, weekKey } = req.body;
   const data = readData();
   const targetReq = data.shiftRequests.find(r => r.id === reqId);
@@ -428,7 +428,7 @@ app.post('/api/shifts/handle-request', requireAuth, requireManager, (req, res) =
     const statusText = status === 'APPROVED' ? 'ĐÃ CHẤP NHẬN ✅' : 'ĐÃ TỪ CHỐI ❌';
     const relatedNames = [targetReq.from, targetReq.to].filter(Boolean).map(n => n.toLowerCase());
 
-    sendPushToTargets(
+    await sendPushToTargets(
       s => s.role === 'employee' && relatedNames.includes((s.actor || '').toLowerCase()),
       `Kết quả ${typeText}`,
       `Quản lý ${statusText} yêu cầu ${typeText} giữa ${targetReq.from} và ${targetReq.to}.`,
@@ -438,13 +438,13 @@ targetReq.type === 'SWAP' ? '/dashboard.html?tab=tab-swap-shift' : '/dashboard.h
 });
 
 // 10B. API BÁO CHO TOÀN BỘ NHÂN VIÊN KHI QUẢN LÝ ĐÃ XẾP XONG BẢNG LỊCH LÀM
-app.post('/api/shifts/publish-roster', requireAuth, requireManager, (req, res) => {
+app.post('/api/shifts/publish-roster', requireAuth, requireManager, async (req, res) => {
   const { actor, weekLabel } = req.body;
   const data = readData();
   logActivity(data, actor || 'Quản lý', 'Công bố lịch làm', `Đã hoàn tất xếp lịch (${weekLabel || 'tuần mới'})`);
   writeData(data);
 
-  sendPushToTargets(
+  await sendPushToTargets(
     s => s.role === 'employee',
     'Lịch Làm Việc Mới 📅',
     `Quản lý đã xếp xong bảng lịch làm ${weekLabel || 'tuần mới'}. Vào xem ca của bạn ngay!`,
@@ -523,33 +523,48 @@ webpush.setVapidDetails(
 );
 
 // HÀM GỬI THÔNG BÁO ĐẾN ĐÚNG NHÓM ĐỐI TƯỢNG VÀ KÈM URL TAB ĐÍCH
-function sendPushToTargets(filterFn, title, message, targetUrl = '/dashboard.html') {
+async function sendPushToTargets(filterFn, title, message, targetUrl = '/dashboard.html') {
   const payload = JSON.stringify({ title, body: message, url: targetUrl });
   const data = readData();
-  const subs = data.pushSubscriptions || [];
-  let changed = false;
-
+  const subs = Array.isArray(data.pushSubscriptions) ? data.pushSubscriptions : [];
   const matchedSubs = subs.filter(filterFn);
 
-  matchedSubs.forEach(subObj => {
+  const results = await Promise.allSettled(matchedSubs.map(async subObj => {
     const subTarget = subObj.subscription ? subObj.subscription : subObj;
-    webpush.sendNotification(subTarget, payload)
-      .then(() => {
-        console.log(`✅ Đã gửi Push [${title}] tới ${subObj.actor} (${subObj.role})`);
-      })
-      .catch(err => {
-        console.error('❌ Lỗi gửi Push:', err.statusCode, err.body || err.message);
-        if ([401, 403, 404, 410].includes(err.statusCode)) {
-          data.pushSubscriptions = data.pushSubscriptions.filter(s => {
-            const ep = s.subscription ? s.subscription.endpoint : s.endpoint;
-            return ep !== subTarget.endpoint;
-          });
-          changed = true;
-        }
-      });
+    await webpush.sendNotification(subTarget, payload);
+    console.log(`✅ Đã gửi Push [${title}] tới ${subObj.actor} (${subObj.role})`);
+  }));
+
+  const invalidEndpoints = new Set();
+  let successCount = 0;
+  let failureCount = 0;
+
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      successCount++;
+      return;
+    }
+
+    failureCount++;
+    const err = result.reason || {};
+    const subObj = matchedSubs[index];
+    const subTarget = subObj.subscription ? subObj.subscription : subObj;
+    console.error('❌ Lỗi gửi Push:', err.statusCode, err.body || err.message);
+
+    if ([403, 404, 410].includes(err.statusCode)) {
+      invalidEndpoints.add(subTarget.endpoint);
+    }
   });
 
-  if (changed) writeData(data);
+  if (invalidEndpoints.size > 0) {
+    data.pushSubscriptions = subs.filter(subObj => {
+      const subTarget = subObj.subscription ? subObj.subscription : subObj;
+      return !invalidEndpoints.has(subTarget.endpoint);
+    });
+    writeData(data);
+  }
+
+  return { matched: matchedSubs.length, success: successCount, failed: failureCount };
 }
 
 app.get('/api/vapid-public-key', (req, res) => {
@@ -572,16 +587,19 @@ app.post('/api/subscribe', requireAuth, (req, res) => {
   }
 
   if (endpoint && role && actor) {
-    // Xóa bản ghi cũ của cùng thiết bị này để cập nhật đúng người đang đăng nhập
+    // Giữ một subscription mới nhất cho mỗi endpoint và không lưu trùng cùng người/thiết bị.
     data.pushSubscriptions = data.pushSubscriptions.filter(s => {
-      const ep = s.subscription ? s.subscription.endpoint : s.endpoint;
-      return ep !== endpoint;
+      const oldSub = s.subscription ? s.subscription : s;
+      const sameEndpoint = oldSub.endpoint === endpoint;
+      const sameUserAndDevice = s.actor === actor && oldSub.endpoint === endpoint;
+      return !sameEndpoint && !sameUserAndDevice;
     });
 
     data.pushSubscriptions.push({
       subscription: subData,
       role: role,
-      actor: actor
+      actor: actor,
+      subscribedAt: Date.now()
     });
     writeData(data);
     console.log(`📲 Đã gắn thiết bị cho ${actor} (${role})`);
@@ -607,14 +625,14 @@ app.post('/api/unsubscribe', requireAuth, (req, res) => {
   res.json({ success: true });
 });
 
-app.post('/api/test-notify', requireAuth, requireManager, (req, res) => {
-  sendPushToTargets(
+app.post('/api/test-notify', requireAuth, requireManager, async (req, res) => {
+  const result = await sendPushToTargets(
     s => s.role === 'manager',
     'Carmel Coffee ☕',
     '🔔 Thông báo thử nghiệm: Kết nối thành công!',
     '/dashboard.html?tab=tab-schedule'
   );
-  res.json({ success: true });
+  res.json({ success: true, push: result });
 });
 app.get('/ping', (req, res) => {
   res.status(200).send('OK');
