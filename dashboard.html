@@ -2349,6 +2349,35 @@
             </table>
           </div>
         </div>
+        <!-- KHUNG THEO DÕI TIẾN ĐỘ NỘP PHIẾU ĐĂNG KÝ CA (CHỈ HIỆN VỚI QUẢN LÝ) -->
+        <div class="data-card" id="managerRegStatusCard" style="display: none; margin-top: 16px;">
+          <div class="data-card-header">
+            <div>
+              <h3 style="margin-bottom: 4px;">Tình Trạng Gửi Đăng Ký Ca (<span id="regStatusWeekLabel"
+                  style="color: #0f766e;">Tuần này</span>)</h3>
+              <span style="font-size: 12.5px; color: #64748b;">Kiểm tra nhân viên đã gửi phiếu trước khi bấm Chia Lịch
+                Tự Động</span>
+            </div>
+            <span id="regProgressBadge"
+              style="padding: 5px 12px; border-radius: 20px; font-size: 12.5px; font-weight: 700; background: #e0f2fe; color: #0369a1;">
+              0/0 đã gửi
+            </span>
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px; text-align: center;">STT</th>
+                  <th>Nhân Viên</th>
+                  <th style="text-align: center;">Trạng Thái</th>
+                  <th style="text-align: center;">Thời Gian Gửi</th>
+                  <th>Chi Tiết Ca Đăng Ký</th>
+                </tr>
+              </thead>
+              <tbody id="managerRegStatusBody"></tbody>
+            </table>
+          </div>
+        </div>
       </section>
       <!-- TAB RIÊNG CỦA NHÂN VIÊN: THỐNG KÊ CÔNG LÀM -->
       <section id="tab-my-stats" style="display: none;">
@@ -2417,35 +2446,6 @@
                 </tr>
               </thead>
               <tbody id="myWeekDaysBreakdown"></tbody>
-            </table>
-          </div>
-        </div>
-        <!-- KHUNG THEO DÕI TIẾN ĐỘ NỘP PHIẾU ĐĂNG KÝ CA (CHỈ HIỆN VỚI QUẢN LÝ) -->
-        <div class="data-card" id="managerRegStatusCard" style="display: none; margin-top: 16px;">
-          <div class="data-card-header">
-            <div>
-              <h3 style="margin-bottom: 4px;">Tình Trạng Gửi Đăng Ký Ca (<span id="regStatusWeekLabel"
-                  style="color: #0f766e;">Tuần này</span>)</h3>
-              <span style="font-size: 12.5px; color: #64748b;">Kiểm tra nhân viên đã gửi phiếu trước khi bấm Chia Lịch
-                Tự Động</span>
-            </div>
-            <span id="regProgressBadge"
-              style="padding: 5px 12px; border-radius: 20px; font-size: 12.5px; font-weight: 700; background: #e0f2fe; color: #0369a1;">
-              0/0 đã gửi
-            </span>
-          </div>
-          <div style="overflow-x: auto;">
-            <table class="custom-table">
-              <thead>
-                <tr>
-                  <th style="width: 50px; text-align: center;">STT</th>
-                  <th>Nhân Viên</th>
-                  <th style="text-align: center;">Trạng Thái</th>
-                  <th style="text-align: center;">Thời Gian Gửi</th>
-                  <th>Chi Tiết Ca Đăng Ký</th>
-                </tr>
-              </thead>
-              <tbody id="managerRegStatusBody"></tbody>
             </table>
           </div>
         </div>
@@ -3032,6 +3032,7 @@
         if (data.staffRates) localStorage.setItem('carmel_staff_rates', JSON.stringify(data.staffRates));
         if (data.registrations) localStorage.setItem('all_staff_registrations', JSON.stringify(data.registrations));
         if (data.carmel_registrations_by_week) localStorage.setItem('carmel_registrations_by_week', JSON.stringify(data.carmel_registrations_by_week));
+        if (data.carmel_reg_meta_by_week) localStorage.setItem('carmel_reg_meta_by_week', JSON.stringify(data.carmel_reg_meta_by_week));
         if (data.masterRoster) localStorage.setItem('carmel_master_roster', JSON.stringify(data.masterRoster));
         if (data.carmel_rosters_by_week) localStorage.setItem('carmel_rosters_by_week', JSON.stringify(data.carmel_rosters_by_week));
         if (data.shiftRequests) localStorage.setItem('carmel_shift_requests', JSON.stringify(data.shiftRequests));
