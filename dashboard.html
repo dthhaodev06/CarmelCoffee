@@ -2420,6 +2420,35 @@
             </table>
           </div>
         </div>
+        <!-- KHUNG THEO DÕI TIẾN ĐỘ NỘP PHIẾU ĐĂNG KÝ CA (CHỈ HIỆN VỚI QUẢN LÝ) -->
+        <div class="data-card" id="managerRegStatusCard" style="display: none; margin-top: 16px;">
+          <div class="data-card-header">
+            <div>
+              <h3 style="margin-bottom: 4px;">Tình Trạng Gửi Đăng Ký Ca (<span id="regStatusWeekLabel"
+                  style="color: #0f766e;">Tuần này</span>)</h3>
+              <span style="font-size: 12.5px; color: #64748b;">Kiểm tra nhân viên đã gửi phiếu trước khi bấm Chia Lịch
+                Tự Động</span>
+            </div>
+            <span id="regProgressBadge"
+              style="padding: 5px 12px; border-radius: 20px; font-size: 12.5px; font-weight: 700; background: #e0f2fe; color: #0369a1;">
+              0/0 đã gửi
+            </span>
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px; text-align: center;">STT</th>
+                  <th>Nhân Viên</th>
+                  <th style="text-align: center;">Trạng Thái</th>
+                  <th style="text-align: center;">Thời Gian Gửi</th>
+                  <th>Chi Tiết Ca Đăng Ký</th>
+                </tr>
+              </thead>
+              <tbody id="managerRegStatusBody"></tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
       <!-- TAB 4: CHẤM CÔNG -->
@@ -3449,6 +3478,15 @@
       let allReg = getCurrentRegistrations();
       allReg[currentUser.name] = mySchedule;
       saveCurrentRegistrations(allReg);
+      const now = new Date();
+      const submittedAt = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} - ${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+      const weekKey = getWeekKey(currentWeekOffset);
+
+      let regMetaByWeek = JSON.parse(localStorage.getItem('carmel_reg_meta_by_week')) || {};
+      if (!regMetaByWeek[weekKey]) regMetaByWeek[weekKey] = {};
+      regMetaByWeek[weekKey][currentUser.name] = submittedAt;
+      localStorage.setItem('carmel_reg_meta_by_week', JSON.stringify(regMetaByWeek));
+      pushDataToServer({ carmel_reg_meta_by_week: regMetaByWeek });
 
       try {
         await apiFetch('/api/shifts/register', {
@@ -3580,6 +3618,7 @@
         tr.innerHTML = rowHtml;
         tbody.appendChild(tr);
       });
+      renderManagerRegistrationStatus();
     }
 
     let modalTargetStaff = null;
@@ -4669,6 +4708,82 @@
             }
           }
         } catch (e) { }
+      }
+    }
+    function renderManagerRegistrationStatus() {
+      const card = document.getElementById('managerRegStatusCard');
+      const tbody = document.getElementById('managerRegStatusBody');
+      if (!card || !tbody) return;
+
+      if (!currentUser || currentUser.role !== 'manager') {
+        card.style.display = 'none';
+        return;
+      }
+      card.style.display = 'block';
+
+      const weekKey = getWeekKey(currentWeekOffset);
+      const weekLabel = document.getElementById('currentWeekDisplayLabel')?.textContent || 'Tuần này';
+      const labelEl = document.getElementById('regStatusWeekLabel');
+      if (labelEl) labelEl.textContent = weekLabel;
+
+      const userAccounts = JSON.parse(localStorage.getItem('carmel_user_accounts')) || {};
+      const staffList = Object.keys(userAccounts).filter(name => name.toLowerCase() !== 'admin');
+      const allReg = getCurrentRegistrations();
+      const regMetaByWeek = JSON.parse(localStorage.getItem('carmel_reg_meta_by_week')) || {};
+      const weekMeta = regMetaByWeek[weekKey] || {};
+
+      let submittedCount = 0;
+      tbody.innerHTML = '';
+
+      if (staffList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 20px;">Chưa có nhân viên nào.</td></tr>`;
+        return;
+      }
+
+      const shortDayNames = { t2: 'T2', t3: 'T3', t4: 'T4', t5: 'T5', t6: 'T6', t7: 'T7', cn: 'CN' };
+
+      staffList.forEach((staffName, idx) => {
+        const regData = allReg[staffName];
+        const hasSubmitted = Boolean(regData && Object.keys(regData).length > 0);
+        if (hasSubmitted) submittedCount++;
+
+        const timeStr = weekMeta[staffName] || (hasSubmitted ? 'Đã nộp (chưa ghi giờ)' : '--');
+
+        let detailText = '<span style="color: #94a3b8;">Chưa gửi phiếu</span>';
+        if (hasSubmitted) {
+          const parts = [];
+          daysOfWeek.forEach(d => {
+            const shifts = regData[d.key];
+            if (Array.isArray(shifts) && shifts.length > 0) {
+              parts.push(`${shortDayNames[d.key]}: ${shifts.join(',')}`);
+            }
+          });
+          detailText = parts.length > 0
+            ? `<span style="color: #0f172a; font-weight: 600;">${escapeHtml(parts.join(' | '))}</span>`
+            : '<span style="color: #64748b;">Đăng ký nghỉ cả tuần (Off)</span>';
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="text-align: center;"><strong>${idx + 1}</strong></td>
+          <td><strong>${escapeHtml(staffName)}</strong></td>
+          <td style="text-align: center;">
+            ${hasSubmitted
+            ? '<span style="padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; background: #dcfce7; color: #15803d;">Đã gửi</span>'
+            : '<span style="padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; background: #fee2e2; color: #dc2626;">Chưa gửi</span>'}
+          </td>
+          <td style="text-align: center; font-size: 12.5px; color: #475569; font-weight: 600;">${escapeHtml(timeStr)}</td>
+          <td style="font-size: 12.5px;">${detailText}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const badge = document.getElementById('regProgressBadge');
+      if (badge) {
+        badge.textContent = `${submittedCount}/${staffList.length} nhân viên đã gửi`;
+        const isAllDone = submittedCount === staffList.length && staffList.length > 0;
+        badge.style.background = isAllDone ? '#dcfce7' : '#fef3c7';
+        badge.style.color = isAllDone ? '#15803d' : '#b45309';
       }
     }
 
