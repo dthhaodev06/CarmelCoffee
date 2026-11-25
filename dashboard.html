@@ -4892,8 +4892,13 @@
               if (h > 0) {
                 monthDaysCount++;
                 monthHoursCount += h;
-                const blocks = shiftVal.match(/[A-C](?:\([^)]+\))?/gi);
                 const blocks = shiftVal.match(/[A-Za-z0-9]+(?:\([^)]+\))?/gi);
+                if (h > 0) {
+                monthDaysCount++;
+                monthHoursCount += h;
+                const blocks = shiftVal.match(/[A-Za-z0-9]+(?:\([^)]+\))?/gi);
+                monthShiftsCount += blocks ? blocks.length : (h > 6 ? 2 : 1);
+              }
               }
             }
           }
