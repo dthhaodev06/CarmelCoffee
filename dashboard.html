@@ -2320,6 +2320,31 @@
         height: 44px !important;
       }
     }
+    /* --- SỬA LỖI INPUT DATE BỊ PHÌNH TO VÀ TRÀN VIỀN TRÊN IPHONE SAFARI --- */
+    input[type="date"],
+    input[type="month"] {
+      -webkit-appearance: none !important;
+      appearance: none !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      height: 42px !important;
+      min-height: 42px !important;
+      max-height: 42px !important;
+      line-height: 24px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      text-align: left !important;
+      font-size: 13.5px !important;
+      overflow: hidden !important;
+    }
+
+    #tab-revenue .filter-group,
+    #tab-expense .filter-group {
+      min-width: 0 !important;
+      overflow: hidden !important;
+    }
   </style>
 </head>
 
