@@ -193,6 +193,7 @@ app.post('/api/save-data', requireAuth, (req, res) => {
         data.users[name].role = incomingData.carmel_full_users[name].role;
         data.users[name].pass = incomingData.carmel_full_users[name].pass;
         data.users[name].hourlyRate = incomingData.carmel_full_users[name].hourlyRate;
+        if (incomingData.carmel_full_users[name].profile) data.users[name].profile = incomingData.carmel_full_users[name].profile;
       }
     });
   }
