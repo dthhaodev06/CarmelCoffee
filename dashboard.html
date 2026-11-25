@@ -1012,6 +1012,31 @@
     #tab-nvl .custom-table th:nth-child(2) {
       background-color: #f8fafc;
     }
+    /* --- CỐ ĐỊNH CỘT TÊN NHÂN VIÊN KHI KÉO NGANG Ở BẢNG TÌNH TRẠNG ĐĂNG KÝ CA --- */
+    @media (max-width: 768px) {
+      #managerRegStatusCard .custom-table {
+        min-width: 650px !important;
+      }
+
+      #managerRegStatusCard .custom-table th:nth-child(2),
+      #managerRegStatusCard .custom-table td:nth-child(2) {
+        position: sticky;
+        left: 0;
+        background-color: #ffffff;
+        z-index: 5;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.08);
+        white-space: nowrap;
+      }
+
+      #managerRegStatusCard .custom-table th:nth-child(2) {
+        background-color: #f1f5f9 !important;
+        z-index: 6;
+      }
+
+      #managerRegStatusCard .custom-table tbody tr:nth-child(even) td:nth-child(2) {
+        background-color: #f8fafc;
+      }
+    }
 
     /* --- DECOR GIAO DIỆN PASS CA & ĐỔI CA CHUẨN APP MOBILE --- */
     @media (max-width: 768px) {
