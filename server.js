@@ -173,7 +173,7 @@ app.get('/api/data', requireAuth, (req, res) => {
 app.post('/api/save-data', requireAuth, (req, res) => {
   const incomingData = req.body;
   const data = readData();
-  const managerOnlyKeys = ['users', 'carmel_full_users', 'carmel_staff_rates', 'masterRoster', 'carmel_master_roster', 'carmel_rosters_by_week', 'revenue', 'carmel_revenue_records', 'expenses', 'carmel_expense_records'];
+  const managerOnlyKeys = ['users', 'carmel_full_users', 'carmel_staff_rates', 'masterRoster', 'carmel_master_roster', 'carmel_rosters_by_week', 'revenue', 'carmel_revenue_records', 'expenses', 'carmel_expense_records','carmel_pinned_staff', 'carmel_custom_shift_codes'];
   if (req.auth.role !== 'manager') {
     const attemptedManagerWrite = managerOnlyKeys.some(key => Object.prototype.hasOwnProperty.call(incomingData, key));
     if (attemptedManagerWrite) return res.status(403).json({ success: false, message: 'Chỉ Quản lý mới được cập nhật dữ liệu này!' });
@@ -200,7 +200,8 @@ app.post('/api/save-data', requireAuth, (req, res) => {
   if (incomingData.carmel_staff_rates) data.carmel_staff_rates = incomingData.carmel_staff_rates;
   if (incomingData.carmel_registrations_by_week) data.carmel_registrations_by_week = incomingData.carmel_registrations_by_week;
   if (incomingData.carmel_rosters_by_week) data.carmel_rosters_by_week = incomingData.carmel_rosters_by_week;
-
+  if (incomingData.carmel_pinned_staff !== undefined) data.carmel_pinned_staff = incomingData.carmel_pinned_staff;
+  if (incomingData.carmel_custom_shift_codes !== undefined) data.carmel_custom_shift_codes = incomingData.carmel_custom_shift_codes;
   if (incomingData.carmel_revenue_records) {
     logActivity(data, req.auth.name, 'Cập nhật doanh thu', `Đã đồng bộ dữ liệu doanh thu (${Object.keys(incomingData.carmel_revenue_records).length} ngày)`);
   }

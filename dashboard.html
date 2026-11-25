@@ -2582,6 +2582,7 @@
     .btn-profile-logout:active {
       transform: scale(0.98);
     }
+
     @media (max-width: 768px) {
       .profile-readonly-grid {
         grid-template-columns: 1fr;
@@ -2882,6 +2883,26 @@
 
       <!-- TAB 3: LỊCH LÀM -->
       <section id="tab-schedule" style="display: none;">
+        <!-- KHUNG TỪ ĐIỂN MÃ CA TÙY CHỈNH (CHỈ QUẢN LÝ THẤY) -->
+        <div class="filter-card" id="customShiftCodesPanel"
+          style="display: none; flex-direction: column; align-items: stretch; gap: 12px; border-left: 4px solid #0284c7;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <strong style="color: #0f172a; font-size: 14px;">Từ Điển Mã Ca Cố Định & Quy Đổi Giờ Công</strong>
+              <div style="font-size: 12px; color: #64748b;">Mặc định: A, B, C = 6 tiếng. Tạo thêm ký hiệu riêng (vd: A2
+                = 2 tiếng) để hệ thống tự tính lương.</div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+              <input type="text" id="newShiftCodeInput" placeholder="Mã ca (vd: A2)"
+                style="width: 120px; padding: 7px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 700;">
+              <input type="number" id="newShiftHoursInput" step="0.5" min="0.5" max="24" placeholder="Số tiếng (vd: 2)"
+                style="width: 135px; padding: 7px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px;">
+              <button class="btn-action" style="padding: 7px 14px; font-size: 13px;" onclick="addCustomShiftCode()">+
+                Thêm Mã</button>
+            </div>
+          </div>
+          <div id="customShiftCodesList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+        </div>
         <div class="data-card">
           <div class="excel-header-box">
             <div>
@@ -3651,10 +3672,22 @@
     function getCurrentRoster() {
       const weekKey = getWeekKey(currentWeekOffset);
       const rostersByWeek = JSON.parse(localStorage.getItem('carmel_rosters_by_week')) || {};
-      if (!rostersByWeek[weekKey] && currentWeekOffset === 0) return JSON.parse(localStorage.getItem('carmel_master_roster')) || {};
-      return rostersByWeek[weekKey] || {};
-    }
+      let roster = rostersByWeek[weekKey];
+      if (!roster && currentWeekOffset === 0) {
+        roster = JSON.parse(localStorage.getItem('carmel_master_roster')) || {};
+      } else {
+        roster = roster ? { ...roster } : {};
+      }
 
+      const pinnedMap = typeof getPinnedStaffMap === 'function' ? getPinnedStaffMap() : {};
+      Object.keys(pinnedMap).forEach(name => {
+        if (!roster[name]) {
+          roster[name] = { ...pinnedMap[name] };
+        }
+      });
+
+      return roster;
+    }
     function getRostersForMonthCalculation() {
       const rostersByWeek = JSON.parse(localStorage.getItem('carmel_rosters_by_week')) || {};
       const currentWeekKey = getWeekKey(0);
@@ -3734,28 +3767,10 @@
     }
 
     function parseShiftHours(shiftStr) {
-      if (!shiftStr || shiftStr === 'Off') return 0;
-      let totalHours = 0;
-      const shiftBlocks = shiftStr.match(/[A-C](?:\([^)]+\))?/gi);
-      if (!shiftBlocks) return 0;
-
-      shiftBlocks.forEach(block => {
-        const customTime = block.match(/([A-C])\s*\(\s*(\d{1,2})(?:h|:)?(\d{1,2})?\s*-\s*(\d{1,2})(?:h|:)?(\d{1,2})?\s*\)/i);
-        if (customTime) {
-          const startH = parseInt(customTime[2], 10);
-          const startM = customTime[3] ? parseInt(customTime[3], 10) : 0;
-          const endH = parseInt(customTime[4], 10);
-          const endM = customTime[5] ? parseInt(customTime[5], 10) : 0;
-          const duration = (endH + endM / 60) - (startH + startM / 60);
-          if (duration > 0) totalHours += duration;
-        } else {
-          const letter = block.charAt(0).toUpperCase();
-          if (['A', 'B', 'C'].includes(letter)) totalHours += 6;
-        }
-      });
-      return Math.round(totalHours * 10) / 10;
+      if (!shiftStr || shiftStr === 'Off' || shiftStr === '-') return 0;
+      const hrs = calculateShiftHoursFromText(shiftStr);
+      return Math.round(hrs * 10) / 10;
     }
-
     const inventoryMinimumStock = {
       "Hạt Robusta": { unit: "Kg", minStock: 7 },
       "Hạt Cầu Đất": { unit: "Kg", minStock: 1 },
@@ -3838,6 +3853,8 @@
         if (data.masterRoster) localStorage.setItem('carmel_master_roster', JSON.stringify(data.masterRoster));
         if (data.carmel_rosters_by_week) localStorage.setItem('carmel_rosters_by_week', JSON.stringify(data.carmel_rosters_by_week));
         if (data.shiftRequests) localStorage.setItem('carmel_shift_requests', JSON.stringify(data.shiftRequests));
+        if (data.carmel_pinned_staff) localStorage.setItem('carmel_pinned_staff', JSON.stringify(data.carmel_pinned_staff));
+        if (data.carmel_custom_shift_codes) localStorage.setItem('carmel_custom_shift_codes', JSON.stringify(data.carmel_custom_shift_codes));
 
         const serverInv = data.inventory && data.inventory.length > 0 ? data.inventory : null;
         if (serverInv) {
@@ -4178,7 +4195,7 @@
       const checkboxes = document.querySelectorAll(`input[name="${dayKey}"]:checked`);
       const badge = document.getElementById(`badge-${dayKey}`);
 
-      if (checkboxes.length > 2) {
+      if (checkboxes.length > 3) {
         alert('Mỗi ngày bạn chỉ được đăng ký tối đa 2 ca làm việc!');
         if (lastClickedCb) lastClickedCb.checked = false;
         const timeBox = document.getElementById(`custom-time-${dayKey}-${lastClickedCb.value}`);
@@ -4310,54 +4327,331 @@
       loadStaffCurrentSelection();
       if (btn) btn.disabled = false;
     }
+    // =========================================================================
+    // 1. TỪ ĐIỂN MÃ CA TÙY CHỈNH & NHÂN VIÊN CỐ ĐỊNH
+    // =========================================================================
+    function getCustomShiftCodes() {
+      return JSON.parse(localStorage.getItem('carmel_custom_shift_codes')) || {};
+    }
+
+    function saveCustomShiftCodes(codesObj) {
+      localStorage.setItem('carmel_custom_shift_codes', JSON.stringify(codesObj));
+      if (typeof pushDataToServer === 'function') pushDataToServer({ carmel_custom_shift_codes: codesObj });
+    }
+
+    function getPinnedStaffMap() {
+      return JSON.parse(localStorage.getItem('carmel_pinned_staff')) || {};
+    }
+
+    function savePinnedStaffMap(pinnedObj) {
+      localStorage.setItem('carmel_pinned_staff', JSON.stringify(pinnedObj));
+      if (typeof pushDataToServer === 'function') pushDataToServer({ carmel_pinned_staff: pinnedObj });
+    }
+
+    function renderCustomShiftCodesUI() {
+      const panel = document.getElementById('customShiftCodesPanel');
+      const listEl = document.getElementById('customShiftCodesList');
+      if (!panel || !listEl) return;
+
+      const isManager = typeof currentUser !== 'undefined' && currentUser && currentUser.role === 'manager';
+      panel.style.display = isManager ? 'flex' : 'none';
+      if (!isManager) return;
+
+      const codes = getCustomShiftCodes();
+      const keys = Object.keys(codes);
+      if (keys.length === 0) {
+        listEl.innerHTML = '<span style="font-size: 12px; color: #94a3b8; font-style: italic;">Chưa có mã ca tùy chỉnh nào (đang dùng mặc định A, B, C = 6 tiếng).</span>';
+        return;
+      }
+
+      listEl.innerHTML = keys.map(code => `
+        <span style="display: inline-flex; align-items: center; gap: 6px; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 4px 10px; border-radius: 20px; font-size: 12.5px; font-weight: 700;">
+          <span>${escapeHtml(code)} = ${codes[code]} tiếng</span>
+          <button onclick="deleteCustomShiftCode('${escapeHtml(code)}')" style="background: none; border: none; color: #dc2626; font-weight: 900; cursor: pointer; font-size: 13px; padding: 0 2px;" title="Xóa mã này">×</button>
+        </span>
+      `).join('');
+    }
+
+    function addCustomShiftCode() {
+      const codeInput = document.getElementById('newShiftCodeInput');
+      const hoursInput = document.getElementById('newShiftHoursInput');
+      const rawCode = (codeInput.value || '').trim();
+      const hours = parseFloat(hoursInput.value);
+
+      if (!rawCode) return alert('Vui lòng nhập ký hiệu mã ca (vd: A2)!');
+      if (!Number.isFinite(hours) || hours <= 0 || hours > 24) return alert('Số tiếng phải lớn hơn 0 và nhỏ hơn hoặc bằng 24!');
+
+      const codes = getCustomShiftCodes();
+      codes[rawCode] = hours;
+      saveCustomShiftCodes(codes);
+
+      codeInput.value = '';
+      hoursInput.value = '';
+      renderCustomShiftCodesUI();
+      if (typeof renderRosterGridTable === 'function') renderRosterGridTable();
+      if (typeof initSalaryTab === 'function') initSalaryTab();
+    }
+
+    function deleteCustomShiftCode(code) {
+      if (!confirm(`Xóa mã ca "${code}" khỏi từ điển?`)) return;
+      const codes = getCustomShiftCodes();
+      delete codes[code];
+      saveCustomShiftCodes(codes);
+      renderCustomShiftCodesUI();
+    }
+
+    // Bật / tắt trạng thái CỐ ĐỊNH cho nhân viên & lưu lịch mẫu hiện tại của bạn đó
+    function togglePinStaff(staffName) {
+      const pinnedMap = getPinnedStaffMap();
+      const currentRoster = typeof getCurrentRoster === 'function' ? getCurrentRoster() : {};
+
+      if (pinnedMap[staffName]) {
+        delete pinnedMap[staffName];
+      } else {
+        const template = currentRoster[staffName] || { t2: 'Off', t3: 'Off', t4: 'Off', t5: 'Off', t6: 'Off', t7: 'Off', cn: 'Off' };
+        pinnedMap[staffName] = { ...template };
+      }
+
+      savePinnedStaffMap(pinnedMap);
+      if (typeof renderRosterGridTable === 'function') renderRosterGridTable();
+    }
+
+    // Cập nhật lại lịch mẫu mỗi khi Quản lý sửa trực tiếp ô lịch của nhân viên Cố định
+    function syncPinnedTemplateIfNeeded(staffName, dayKey, newValue) {
+      const pinnedMap = getPinnedStaffMap();
+      if (pinnedMap[staffName]) {
+        pinnedMap[staffName][dayKey] = newValue;
+        savePinnedStaffMap(pinnedMap);
+      }
+    }
+
+    // =========================================================================
+    // 2. HÀM QUY ĐỔI SỐ GIỜ CÔNG TỪ CHUỖI CA (HỖ TRỢ MÃ TÙY CHỈNH NHƯ A2, FULL...)
+    // =========================================================================
+    function calculateShiftHoursFromText(shiftText) {
+      if (!shiftText || shiftText === 'Off' || shiftText === '-') return 0;
+      const str = String(shiftText).trim();
+      const customCodes = getCustomShiftCodes();
+
+      // Sắp xếp key mã tùy chỉnh theo độ dài giảm dần để bắt "A2" trước "A"
+      const sortedCustomKeys = Object.keys(customCodes).sort((a, b) => b.length - a.length);
+
+      let totalHours = 0;
+      let remaining = str;
+
+      // Bước 1: Quét các mã tùy chỉnh trong từ điển trước (vd: A2 = 2 tiếng)
+      sortedCustomKeys.forEach(code => {
+        const escaped = code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(?:^|[^A-Za-z0-9])${escaped}(?:\\(([^)]+)\\))?(?=$|[^A-Za-z0-9])`, 'gi');
+        remaining = remaining.replace(regex, (match, timeRange) => {
+          if (timeRange && timeRange.includes('-')) {
+            const parsed = parseCustomTimeRangeHours(timeRange);
+            totalHours += parsed > 0 ? parsed : customCodes[code];
+          } else {
+            totalHours += customCodes[code];
+          }
+          return ' ';
+        });
+      });
+
+      // Bước 2: Quét các ca chuẩn A, B, C còn lại (mặc định 6 tiếng hoặc theo khung giờ ngoặc đơn)
+      const standardBlocks = remaining.match(/[A-C](?:\([^)]+\))?/gi) || [];
+      standardBlocks.forEach(block => {
+        const rangeMatch = block.match(/\(([^)]+)\)/);
+        if (rangeMatch && rangeMatch[1].includes('-')) {
+          const parsed = parseCustomTimeRangeHours(rangeMatch[1]);
+          totalHours += parsed > 0 ? parsed : 6;
+        } else {
+          totalHours += 6;
+        }
+      });
+
+      return totalHours;
+    }
+
+    function parseCustomTimeRangeHours(rangeStr) {
+      const parts = rangeStr.split('-').map(s => s.trim());
+      if (parts.length !== 2) return 0;
+      const toDecimal = (t) => {
+        const m = t.match(/(\d{1,2})(?:[h:](\d{1,2}))?/i);
+        if (!m) return NaN;
+        return parseInt(m[1], 10) + (m[2] ? parseInt(m[2], 10) / 60 : 0);
+      };
+      const start = toDecimal(parts[0]);
+      const end = toDecimal(parts[1]);
+      if (!Number.isFinite(start) || !Number.isFinite(end)) return 0;
+      return end >= start ? (end - start) : (24 - start + end);
+    }
+
+    // =========================================================================
+    // 3. THUẬT TOÁN CHIA LỊCH TỰ ĐỘNG (BÁM SÁT PHIẾU ĐĂNG KÝ + BÙ CÔNG + 2 VÒNG)
+    // =========================================================================
     function rebalanceAlgorithm() {
       const allReg = getCurrentRegistrations();
       const userAccounts = JSON.parse(localStorage.getItem('carmel_user_accounts')) || {};
-      const allStaffs = Array.from(new Set([...Object.keys(userAccounts), ...Object.keys(allReg)])).filter(name => name && name.toLowerCase() !== 'admin');
+      const pinnedMap = getPinnedStaffMap();
+
+      const allStaffs = Array.from(new Set([...Object.keys(userAccounts), ...Object.keys(allReg), ...Object.keys(pinnedMap)]))
+        .filter(name => name && name.toLowerCase() !== 'admin');
       if (allStaffs.length === 0) return null;
 
       let newRoster = {};
-      allStaffs.forEach(name => newRoster[name] = { t2: 'Off', t3: 'Off', t4: 'Off', t5: 'Off', t6: 'Off', t7: 'Off', cn: 'Off' });
-      const weeklyShiftCount = {};
-      allStaffs.forEach(name => weeklyShiftCount[name] = 0);
+      const dailyShiftCount = {};
+      const currentWeekShiftCount = {};
+      const prevWeekShiftCount = {};
 
-      daysOfWeek.forEach(day => {
-        const dailyShiftCount = {};
-        allStaffs.forEach(name => dailyShiftCount[name] = 0);
+      // Lấy dữ liệu tuần liền trước để tính điểm bù công
+      const prevWeekKey = getWeekKey(currentWeekOffset - 1);
+      const rostersByWeek = JSON.parse(localStorage.getItem('carmel_rosters_by_week')) || {};
+      const prevRoster = rostersByWeek[prevWeekKey] || {};
 
-        function getReg(name, shiftKey) {
-          const val = allReg[name] && allReg[name][day.key];
-          if (!val) return null;
-          return Array.isArray(val) ? (val.find(v => v === shiftKey || v.startsWith(shiftKey + '(')) || null) : null;
-        }
+      allStaffs.forEach(name => {
+        newRoster[name] = { t2: 'Off', t3: 'Off', t4: 'Off', t5: 'Off', t6: 'Off', t7: 'Off', cn: 'Off' };
+        dailyShiftCount[name] = { t2: 0, t3: 0, t4: 0, t5: 0, t6: 0, t7: 0, cn: 0 };
+        currentWeekShiftCount[name] = 0;
 
-        let candidatesA = allStaffs.filter(name => getReg(name, 'A') !== null).sort((a, b) => weeklyShiftCount[a] - weeklyShiftCount[b]);
-        candidatesA.slice(0, 2).forEach(name => {
-          newRoster[name][day.key] = getReg(name, 'A') || 'A';
-          dailyShiftCount[name]++; weeklyShiftCount[name]++;
+        let prevCount = 0;
+        const prevSched = prevRoster[name] || {};
+        daysOfWeek.forEach(d => {
+          const val = prevSched[d.key];
+          if (val && val !== 'Off') {
+            const blocks = String(val).match(/[A-Za-z0-9]+(?:\([^)]+\))?/gi);
+            prevCount += blocks ? blocks.length : 1;
+          }
         });
+        prevWeekShiftCount[name] = prevCount;
+      });
 
-        let candidatesB = allStaffs.filter(name => getReg(name, 'B') !== null && dailyShiftCount[name] < 2).sort((a, b) => weeklyShiftCount[a] - weeklyShiftCount[b]);
-        if (candidatesB.length > 0) {
-          const name = candidatesB[0];
-          const entry = getReg(name, 'B') || 'B';
-          newRoster[name][day.key] = newRoster[name][day.key] === 'Off' ? entry : newRoster[name][day.key] + entry;
-          dailyShiftCount[name]++; weeklyShiftCount[name]++;
-        }
+      // Khởi tạo định mức nhân sự cần cho 21 ca trong tuần (A: 2 người, B: 1 người, C: 1 người)
+      const slotCapacity = {};
+      daysOfWeek.forEach(d => {
+        slotCapacity[d.key] = { A: 2, B: 1, C: 1 };
+      });
 
-        let candidatesC = allStaffs.filter(name => getReg(name, 'C') !== null && dailyShiftCount[name] < 2).sort((a, b) => weeklyShiftCount[a] - weeklyShiftCount[b]);
-        if (candidatesC.length > 0) {
-          const name = candidatesC[0];
-          const entry = getReg(name, 'C') || 'C';
-          newRoster[name][day.key] = newRoster[name][day.key] === 'Off' ? entry : newRoster[name][day.key] + entry;
-          dailyShiftCount[name]++; weeklyShiftCount[name]++;
+      // BƯỚC 0: KHÓA CỨNG LỊCH CỦA CÁC NHÂN VIÊN CỐ ĐỊNH & TRỪ SUẤT NHÂN SỰ TƯƠNG ỨNG
+      Object.keys(pinnedMap).forEach(name => {
+        if (!newRoster[name]) return;
+        const template = pinnedMap[name] || {};
+        daysOfWeek.forEach(d => {
+          const val = template[d.key] || 'Off';
+          newRoster[name][d.key] = val;
+          if (val && val !== 'Off') {
+            dailyShiftCount[name][d.key] += 1;
+            currentWeekShiftCount[name] += 1;
+            // Nếu mã bắt đầu bằng A, B hoặc C (vd: A, A2, B...) thì trừ đi 1 suất của ca đó
+            ['A', 'B', 'C'].forEach(sKey => {
+              const regex = new RegExp(`(?:^|[^A-Za-z])${sKey}(?:[0-9]|\\(|$|[^A-Za-z])`, 'i');
+              if (regex.test(val) && slotCapacity[d.key][sKey] > 0) {
+                slotCapacity[d.key][sKey] -= 1;
+              }
+            });
+          }
+        });
+      });
+
+      // Chỉ xếp tự động cho nhóm nhân viên KHÔNG bị ghim cố định
+      const rotatingStaffs = allStaffs.filter(name => !pinnedMap[name]);
+
+      function getRegEntry(name, dayKey, shiftKey) {
+        const val = allReg[name] && allReg[name][dayKey];
+        if (!Array.isArray(val)) return null;
+        return val.find(v => v === shiftKey || (typeof v === 'string' && v.startsWith(shiftKey + '('))) || null;
+      }
+
+      function hasAllThreeReg(name, dayKey) {
+        return getRegEntry(name, dayKey, 'A') !== null &&
+          getRegEntry(name, dayKey, 'B') !== null &&
+          getRegEntry(name, dayKey, 'C') !== null;
+      }
+
+      // Tạo danh sách các ca còn thiếu người & sắp xếp CA HIẾM NGƯỜI ĐĂNG KÝ TRƯỚC
+      const shiftSlots = [];
+      daysOfWeek.forEach(day => {
+        ['A', 'B', 'C'].forEach(shiftKey => {
+          const needed = slotCapacity[day.key][shiftKey];
+          if (needed > 0) {
+            const eligibleCount = rotatingStaffs.filter(name => getRegEntry(name, day.key, shiftKey) !== null).length;
+            shiftSlots.push({ dayKey: day.key, shiftKey, needed, eligibleCount });
+          }
+        });
+      });
+
+      shiftSlots.sort((a, b) => a.eligibleCount - b.eligibleCount);
+
+      function assignShiftToStaff(name, dayKey, shiftKey) {
+        const entry = getRegEntry(name, dayKey, shiftKey) || shiftKey;
+        const existing = newRoster[name][dayKey];
+        if (existing === 'Off') {
+          newRoster[name][dayKey] = entry;
+        } else {
+          const combined = (existing + entry).match(/[A-C](?:\([^)]+\))?/gi) || [];
+          combined.sort((x, y) => x.charAt(0).localeCompare(y.charAt(0)));
+          newRoster[name][dayKey] = combined.join('');
         }
+        dailyShiftCount[name][dayKey]++;
+        currentWeekShiftCount[name]++;
+        slotCapacity[dayKey][shiftKey]--;
+      }
+
+      function sortCandidates(list, dayKey, shiftKey) {
+        return list.sort((a, b) => {
+          // Ưu tiên 1: Bù công từ tuần trước + tuần này (ít ca hơn xếp trước)
+          const totalA = prevWeekShiftCount[a] + currentWeekShiftCount[a];
+          const totalB = prevWeekShiftCount[b] + currentWeekShiftCount[b];
+          if (totalA !== totalB) return totalA - totalB;
+
+          // Ưu tiên 2: Số ca trong tuần hiện tại ít hơn xếp trước
+          if (currentWeekShiftCount[a] !== currentWeekShiftCount[b]) {
+            return currentWeekShiftCount[a] - currentWeekShiftCount[b];
+          }
+
+          // Ưu tiên 3: Đăng ký đủ giờ chuẩn (không ngoặc trễ/sớm) xếp trước
+          const isCustomA = getRegEntry(a, dayKey, shiftKey).includes('(') ? 1 : 0;
+          const isCustomB = getRegEntry(b, dayKey, shiftKey).includes('(') ? 1 : 0;
+          return isCustomA - isCustomB;
+        });
+      }
+
+      // VÒNG 1: CHIA LỊCH TIÊU CHUẨN (TỐI ĐA 2 CA/NGÀY, BÁM SÁT 100% PHIẾU ĐĂNG KÝ)
+      shiftSlots.forEach(slot => {
+        const { dayKey, shiftKey } = slot;
+        const needed = slotCapacity[dayKey][shiftKey];
+        if (needed <= 0) return;
+
+        const candidates = sortCandidates(
+          rotatingStaffs.filter(name =>
+            getRegEntry(name, dayKey, shiftKey) !== null &&
+            dailyShiftCount[name][dayKey] < 2
+          ),
+          dayKey,
+          shiftKey
+        );
+
+        candidates.slice(0, needed).forEach(name => assignShiftToStaff(name, dayKey, shiftKey));
+      });
+
+      // VÒNG 2: BẤT KHẢ KHÁNG CHỐNG TRỐNG CA (CHỈ XÉT NGƯỜI ĐÃ TÍCH ĐỦ CẢ 3 CA ABC)
+      shiftSlots.forEach(slot => {
+        const { dayKey, shiftKey } = slot;
+        const stillNeeded = slotCapacity[dayKey][shiftKey];
+        if (stillNeeded <= 0) return;
+
+        const emergencyCandidates = sortCandidates(
+          rotatingStaffs.filter(name =>
+            getRegEntry(name, dayKey, shiftKey) !== null &&
+            dailyShiftCount[name][dayKey] === 2 &&
+            hasAllThreeReg(name, dayKey)
+          ),
+          dayKey,
+          shiftKey
+        );
+
+        emergencyCandidates.slice(0, stillNeeded).forEach(name => assignShiftToStaff(name, dayKey, shiftKey));
       });
 
       saveCurrentRoster(newRoster);
       return newRoster;
     }
-
     function rebalanceMasterRoster() {
       if (currentUser.role !== 'manager') return;
       const newRoster = rebalanceAlgorithm();
@@ -4368,24 +4662,34 @@
     }
 
     function renderRosterGridTable() {
+      renderCustomShiftCodesUI();
       const tbody = document.getElementById('rosterGridBody');
       if (!tbody) return;
       tbody.innerHTML = '';
       const userAccounts = JSON.parse(localStorage.getItem('carmel_user_accounts')) || {};
+      const pinnedMap = getPinnedStaffMap();
       const masterRoster = getCurrentRoster();
       const isManager = currentUser.role === 'manager';
-      const staffList = Object.keys(userAccounts).filter(name => name.toLowerCase() !== 'admin');
+      const staffList = Array.from(new Set([...Object.keys(userAccounts), ...Object.keys(pinnedMap)]))
+        .filter(name => name && name.toLowerCase() !== 'admin');
 
       if (staffList.length === 0) {
         tbody.innerHTML = `<tr><td colspan="9" style="padding: 30px; text-align: center; color: #94a3b8;">Chưa có nhân viên nào.</td></tr>`;
         return;
       }
 
+      const customCodes = Object.keys(getCustomShiftCodes());
+
       staffList.forEach((staffName, index) => {
         const tr = document.createElement('tr');
         const staffShifts = masterRoster[staffName] || {};
+        const isPinned = !!pinnedMap[staffName];
 
-        let rowHtml = `<td><strong>${index + 1}</strong></td><td style="text-align: left; padding-left: 10px; font-weight: 700;">${escapeHtml(staffName)}</td>`;
+        const pinBtnHtml = isManager
+          ? `<button onclick="togglePinStaff('${escapeHtml(staffName)}')" style="margin-left: 6px; padding: 2px 7px; border-radius: 10px; font-size: 10.5px; font-weight: 700; cursor: pointer; border: 1px solid ${isPinned ? '#f59e0b' : '#cbd5e1'}; background: ${isPinned ? '#fef3c7' : '#f8fafc'}; color: ${isPinned ? '#b45309' : '#64748b'};">${isPinned ? 'Đang cố định' : 'Ghim cố định'}</button>`
+          : (isPinned ? `<span style="margin-left: 6px; padding: 2px 7px; border-radius: 10px; font-size: 10.5px; font-weight: 700; background: #fef3c7; color: #b45309;">Cố định</span>` : '');
+
+        let rowHtml = `<td><strong>${index + 1}</strong></td><td style="text-align: left; padding-left: 10px; font-weight: 700; white-space: nowrap;">${escapeHtml(staffName)}${pinBtnHtml}</td>`;
 
         daysOfWeek.forEach(day => {
           let currentShift = staffShifts[day.key] || 'Off';
@@ -4393,10 +4697,15 @@
           if (currentShift.startsWith('A')) cellClass = 'cell-shift-a';
           else if (currentShift.startsWith('B')) cellClass = 'cell-shift-b';
           else if (currentShift.startsWith('C')) cellClass = 'cell-shift-c';
-          if (currentShift.length >= 2 && !currentShift.includes('(') && currentShift !== 'Off') cellClass = 'cell-shift-combo';
+          else if (currentShift !== 'Off') cellClass = 'cell-shift-combo';
+          if (currentShift.length >= 3 && !currentShift.includes('(') && currentShift !== 'Off') cellClass = 'cell-shift-combo';
 
-          const standard = ['Off', 'A', 'B', 'C', 'AB', 'AC', 'BC'];
+          const standard = ['Off', 'A', 'B', 'C', 'AB', 'AC', 'BC', 'ABC', ...customCodes];
           let isCustom = !standard.includes(currentShift);
+
+          const customOptionsHtml = customCodes.map(c =>
+            `<option value="${escapeHtml(c)}" ${currentShift === c ? 'selected' : ''}>${escapeHtml(c)}</option>`
+          ).join('');
 
           if (isManager) {
             rowHtml += `
@@ -4410,6 +4719,8 @@
                   <option value="AB" ${currentShift === 'AB' ? 'selected' : ''}>AB</option>
                   <option value="AC" ${currentShift === 'AC' ? 'selected' : ''}>AC</option>
                   <option value="BC" ${currentShift === 'BC' ? 'selected' : ''}>BC</option>
+                  <option value="ABC" ${currentShift === 'ABC' ? 'selected' : ''}>ABC</option>
+                  ${customOptionsHtml}
                   <option value="CUSTOM">📝 Ghi giờ trễ</option>
                 </select>
               </td>
@@ -4424,7 +4735,6 @@
       });
       renderManagerRegistrationStatus();
     }
-
     let modalTargetStaff = null;
     let modalTargetDayKey = null;
 
@@ -4459,6 +4769,7 @@
       let masterRoster = getCurrentRoster();
       if (!masterRoster[staffName]) masterRoster[staffName] = {};
       masterRoster[staffName][dayKey] = newShift;
+      syncPinnedTemplateIfNeeded(staffName, dayKey, newShift);
       saveCurrentRoster(masterRoster);
       renderRosterGridTable();
       renderSalaryTable();
@@ -4525,8 +4836,7 @@
         if (isWorking) {
           weekDaysCount++;
           weekHoursCount += hours;
-          const shiftBlocks = shiftVal.match(/[A-C](?:\([^)]+\))?/gi);
-          weekShiftsCount += shiftBlocks ? shiftBlocks.length : (hours > 6 ? 2 : 1);
+          const shiftBlocks = shiftVal.match(/[A-Za-z0-9]+(?:\([^)]+\))?/gi); weekShiftsCount += shiftBlocks ? shiftBlocks.length : (hours > 6 ? 2 : 1);
           workingDayNames.push(day.label.replace('Thứ ', 'T').replace('Chủ Nhật', 'CN'));
         }
         if (!isWorking) return;
@@ -4583,7 +4893,7 @@
                 monthDaysCount++;
                 monthHoursCount += h;
                 const blocks = shiftVal.match(/[A-C](?:\([^)]+\))?/gi);
-                monthShiftsCount += blocks ? blocks.length : (h > 6 ? 2 : 1);
+                const blocks = shiftVal.match(/[A-Za-z0-9]+(?:\([^)]+\))?/gi);
               }
             }
           }
@@ -4632,8 +4942,7 @@
       // Hàm đếm chuẩn số ca trong 1 ô lịch (kể cả ca có ghi giờ trễ)
       function countShiftsInCell(shiftVal, hours) {
         if (!shiftVal || shiftVal === 'Off' || hours <= 0) return 0;
-        const blocks = shiftVal.match(/[A-C](?:\([^)]+\))?/gi);
-        return blocks ? blocks.length : (hours > 6 ? 2 : 1);
+        const blocks = shiftVal.match(/[A-Za-z0-9]+(?:\([^)]+\))?/gi); return blocks ? blocks.length : (hours > 6 ? 2 : 1);
       }
 
       staffList.forEach((staffName, index) => {
