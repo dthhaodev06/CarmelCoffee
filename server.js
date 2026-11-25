@@ -269,6 +269,46 @@ app.post('/api/users/create', requireAuth, requireManager, (req, res) => {
 
   res.json({ success: true, message: `Đã cấp tài khoản cho ${staffName} thành công!` });
 });
+app.post('/api/users/profile', requireAuth, (req, res) => {
+  const { targetName, phone, birthday, emergencyContact, bankName, bankAccount, bankOwner, startDate } = req.body || {};
+  const nameToUpdate = (targetName || req.auth.name || '').trim();
+
+  if (!nameToUpdate) {
+    return res.status(400).json({ success: false, message: 'Thiếu tên tài khoản!' });
+  }
+  if (req.auth.role !== 'manager' && nameToUpdate !== req.auth.name) {
+    return res.status(403).json({ success: false, message: 'Bạn chỉ được cập nhật hồ sơ của chính mình!' });
+  }
+
+  const data = readData();
+  if (!data.users || !data.users[nameToUpdate]) {
+    return res.status(404).json({ success: false, message: 'Không tìm thấy tài khoản!' });
+  }
+
+  const existingProfile = data.users[nameToUpdate].profile || {};
+  const updatedProfile = {
+    phone: phone !== undefined ? String(phone).trim() : (existingProfile.phone || ''),
+    birthday: birthday !== undefined ? String(birthday).trim() : (existingProfile.birthday || ''),
+    emergencyContact: emergencyContact !== undefined ? String(emergencyContact).trim() : (existingProfile.emergencyContact || ''),
+    bankName: bankName !== undefined ? String(bankName).trim() : (existingProfile.bankName || ''),
+    bankAccount: bankAccount !== undefined ? String(bankAccount).trim() : (existingProfile.bankAccount || ''),
+    bankOwner: bankOwner !== undefined ? String(bankOwner).trim().toUpperCase() : (existingProfile.bankOwner || ''),
+    startDate: req.auth.role === 'manager' && startDate !== undefined
+      ? String(startDate).trim()
+      : (existingProfile.startDate || '')
+  };
+
+  data.users[nameToUpdate].profile = updatedProfile;
+  if (!data.carmel_full_users) data.carmel_full_users = {};
+  if (data.carmel_full_users[nameToUpdate]) {
+    data.carmel_full_users[nameToUpdate].profile = updatedProfile;
+  }
+
+  logActivity(data, req.auth.name, 'Cập nhật hồ sơ', `Cập nhật thông tin cá nhân cho ${nameToUpdate}`);
+  writeData(data);
+
+  res.json({ success: true, message: 'Đã lưu thông tin cá nhân!', profile: updatedProfile });
+});
 app.post('/api/users/change-password', requireAuth, (req, res) => {
   const { name, oldPass, newPass } = req.body || {};
   if (!name || !oldPass || !newPass) {

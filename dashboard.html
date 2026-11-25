@@ -2346,6 +2346,242 @@
       min-width: 0 !important;
       overflow: hidden !important;
     }
+
+    /* --- DECOR TRANG THÔNG TIN CÁ NHÂN --- */
+    #userNameDisplay {
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+    }
+
+    #userNameDisplay::after {
+      content: "▾";
+      font-size: 11px;
+      opacity: 0.85;
+    }
+
+    #userNameDisplay:hover {
+      background: rgba(20, 14, 10, 0.72) !important;
+      border-color: #fde68a !important;
+    }
+
+    .profile-hero-card {
+      background: linear-gradient(135deg, #2b1a10 0%, #4a2e1b 55%, #6b4226 100%) !important;
+      border-radius: 18px !important;
+      padding: 22px 20px !important;
+      color: #ffffff !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      flex-wrap: wrap !important;
+      gap: 16px !important;
+      box-shadow: 0 8px 24px rgba(43, 26, 16, 0.18) !important;
+      margin-bottom: 18px !important;
+      border: 1px solid rgba(253, 230, 138, 0.25) !important;
+    }
+
+    .profile-hero-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .profile-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.35);
+      flex-shrink: 0;
+    }
+
+    .profile-hero-info h2 {
+      font-size: 19px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      color: #ffffff;
+    }
+
+    .profile-hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12.5px;
+      color: #fde68a;
+    }
+
+    .profile-readonly-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .profile-readonly-box {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px 16px;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.03);
+    }
+
+    .profile-readonly-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .profile-readonly-val {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 6px;
+    }
+
+    .profile-section-card {
+      border-radius: 16px !important;
+      border: 1.5px solid #e2e8f0 !important;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04) !important;
+      padding: 20px 18px !important;
+      background: #ffffff !important;
+      margin-bottom: 18px !important;
+    }
+
+    .profile-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1.5px solid #f1f5f9;
+      gap: 10px;
+    }
+
+    .profile-section-header h3 {
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      color: #1e293b !important;
+      margin: 0 !important;
+    }
+
+    .profile-form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .profile-form-grid .filter-group label {
+      font-size: 12.5px !important;
+      font-weight: 600 !important;
+      color: #475569 !important;
+    }
+
+    .profile-form-grid input {
+      height: 42px !important;
+      padding: 8px 12px !important;
+      border: 1.5px solid #cbd5e1 !important;
+      border-radius: 10px !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: #0f172a !important;
+      background: #f8fafc !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .profile-form-grid input:focus {
+      background: #ffffff !important;
+      border-color: #b45309 !important;
+      box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.14) !important;
+    }
+
+    .profile-actions-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    .profile-actions-bar button {
+      height: 42px !important;
+      padding: 0 22px !important;
+      border-radius: 11px !important;
+      font-size: 14px !important;
+      font-weight: 700 !important;
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.22) !important;
+    }
+
+    .profile-security-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-profile-pass {
+      height: 44px;
+      border-radius: 12px;
+      border: 1.5px solid #cbd5e1;
+      background: #f8fafc;
+      color: #1e293b;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-profile-pass:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-profile-logout {
+      height: 44px;
+      border-radius: 12px;
+      border: 1.5px solid #fecaca;
+      background: #fef2f2;
+      color: #dc2626;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-profile-logout:hover {
+      background: #fee2e2;
+    }
+
+    @media (max-width: 768px) {
+      .profile-readonly-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .profile-form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .profile-actions-bar button {
+        width: 100%;
+        height: 44px !important;
+      }
+
+      .profile-security-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+    }
   </style>
 </head>
 
@@ -2413,7 +2649,15 @@
       <li class="menu-item" id="menu-change-pass">
         <a onclick="openChangePasswordModal()"><span class="menu-text">Đổi Mật Khẩu</span></a>
       </li>
+      <li class="menu-item" id="menu-logs" style="display: none;">
+        <a onclick="showTab('logs')"><span class="menu-text">Nhật Ký</span></a>
+      </li>
+      <li class="menu-item" id="menu-profile">
+        <a onclick="showTab('profile')"><span class="menu-text">Thông Tin Cá Nhân</span></a>
+      </li>
     </ul>
+  </aside>
+  </ul>
   </aside>
 
   <!-- MAIN -->
@@ -2426,9 +2670,7 @@
       <div class="user-info">
         <span class="user-badge" id="userRoleBadge" onclick="enablePushNotifications()" style="cursor: pointer;"
           title="Chạm để kích hoạt thông báo đẩy">Nhân viên</span>
-        <span id="userNameDisplay" style="font-weight: 700; color: #1e293b; font-size: 13.5px;"></span>
-        <button class="btn-action btn-reset" style="padding: 5px 12px; font-size: 11.5px;" onclick="handleLogout()">Đăng
-          xuất</button>
+        <span id="userNameDisplay" onclick="showTab('profile')" title="Xem thông tin cá nhân"></span>
       </div>
     </header>
     <div class="content-container">
@@ -3097,7 +3339,100 @@
           </div>
         </div>
       </section>
+      <!-- TAB: THÔNG TIN CÁ NHÂN -->
+      <section id="tab-profile" style="display: none;">
+        <div class="profile-hero-card">
+          <div class="profile-hero-left">
+            <div class="profile-avatar" id="profileAvatarChar">C</div>
+            <div class="profile-hero-info">
+              <h2 id="profileHeroName">...</h2>
+              <div class="profile-hero-meta">
+                <span id="profileHeroRole">Nhân viên Carmel Coffee</span>
+                <span>•</span>
+                <span>Cơ sở chính</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-action"
+            style="background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px;"
+            onclick="enablePushNotifications()">Bật Thông Báo Đẩy</button>
+        </div>
 
+        <div class="profile-readonly-grid">
+          <div class="profile-readonly-box">
+            <div class="profile-readonly-label">Tên tài khoản</div>
+            <div class="profile-readonly-val" id="profileReadName">...</div>
+          </div>
+          <div class="profile-readonly-box">
+            <div class="profile-readonly-label">Ngày bắt đầu làm việc</div>
+            <div class="profile-readonly-val" id="profileReadStartDate" style="color: #0369a1;">Chưa cập nhật</div>
+          </div>
+          <div class="profile-readonly-box">
+            <div class="profile-readonly-label">Mức lương hiện tại</div>
+            <div class="profile-readonly-val" id="profileReadHourlyRate" style="color: #16a34a;">25.000 đ/giờ</div>
+          </div>
+        </div>
+
+        <div class="profile-section-card">
+          <div class="profile-section-header">
+            <h3>Thông Tin Liên Hệ & Khẩn Cấp</h3>
+            <span style="font-size: 12px; color: #64748b;">Tự chỉnh sửa</span>
+          </div>
+          <div class="profile-form-grid">
+            <div class="filter-group">
+              <label for="profPhoneInput">Số điện thoại / Zalo</label>
+              <input type="tel" id="profPhoneInput" placeholder="Vd: 0909 123 456">
+            </div>
+            <div class="filter-group">
+              <label for="profBirthdayInput">Ngày sinh</label>
+              <input type="date" id="profBirthdayInput">
+            </div>
+            <div class="filter-group">
+              <label for="profEmergencyInput">Người liên hệ khẩn cấp (Tên & SĐT)</label>
+              <input type="text" id="profEmergencyInput" placeholder="Vd: Mẹ - 0912 345 678">
+            </div>
+          </div>
+          <div class="profile-actions-bar">
+            <button class="btn-action btn-success" id="btnSaveMyProfile" onclick="saveMyPersonalProfile()">Lưu Thông Tin
+              Cá Nhân</button>
+          </div>
+        </div>
+
+        <div class="profile-section-card">
+          <div class="profile-section-header">
+            <h3>Tài Khoản Ngân Hàng Nhận Lương</h3>
+            <span style="font-size: 12px; color: #64748b;">Dùng để nhận lương cuối tháng</span>
+          </div>
+          <div class="profile-form-grid">
+            <div class="filter-group">
+              <label for="profBankNameInput">Tên ngân hàng</label>
+              <input type="text" id="profBankNameInput" placeholder="Vd: MB Bank, Vietcombank...">
+            </div>
+            <div class="filter-group">
+              <label for="profBankAccInput">Số tài khoản</label>
+              <input type="text" id="profBankAccInput" placeholder="Nhập số tài khoản...">
+            </div>
+            <div class="filter-group">
+              <label for="profBankOwnerInput">Tên chủ tài khoản (In hoa)</label>
+              <input type="text" id="profBankOwnerInput" placeholder="VD: NGUYEN VAN A"
+                style="text-transform: uppercase;">
+            </div>
+          </div>
+          <div class="profile-actions-bar">
+            <button class="btn-action btn-success" onclick="saveMyPersonalProfile()">Lưu Tài Khoản Ngân Hàng</button>
+          </div>
+        </div>
+
+        <div class="profile-section-card">
+          <div class="profile-section-header">
+            <h3>Bảo Mật & Tài Khoản</h3>
+          </div>
+          <div class="profile-security-grid">
+            <button class="btn-profile-pass" onclick="openChangePasswordModal()">Đổi Mật Khẩu Tài Khoản</button>
+            <button class="btn-profile-logout" onclick="handleLogout()">Đăng Xuất Khỏi Tài Khoản</button>
+          </div>
+        </div>
+      </section>
     </div>
   </main>
 
@@ -3151,7 +3486,68 @@
       </div>
     </div>
   </div>
+  <!-- MODAL ĐỔI MẬT KHẨU CÁ NHÂN -->
+  <div class="custom-modal" id="changePasswordModal">
+    <div class="modal-box" style="max-width: 390px;">
+      <h3 style="font-size: 16px; margin-bottom: 6px; color: #1e293b;">Đổi Mật Khẩu Tài Khoản</h3>
+      <p style="font-size: 12.5px; color: #64748b; margin-bottom: 14px;">Tài khoản: <strong id="changePassUserLabel"
+          style="color: #2563eb;"></strong></p>
+      <div class="filter-group" style="margin-bottom: 10px;">
+        <label>Mật khẩu hiện tại:</label>
+        <input type="password" id="oldPasswordInput" placeholder="Nhập mật khẩu đang dùng...">
+      </div>
+      <div class="filter-group" style="margin-bottom: 10px;">
+        <label>Mật khẩu mới:</label>
+        <input type="password" id="newPasswordInput" placeholder="Nhập mật khẩu mới (từ 4 ký tự)...">
+      </div>
+      <div class="filter-group" style="margin-bottom: 16px;">
+        <label>Xác nhận mật khẩu mới:</label>
+        <input type="password" id="confirmPasswordInput" placeholder="Nhập lại mật khẩu mới...">
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn-action btn-reset" onclick="closeChangePasswordModal()">Hủy</button>
+        <button class="btn-action btn-success" id="btnSaveNewPassword" onclick="submitChangePassword()">Lưu Mật
+          Khẩu</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- MODAL XEM HỒ SƠ & SỬA NGÀY VÀO LÀM (DÀNH CHO QUẢN LÝ) -->
+  <div class="custom-modal" id="managerViewProfileModal">
+    <div class="modal-box" style="max-width: 420px;">
+      <h3 style="font-size: 16.5px; margin-bottom: 4px; color: #1e293b;">Hồ Sơ: <span id="mgrProfName"
+          style="color: #2563eb;"></span></h3>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Thông tin liên hệ, ngân hàng nhận lương và ngày
+        vào quán</p>
+
+      <div
+        style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; font-size: 13px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+        <div><span style="color:#64748b;">SĐT / Zalo:</span> <strong id="mgrProfPhone">--</strong></div>
+        <div><span style="color:#64748b;">Ngày sinh:</span> <strong id="mgrProfBirthday">--</strong></div>
+        <div><span style="color:#64748b;">Liên hệ khẩn cấp:</span> <strong id="mgrProfEmergency">--</strong></div>
+        <div style="border-top: 1px dashed #cbd5e1; padding-top: 8px;">
+          <span style="color:#64748b;">Ngân hàng:</span> <strong id="mgrProfBank">--</strong>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <div><span style="color:#64748b;">Số tài khoản:</span> <strong id="mgrProfBankAcc"
+              style="color: #0369a1;">--</strong></div>
+          <button class="btn-action" style="padding: 4px 10px; font-size: 11.5px;" onclick="copyStaffBankAccount()">Copy
+            STK</button>
+        </div>
+        <div><span style="color:#64748b;">Chủ tài khoản:</span> <strong id="mgrProfBankOwner">--</strong></div>
+      </div>
+
+      <div class="filter-group" style="margin-bottom: 16px;">
+        <label style="font-weight: 700; color: #1e293b;">Ngày bắt đầu làm việc (Chỉ Quản lý sửa):</label>
+        <input type="date" id="mgrProfStartDateInput">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn-action btn-reset" onclick="closeManagerProfileModal()">Đóng</button>
+        <button class="btn-action btn-success" onclick="saveManagerStaffStartDate()">Lưu Ngày Vào Làm</button>
+      </div>
+    </div>
+  </div>
   <script>
     function getLocalDateString(date = new Date()) {
       const year = date.getFullYear();
@@ -3491,7 +3887,7 @@
         closeSidebarMobile();
       }
 
-      ['nvl', 'shift', 'pass-shift', 'swap-shift', 'schedule', 'my-stats', 'salary', 'revenue', 'expense', 'accounts', 'profit', 'logs'].forEach(t => {
+      ['nvl', 'shift', 'pass-shift', 'swap-shift', 'schedule', 'my-stats', 'salary', 'revenue', 'expense', 'accounts', 'profit', 'logs', 'profile'].forEach(t => {
         const sec = document.getElementById('tab-' + t);
         if (sec) sec.style.display = (t === tab) ? 'block' : 'none';
         const menu = document.getElementById('menu-' + t);
@@ -3514,6 +3910,7 @@
       if (tab === 'accounts') { title.innerHTML = '<strong>Quản Lý & Cấp Mức Lương</strong>'; renderAccountsTable(); }
       if (tab === 'logs') { title.innerHTML = '<strong>Nhật Ký Hoạt Động</strong>'; loadAuditLogs(); }
       if (tab === 'profit') { title.innerHTML = '<strong>Báo Cáo Lợi Nhuận</strong>'; initProfitTab(); }
+      if (tab === 'profile') { title.innerHTML = '<strong>Thông Tin Cá Nhân</strong>'; renderMyProfileTab(); }
     }
 
     function updateUserInfoUI() {
@@ -3620,10 +4017,11 @@
             <span id="${passSpanId}" data-real-pass="${escapeHtml(u.pass || '')}" style="font-family: monospace;">••••••</span>
             <button onclick="togglePassVisibility('${passSpanId}')" style="background: none; border: none; cursor: pointer; margin-left: 6px;">👁️</button>
           </td>
-          <td style="text-align: center;">
-            ${isAdmin ? '<span style="color:#94a3b8; font-size: 11px;">Mặc định</span>' : `<button class="btn-action btn-reset" style="padding: 3px 8px; font-size: 11px; background:#dc2626;" onclick="deleteAccountByAdmin('${escapeHtml(name)}')">Xóa</button>`}
-          </td>
-        `;
+<td style="text-align: center;">
+            <button class="btn-action" style="padding: 3px 8px; font-size: 11px; margin-right: 4px;" onclick="openManagerProfileModal('${escapeHtml(name)}')">Hồ sơ</button>
+            ${isAdmin ? '' : `<button class="btn-action btn-reset" style="padding: 3px 8px; font-size: 11px; background:#dc2626;" onclick="deleteAccountByAdmin('${escapeHtml(name)}')">Xóa</button>`}
+          </td>      
+            `;
         tbody.appendChild(tr);
       });
     }
@@ -5227,6 +5625,127 @@
       } catch (e) {
         alert('Lỗi kết nối máy chủ khi đổi mật khẩu!');
         if (btn) btn.disabled = false;
+      }
+    }
+    function renderMyProfileTab() {
+      if (!currentUser) return;
+      const users = JSON.parse(localStorage.getItem('carmel_full_users')) || {};
+      const me = users[currentUser.name] || {};
+      const prof = me.profile || {};
+      const rate = getStaffHourlyRate(currentUser.name);
+
+      document.getElementById('profileAvatarChar').textContent = currentUser.name.charAt(0).toUpperCase();
+      document.getElementById('profileHeroName').textContent = currentUser.name;
+      document.getElementById('profileHeroRole').textContent = currentUser.role === 'manager' ? 'Quản lý hệ thống' : 'Nhân viên Carmel Coffee';
+
+      document.getElementById('profileReadName').textContent = currentUser.name;
+      document.getElementById('profileReadHourlyRate').textContent = rate.toLocaleString('vi-VN') + ' đ/giờ';
+
+      if (prof.startDate) {
+        const p = prof.startDate.split('-');
+        document.getElementById('profileReadStartDate').textContent = p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : prof.startDate;
+      } else {
+        document.getElementById('profileReadStartDate').textContent = 'Chưa cập nhật';
+      }
+
+      document.getElementById('profPhoneInput').value = prof.phone || '';
+      document.getElementById('profBirthdayInput').value = prof.birthday || '';
+      document.getElementById('profEmergencyInput').value = prof.emergencyContact || '';
+      document.getElementById('profBankNameInput').value = prof.bankName || '';
+      document.getElementById('profBankAccInput').value = prof.bankAccount || '';
+      document.getElementById('profBankOwnerInput').value = prof.bankOwner || '';
+    }
+
+    async function saveMyPersonalProfile() {
+      const payload = {
+        targetName: currentUser.name,
+        phone: document.getElementById('profPhoneInput').value.trim(),
+        birthday: document.getElementById('profBirthdayInput').value,
+        emergencyContact: document.getElementById('profEmergencyInput').value.trim(),
+        bankName: document.getElementById('profBankNameInput').value.trim(),
+        bankAccount: document.getElementById('profBankAccInput').value.trim(),
+        bankOwner: document.getElementById('profBankOwnerInput').value.trim().toUpperCase()
+      };
+
+      try {
+        const res = await apiFetch('/api/users/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (!result.success) {
+          alert('❌ ' + (result.message || 'Lưu thông tin thất bại!'));
+          return;
+        }
+        await syncDataFromServer();
+        renderMyProfileTab();
+        alert('Đã lưu thông tin cá nhân thành công!');
+      } catch (e) {
+        alert('Lỗi kết nối máy chủ khi lưu hồ sơ!');
+      }
+    }
+
+    let currentMgrProfileTarget = null;
+
+    function openManagerProfileModal(staffName) {
+      if (currentUser.role !== 'manager') return;
+      currentMgrProfileTarget = staffName;
+      const users = JSON.parse(localStorage.getItem('carmel_full_users')) || {};
+      const prof = (users[staffName] && users[staffName].profile) || {};
+
+      document.getElementById('mgrProfName').textContent = staffName;
+      document.getElementById('mgrProfPhone').textContent = prof.phone || 'Chưa cập nhật';
+      if (prof.birthday) {
+        const b = prof.birthday.split('-');
+        document.getElementById('mgrProfBirthday').textContent = b.length === 3 ? `${b[2]}/${b[1]}/${b[0]}` : prof.birthday;
+      } else {
+        document.getElementById('mgrProfBirthday').textContent = 'Chưa cập nhật';
+      }
+      document.getElementById('mgrProfEmergency').textContent = prof.emergencyContact || 'Chưa cập nhật';
+      document.getElementById('mgrProfBank').textContent = prof.bankName || 'Chưa cập nhật';
+      document.getElementById('mgrProfBankAcc').textContent = prof.bankAccount || 'Chưa cập nhật';
+      document.getElementById('mgrProfBankOwner').textContent = prof.bankOwner || 'Chưa cập nhật';
+      document.getElementById('mgrProfStartDateInput').value = prof.startDate || '';
+
+      document.getElementById('managerViewProfileModal').classList.add('active');
+    }
+
+    function closeManagerProfileModal() {
+      document.getElementById('managerViewProfileModal').classList.remove('active');
+      currentMgrProfileTarget = null;
+    }
+
+    function copyStaffBankAccount() {
+      const stk = document.getElementById('mgrProfBankAcc').textContent;
+      if (!stk || stk === 'Chưa cập nhật' || stk === '--') {
+        alert('Nhân viên này chưa nhập số tài khoản!');
+        return;
+      }
+      navigator.clipboard.writeText(stk).then(() => {
+        alert(`Đã copy STK: ${stk}`);
+      }).catch(() => {
+        alert(`Số tài khoản: ${stk}`);
+      });
+    }
+
+    async function saveManagerStaffStartDate() {
+      if (!currentMgrProfileTarget || currentUser.role !== 'manager') return;
+      const startDate = document.getElementById('mgrProfStartDateInput').value;
+      try {
+        const res = await apiFetch('/api/users/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetName: currentMgrProfileTarget, startDate })
+        });
+        const result = await res.json();
+        if (result.success) {
+          await syncDataFromServer();
+          alert(`Đã cập nhật ngày vào làm cho ${currentMgrProfileTarget}!`);
+          closeManagerProfileModal();
+        }
+      } catch (e) {
+        alert('Lỗi cập nhật ngày vào làm!');
       }
     }
 
