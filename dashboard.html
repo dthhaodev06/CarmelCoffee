@@ -1012,6 +1012,7 @@
     #tab-nvl .custom-table th:nth-child(2) {
       background-color: #f8fafc;
     }
+
     /* --- CỐ ĐỊNH CỘT TÊN NHÂN VIÊN KHI KÉO NGANG Ở BẢNG TÌNH TRẠNG ĐĂNG KÝ CA --- */
     @media (max-width: 768px) {
       #managerRegStatusCard .custom-table {
@@ -2026,6 +2027,99 @@
         background-position: center 32% !important;
       }
     }
+
+    /* --- DECOR KHUNG CẤP TÀI KHOẢN NHÂN VIÊN MỚI --- */
+    .create-account-card {
+      border-radius: 16px !important;
+      border: 1.5px solid #e2e8f0 !important;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05) !important;
+      padding: 20px 18px !important;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+    }
+
+    .create-account-card .data-card-header {
+      padding-bottom: 12px !important;
+      margin-bottom: 16px !important;
+      border-bottom: 1.5px solid #f1f5f9 !important;
+    }
+
+    .create-account-card .data-card-header h3 {
+      font-size: 17px !important;
+      font-weight: 700 !important;
+      color: #1e293b !important;
+      margin: 0 !important;
+    }
+
+    .create-account-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr) auto;
+      gap: 14px;
+      align-items: flex-end;
+    }
+
+    .create-account-grid .filter-group {
+      gap: 6px !important;
+    }
+
+    .create-account-grid .filter-group label {
+      font-size: 12.5px !important;
+      font-weight: 600 !important;
+      color: #475569 !important;
+    }
+
+    .create-account-grid input,
+    .create-account-grid select {
+      height: 42px !important;
+      padding: 8px 12px !important;
+      border: 1.5px solid #cbd5e1 !important;
+      border-radius: 10px !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      color: #0f172a !important;
+      background-color: #ffffff !important;
+      transition: all 0.2s ease !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .create-account-grid input:focus,
+    .create-account-grid select:focus {
+      border-color: #16a34a !important;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.14) !important;
+      background-color: #ffffff !important;
+    }
+
+    .create-account-action button {
+      height: 42px !important;
+      padding: 0 20px !important;
+      border-radius: 11px !important;
+      font-size: 14px !important;
+      font-weight: 700 !important;
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.24) !important;
+      white-space: nowrap !important;
+      width: 100% !important;
+    }
+
+    .create-account-action button:active {
+      transform: scale(0.98);
+    }
+
+    @media (max-width: 768px) {
+      .create-account-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+      }
+
+      .create-account-action {
+        grid-column: 1 / -1 !important;
+        margin-top: 4px !important;
+      }
+
+      .create-account-action button {
+        height: 44px !important;
+      }
+    }
   </style>
 </head>
 
@@ -2645,25 +2739,33 @@
 
       <!-- TAB: TÀI KHOẢN -->
       <section id="tab-accounts" style="display: none;">
-        <div class="data-card">
+        <div class="data-card create-account-card">
           <div class="data-card-header">
             <h3>Cấp Tài Khoản Nhân Viên Mới</h3>
-            <span style="font-size: 12.5px; color: #64748b;">Chỉ Quản lý mới có quyền tạo</span>
           </div>
-          <div
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: flex-end;">
-            <div class="filter-group"><label>Tên nhân viên:</label><input type="text" id="newStaffNameInput"
-                placeholder="Vd: Tuấn, Mai..."></div>
-            <div class="filter-group"><label>Mật khẩu cấp:</label><input type="text" id="newStaffPassInput"
-                placeholder="Nhập mật khẩu..."></div>
-            <div class="filter-group"><label>Lương/giờ (VNĐ):</label><input type="number" id="newStaffRateInput"
-                value="25000" step="1000"></div>
-            <div class="filter-group"><label>Vai trò:</label><select id="newStaffRoleSelect">
+          <div class="create-account-grid">
+            <div class="filter-group">
+              <label for="newStaffNameInput">Tên nhân viên</label>
+              <input type="text" id="newStaffNameInput" placeholder="Vd: Tuấn, Mai...">
+            </div>
+            <div class="filter-group">
+              <label for="newStaffPassInput">Mật khẩu cấp</label>
+              <input type="text" id="newStaffPassInput" placeholder="Nhập mật khẩu...">
+            </div>
+            <div class="filter-group">
+              <label for="newStaffRateInput">Lương/giờ (VNĐ)</label>
+              <input type="number" id="newStaffRateInput" value="25000" step="1000">
+            </div>
+            <div class="filter-group">
+              <label for="newStaffRoleSelect">Vai trò</label>
+              <select id="newStaffRoleSelect">
                 <option value="employee">Nhân viên</option>
                 <option value="manager">Quản lý</option>
-              </select></div>
-            <div><button class="btn-action btn-success" style="width: 100%; height: 38px;"
-                onclick="createNewAccountByAdmin()">Tạo & Cấp Tài Khoản</button></div>
+              </select>
+            </div>
+            <div class="create-account-action">
+              <button class="btn-action btn-success" onclick="createNewAccountByAdmin()">Tạo Tài Khoản</button>
+            </div>
           </div>
         </div>
         <div class="data-card">
