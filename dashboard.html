@@ -3545,8 +3545,7 @@
     <div class="modal-box" style="max-width: 420px;">
       <h3 style="font-size: 16.5px; margin-bottom: 4px; color: #1e293b;">Hồ Sơ: <span id="mgrProfName"
           style="color: #2563eb;"></span></h3>
-      <p style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Thông tin liên hệ, ngân hàng nhận lương và ngày
-        vào quán</p>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 14px;"></p>
 
       <div
         style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; font-size: 13px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
@@ -5422,10 +5421,10 @@
           }
           throw new Error(error.message || 'Server từ chối lưu thiết bị');
         }
-        alert('✅ Đã làm mới và bật thông báo đẩy thành công! Chờ 1 giây để nhận tin nhắn thử nghiệm...');
+        alert('Bật Thông Báo Thành Công!');
       } catch (err) {
         console.error('Lỗi Push:', err);
-        alert('❌ Không thể kích hoạt thông báo: ' + err.message);
+        alert('Không thể kích hoạt thông báo: ' + err.message);
       }
     }
     setInterval(() => {
