@@ -21,9 +21,9 @@ app.use(express.static(__dirname));
 const rawMongoUri = process.env.MONGO_URI;
 const MONGO_URI = rawMongoUri
   ? rawMongoUri.trim()
-      .replace(/^['"]|['"]$/g, '')
-      .replace(/^\[|\]$/g, '')
-      .trim()
+    .replace(/^['"]|['"]$/g, '')
+    .replace(/^\[|\]$/g, '')
+    .trim()
   : '';
 
 if (!MONGO_URI) {
@@ -222,9 +222,9 @@ app.post('/api/login', (req, res) => {
   const data = readData();
 
   if (!data.users[name]) {
-    return res.status(401).json({ 
-      success: false, 
-      message: 'Tài khoản chưa được tạo! Vui lòng liên hệ Admin/Quản lý để được cấp tài khoản.' 
+    return res.status(401).json({
+      success: false,
+      message: 'Tài khoản chưa được tạo! Vui lòng liên hệ Admin/Quản lý để được cấp tài khoản.'
     });
   }
 
@@ -268,6 +268,34 @@ app.post('/api/users/create', requireAuth, requireManager, (req, res) => {
   writeData(data);
 
   res.json({ success: true, message: `Đã cấp tài khoản cho ${staffName} thành công!` });
+});
+app.post('/api/users/change-password', requireAuth, (req, res) => {
+  const { name, oldPass, newPass } = req.body || {};
+  if (!name || !oldPass || !newPass) {
+    return res.status(400).json({ success: false, message: 'Vui lòng nhập đầy đủ thông tin!' });
+  }
+  if (String(newPass).trim().length < 4) {
+    return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có ít nhất 4 ký tự!' });
+  }
+
+  const data = readData();
+  if (!data.users || !data.users[name]) {
+    return res.status(404).json({ success: false, message: 'Không tìm thấy tài khoản!' });
+  }
+  if (data.users[name].pass !== oldPass) {
+    return res.status(400).json({ success: false, message: 'Mật khẩu hiện tại không đúng!' });
+  }
+
+  const trimmedNewPass = String(newPass).trim();
+  data.users[name].pass = trimmedNewPass;
+  if (data.carmel_full_users && data.carmel_full_users[name]) {
+    data.carmel_full_users[name].pass = trimmedNewPass;
+  }
+
+  logActivity(data, name, 'Đổi mật khẩu', `${name} đã tự đổi mật khẩu cá nhân`);
+  writeData(data);
+
+  res.json({ success: true, message: 'Đổi mật khẩu thành công!' });
 });
 
 app.delete('/api/users/:name', requireAuth, requireManager, (req, res) => {
@@ -425,7 +453,7 @@ app.post('/api/shifts/request', requireAuth, async (req, res) => {
     s => s.role === 'manager',
     'Yêu Cầu Ca Làm',
     `Nhân viên ${newRequest.from} vừa gửi đơn ${actionText} cho ${newRequest.to}. Quản lý vui lòng xét duyệt!`,
-newRequest.type === 'SWAP' ? '/dashboard.html?tab=tab-swap-shift' : '/dashboard.html?tab=tab-pass-shift'  );
+    newRequest.type === 'SWAP' ? '/dashboard.html?tab=tab-swap-shift' : '/dashboard.html?tab=tab-pass-shift');
 
   res.json({ success: true });
 });
@@ -474,7 +502,7 @@ app.post('/api/shifts/handle-request', requireAuth, requireManager, async (req, 
       s => s.role === 'employee' && relatedNames.includes((s.actor || '').toLowerCase()),
       `Kết quả ${typeText}`,
       `Quản lý ${statusText} yêu cầu ${typeText} giữa ${targetReq.from} và ${targetReq.to}.`,
-targetReq.type === 'SWAP' ? '/dashboard.html?tab=tab-swap-shift' : '/dashboard.html?tab=tab-pass-shift'    );
+      targetReq.type === 'SWAP' ? '/dashboard.html?tab=tab-swap-shift' : '/dashboard.html?tab=tab-pass-shift');
   }
   res.json({ success: true });
 });

@@ -2320,6 +2320,7 @@
         height: 44px !important;
       }
     }
+
     /* --- SỬA LỖI INPUT DATE BỊ PHÌNH TO VÀ TRÀN VIỀN TRÊN IPHONE SAFARI --- */
     input[type="date"],
     input[type="month"] {
@@ -5135,6 +5136,69 @@
         const isAllDone = submittedCount === staffList.length && staffList.length > 0;
         badge.style.background = isAllDone ? '#dcfce7' : '#fef3c7';
         badge.style.color = isAllDone ? '#15803d' : '#b45309';
+      }
+    }
+    function openChangePasswordModal() {
+      if (window.innerWidth <= 768) closeSidebarMobile();
+      document.getElementById('changePassUserLabel').textContent = currentUser.name;
+      document.getElementById('oldPasswordInput').value = '';
+      document.getElementById('newPasswordInput').value = '';
+      document.getElementById('confirmPasswordInput').value = '';
+      document.getElementById('changePasswordModal').classList.add('active');
+    }
+
+    function closeChangePasswordModal() {
+      document.getElementById('changePasswordModal').classList.remove('active');
+    }
+
+    async function submitChangePassword() {
+      const oldPass = document.getElementById('oldPasswordInput').value.trim();
+      const newPass = document.getElementById('newPasswordInput').value.trim();
+      const confirmPass = document.getElementById('confirmPasswordInput').value.trim();
+
+      if (!oldPass || !newPass || !confirmPass) {
+        alert('Vui lòng điền đầy đủ cả 3 ô mật khẩu!');
+        return;
+      }
+      if (newPass.length < 4) {
+        alert('Mật khẩu mới phải có ít nhất 4 ký tự!');
+        return;
+      }
+      if (newPass !== confirmPass) {
+        alert('Mật khẩu xác nhận không khớp!');
+        return;
+      }
+      if (oldPass === newPass) {
+        alert('Mật khẩu mới phải khác mật khẩu hiện tại!');
+        return;
+      }
+
+      const btn = document.getElementById('btnSaveNewPassword');
+      if (btn) btn.disabled = true;
+
+      try {
+        const res = await apiFetch('/api/users/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: currentUser.name,
+            oldPass,
+            newPass
+          })
+        });
+        const result = await res.json();
+        if (!result.success) {
+          alert('❌ ' + (result.message || 'Đổi mật khẩu thất bại!'));
+          if (btn) btn.disabled = false;
+          return;
+        }
+
+        alert('Đổi mật khẩu thành công! Vui lòng đăng nhập lại bằng mật khẩu mới.');
+        closeChangePasswordModal();
+        await handleLogout();
+      } catch (e) {
+        alert('Lỗi kết nối máy chủ khi đổi mật khẩu!');
+        if (btn) btn.disabled = false;
       }
     }
 
