@@ -249,19 +249,11 @@
       bottom: 0;
       background: rgba(0, 0, 0, 0.45);
 
-        {
-        id: 4, name: "Sữa Đặc", unit: "hộp", inQty: 50, outQty: 12
-      }
-
       z-index: 9998;
     }
 
     /* SIDEBAR */
     .sidebar {
-        {
-        id: 4, name: "Sữa Đặc", unit: "hộp", inQty: 50, outQty: 12
-      }
-
       width: 250px;
       background: #212529;
       color: #94a3b8;
@@ -2676,8 +2668,6 @@
       </li>
     </ul>
   </aside>
-  </ul>
-  </aside>
 
   <!-- MAIN -->
   <main class="main-area">
@@ -3531,31 +3521,6 @@
       <div style="display: flex; justify-content: flex-end; gap: 8px;">
         <button class="btn-action btn-reset" onclick="closeCustomShiftModal()">Hủy</button>
         <button class="btn-action btn-success" onclick="applyCustomShiftModal()">Xác Nhận</button>
-      </div>
-    </div>
-  </div>
-  <!-- MODAL ĐỔI MẬT KHẨU CÁ NHÂN -->
-  <div class="custom-modal" id="changePasswordModal">
-    <div class="modal-box" style="max-width: 390px;">
-      <h3 style="font-size: 16px; margin-bottom: 6px; color: #1e293b;">Đổi Mật Khẩu Tài Khoản</h3>
-      <p style="font-size: 12.5px; color: #64748b; margin-bottom: 14px;">Tài khoản: <strong id="changePassUserLabel"
-          style="color: #2563eb;"></strong></p>
-      <div class="filter-group" style="margin-bottom: 10px;">
-        <label>Mật khẩu hiện tại:</label>
-        <input type="password" id="oldPasswordInput" placeholder="Nhập mật khẩu đang dùng...">
-      </div>
-      <div class="filter-group" style="margin-bottom: 10px;">
-        <label>Mật khẩu mới:</label>
-        <input type="password" id="newPasswordInput" placeholder="Nhập mật khẩu mới (từ 4 ký tự)...">
-      </div>
-      <div class="filter-group" style="margin-bottom: 16px;">
-        <label>Xác nhận mật khẩu mới:</label>
-        <input type="password" id="confirmPasswordInput" placeholder="Nhập lại mật khẩu mới...">
-      </div>
-      <div style="display: flex; justify-content: flex-end; gap: 8px;">
-        <button class="btn-action btn-reset" onclick="closeChangePasswordModal()">Hủy</button>
-        <button class="btn-action btn-success" id="btnSaveNewPassword" onclick="submitChangePassword()">Lưu Mật
-          Khẩu</button>
       </div>
     </div>
   </div>
@@ -4992,15 +4957,10 @@
                 monthDaysCount++;
                 monthHoursCount += h;
                 const blocks = shiftVal.match(/[A-Za-z0-9]+(?:\([^)]+\))?/gi);
-                if (h > 0) {
-                  monthDaysCount++;
-                  monthHoursCount += h;
-                  const blocks = shiftVal.match(/[A-Za-z0-9]+(?:\([^)]+\))?/gi);
-                  monthShiftsCount += blocks ? blocks.length : (h > 6 ? 2 : 1);
-                }
+                monthShiftsCount += blocks ? blocks.length : (h > 6 ? 2 : 1);
               }
             }
-          } ƒ
+          }
         });
       });
 
