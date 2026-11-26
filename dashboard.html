@@ -2767,6 +2767,33 @@
               Ký</button>
           </div>
         </div>
+        <!-- KHUNG LỊCH SỬ ĐĂNG KÝ CA CỦA TÀI KHOẢN ĐANG ĐĂNG NHẬP -->
+        <div class="data-card" style="margin-top: 18px;">
+          <div class="data-card-header">
+            <div>
+              <h3 style="margin-bottom: 4px;">Lịch Sử Phiếu Đăng Ký Ca Đã Gửi</h3>
+              <span style="font-size: 12.5px; color: #64748b;">Lưu lại chi tiết từng tuần bạn đã gửi cho Quản lý để dễ
+                đối chiếu</span>
+            </div>
+            <span id="myRegHistoryCountBadge"
+              style="padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; background: #e0f2fe; color: #0369a1;">0
+              tuần đã gửi</span>
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px; text-align: center;">STT</th>
+                  <th>Tuần Làm Việc</th>
+                  <th style="text-align: center;">Trạng Thái</th>
+                  <th style="text-align: center;">Thời Gian Gửi</th>
+                  <th>Chi Tiết Ca Đã Đăng Ký</th>
+                </tr>
+              </thead>
+              <tbody id="myShiftRegHistoryBody"></tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
       <!-- TAB CON 1: PASS CA -->
@@ -3874,6 +3901,7 @@
         renderRevenueTable();
         renderProfitReport();
         renderAccountsTable();
+        renderMyShiftRegHistory();
       } catch (e) {
         console.warn("Lỗi đồng bộ:", e);
       }
@@ -4235,6 +4263,81 @@
           badge.style.background = '#ffe4e6';
           badge.style.color = '#e11d48';
         }
+      });
+    }
+    function renderMyShiftRegHistory() {
+      const tbody = document.getElementById('myShiftRegHistoryBody');
+      const countBadge = document.getElementById('myRegHistoryCountBadge');
+      if (!tbody || !currentUser) return;
+
+      const staffName = currentUser.name;
+      const regsByWeek = JSON.parse(localStorage.getItem('carmel_registrations_by_week')) || {};
+      const currentWeekKey = getWeekKey(0);
+      const legacyReg = JSON.parse(localStorage.getItem('all_staff_registrations')) || {};
+      if (!regsByWeek[currentWeekKey] && legacyReg[staffName]) {
+        regsByWeek[currentWeekKey] = { ...regsByWeek[currentWeekKey], [staffName]: legacyReg[staffName] };
+      }
+
+      const regMetaByWeek = JSON.parse(localStorage.getItem('carmel_reg_meta_by_week')) || {};
+      const shortDayNames = { t2: 'T2', t3: 'T3', t4: 'T4', t5: 'T5', t6: 'T6', t7: 'T7', cn: 'CN' };
+
+      // Lọc tất cả các tuần mà tài khoản này đã từng nộp phiếu, sắp xếp tuần mới nhất lên đầu
+      const myWeeks = Object.keys(regsByWeek)
+        .filter(wKey => regsByWeek[wKey] && regsByWeek[wKey][staffName])
+        .sort((a, b) => new Date(b) - new Date(a));
+
+      if (countBadge) {
+        countBadge.textContent = `${myWeeks.length} tuần đã gửi`;
+      }
+
+      if (myWeeks.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 20px;">Bạn chưa gửi phiếu đăng ký ca nào.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = '';
+      myWeeks.forEach((wKey, idx) => {
+        const parts = wKey.split('-');
+        let weekRangeText = wKey;
+        if (parts.length === 3) {
+          const mon = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+          const sun = new Date(mon);
+          sun.setDate(mon.getDate() + 6);
+          const monStr = `${String(mon.getDate()).padStart(2, '0')}/${String(mon.getMonth() + 1).padStart(2, '0')}/${mon.getFullYear()}`;
+          const sunStr = `${String(sun.getDate()).padStart(2, '0')}/${String(sun.getMonth() + 1).padStart(2, '0')}/${sun.getFullYear()}`;
+          weekRangeText = `${monStr} - ${sunStr}`;
+        }
+
+        const timeStr = (regMetaByWeek[wKey] && regMetaByWeek[wKey][staffName]) || 'Đã ghi nhận trên hệ thống';
+        const sched = regsByWeek[wKey][staffName] || {};
+
+        const shiftParts = [];
+        daysOfWeek.forEach(d => {
+          const arr = sched[d.key];
+          if (Array.isArray(arr) && arr.length > 0) {
+            shiftParts.push(`${shortDayNames[d.key]}: ${arr.join(', ')}`);
+          }
+        });
+
+        const detailHtml = shiftParts.length > 0
+          ? `<span style="color: #0f172a; font-weight: 600;">${escapeHtml(shiftParts.join(' | '))}</span>`
+          : `<span style="color: #64748b; font-style: italic;">Đăng ký nghỉ cả tuần (Off)</span>`;
+
+        const isThisWeek = wKey === currentWeekKey;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="text-align: center;"><strong>${idx + 1}</strong></td>
+          <td>
+            <strong>${escapeHtml(weekRangeText)}</strong>
+            ${isThisWeek ? '<span style="margin-left: 6px; padding: 2px 7px; border-radius: 10px; font-size: 10.5px; font-weight: 700; background: #fef3c7; color: #b45309;">Tuần này</span>' : ''}
+          </td>
+          <td style="text-align: center;">
+            <span style="padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; background: #dcfce7; color: #15803d;">Đã gửi Quản lý</span>
+          </td>
+          <td style="text-align: center; font-size: 12.5px; color: #475569; font-weight: 600;">${escapeHtml(timeStr)}</td>
+          <td style="font-size: 12.5px;">${detailHtml}</td>
+        `;
+        tbody.appendChild(tr);
       });
     }
 
@@ -6097,6 +6200,7 @@
       renderTable();
       updateStaffDropdowns();
       renderShiftRequests();
+      renderMyShiftRegHistory();
       loadAuditLogs();
       handleNotificationDeepLink();
       autoSyncPushSubscription();
