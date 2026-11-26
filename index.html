@@ -254,6 +254,23 @@
   </style>
 </head>
 <body>
+  <!-- MÀN HÌNH CHỜ LOGO CARMEL COFFEE -->
+  <div id="carmelSplash" style="position:fixed;inset:0;z-index:999999;background:#241811;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity 0.3s ease;">
+    <img src="/logocarmel.jpg" alt="Carmel Coffee" style="width:84px;height:84px;border-radius:22px;object-fit:cover;box-shadow:0 8px 24px rgba(0,0,0,0.45);border:2px solid #f3d078;">
+    <div style="color:#fde68a;font-family:'Inter',sans-serif;font-size:15px;font-weight:700;letter-spacing:1.5px;">CARMEL COFFEE</div>
+    <div style="width:26px;height:26px;border:3px solid rgba(253,230,138,0.25);border-top-color:#fde68a;border-radius:50%;animation:carmelSpin 0.8s linear infinite;"></div>
+  </div>
+  <style>@keyframes carmelSpin{to{transform:rotate(360deg)}}</style>
+  <script>
+    (function(){
+      var hide = function(){
+        var el = document.getElementById('carmelSplash');
+        if(el){ el.style.opacity='0'; setTimeout(function(){ el.remove(); }, 300); }
+      };
+      window.addEventListener('DOMContentLoaded', function(){ setTimeout(hide, 250); });
+      setTimeout(hide, 2500);
+    })();
+  </script>
 
   <div class="login-container">
     
