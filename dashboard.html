@@ -2883,26 +2883,6 @@
 
       <!-- TAB 3: LỊCH LÀM -->
       <section id="tab-schedule" style="display: none;">
-        <!-- KHUNG TỪ ĐIỂN MÃ CA TÙY CHỈNH (CHỈ QUẢN LÝ THẤY) -->
-        <div class="filter-card" id="customShiftCodesPanel"
-          style="display: none; flex-direction: column; align-items: stretch; gap: 12px; border-left: 4px solid #0284c7;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-            <div>
-              <strong style="color: #0f172a; font-size: 14px;">Từ Điển Mã Ca Cố Định & Quy Đổi Giờ Công</strong>
-              <div style="font-size: 12px; color: #64748b;">Mặc định: A, B, C = 6 tiếng. Tạo thêm ký hiệu riêng (vd: A2
-                = 2 tiếng) để hệ thống tự tính lương.</div>
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-              <input type="text" id="newShiftCodeInput" placeholder="Mã ca (vd: A2)"
-                style="width: 120px; padding: 7px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 700;">
-              <input type="number" id="newShiftHoursInput" step="0.5" min="0.5" max="24" placeholder="Số tiếng (vd: 2)"
-                style="width: 135px; padding: 7px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px;">
-              <button class="btn-action" style="padding: 7px 14px; font-size: 13px;" onclick="addCustomShiftCode()">+
-                Thêm Mã</button>
-            </div>
-          </div>
-          <div id="customShiftCodesList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
-        </div>
         <div class="data-card">
           <div class="excel-header-box">
             <div>
@@ -2944,6 +2924,24 @@
               <button class="btn-action" id="btnPublishRoster" style="background:#0284c7; display: none;"
                 onclick="publishRosterToStaff()">Thông báo lịch làm</button>
             </div>
+          </div>
+          <!-- KHUNG TỪ ĐIỂN MÃ CA CỐ ĐỊNH (NẰM GIỮA TIÊU ĐỀ VÀ BẢNG LỊCH) -->
+          <div id="customShiftCodesPanel"
+            style="display: none; flex-direction: column; gap: 10px; background: #f8fafc; border: 1.5px solid #e2e8f0; border-left: 4px solid #0284c7; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px;">
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <strong style="color: #0f172a; font-size: 13.5px;">Từ Điển Mã Ca Cố Định & Quy Đổi Giờ Công</strong>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                <input type="text" id="newShiftCodeInput" placeholder="Mã ca (vd: A2)"
+                  style="width: 115px; height: 36px; padding: 0 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 700; background: #fff;">
+                <input type="number" id="newShiftHoursInput" step="0.5" min="0.5" max="24"
+                  placeholder="Số tiếng (vd: 2)"
+                  style="width: 130px; height: 36px; padding: 0 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: #fff;">
+                <button class="btn-action" style="height: 36px; padding: 0 14px; font-size: 12.5px; border-radius: 8px;"
+                  onclick="addCustomShiftCode()">+ Thêm Mã</button>
+              </div>
+            </div>
+            <div id="customShiftCodesList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
           </div>
           <div style="overflow-x: auto;">
             <table class="roster-grid-table">
@@ -4045,13 +4043,13 @@
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td style="text-align: center;"><strong>${idx + 1}</strong></td>
-<td><strong style="cursor: pointer; color: #2563eb; text-decoration: underline;" onclick="openManagerProfileModal('${escapeHtml(name)}')">${escapeHtml(name)}</strong></td>          <td style="text-align: center;">
+<td style="text-align: center;"><strong>${idx + 1}</strong></td>
+          <td><strong style="cursor: pointer; color: #0f172a; text-decoration: none;" onclick="openManagerProfileModal('${escapeHtml(name)}')">${escapeHtml(name)}</strong></td>
+          <td style="text-align: center;">
             <span style="font-size: 11.5px; padding: 3px 8px; border-radius: 12px; font-weight: 600; background: ${isManager ? '#fef3c7' : '#e0f2fe'}; color: ${isManager ? '#b45309' : '#0369a1'};">
               ${isManager ? 'Quản lý' : 'Nhân viên'}
             </span>
-          </td>
-          <td style="text-align: center;">
+          </td>          <td style="text-align: center;">
             <span style="cursor: pointer; padding: 4px 8px; border-radius: 6px; background: #f0fdf4; color: #15803d; font-weight: 700; border: 1px solid #bbf7d0;" onclick="promptChangeRate('${escapeHtml(name)}')">
               ${staffRate.toLocaleString('vi-VN')}
             </span>
@@ -4360,10 +4358,9 @@
       const codes = getCustomShiftCodes();
       const keys = Object.keys(codes);
       if (keys.length === 0) {
-        listEl.innerHTML = '<span style="font-size: 12px; color: #94a3b8; font-style: italic;">Chưa có mã ca tùy chỉnh nào (đang dùng mặc định A, B, C = 6 tiếng).</span>';
+        listEl.innerHTML = '<span style="font-size: 12px; color: #94a3b8; font-style: italic;">Chưa có mã ca tùy chỉnh nào.</span>';
         return;
       }
-
       listEl.innerHTML = keys.map(code => `
         <span style="display: inline-flex; align-items: center; gap: 6px; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 4px 10px; border-radius: 20px; font-size: 12.5px; font-weight: 700;">
           <span>${escapeHtml(code)} = ${codes[code]} tiếng</span>
@@ -4894,14 +4891,14 @@
                 monthHoursCount += h;
                 const blocks = shiftVal.match(/[A-Za-z0-9]+(?:\([^)]+\))?/gi);
                 if (h > 0) {
-                monthDaysCount++;
-                monthHoursCount += h;
-                const blocks = shiftVal.match(/[A-Za-z0-9]+(?:\([^)]+\))?/gi);
-                monthShiftsCount += blocks ? blocks.length : (h > 6 ? 2 : 1);
-              }
+                  monthDaysCount++;
+                  monthHoursCount += h;
+                  const blocks = shiftVal.match(/[A-Za-z0-9]+(?:\([^)]+\))?/gi);
+                  monthShiftsCount += blocks ? blocks.length : (h > 6 ? 2 : 1);
+                }
               }
             }
-          }
+          } ƒ
         });
       });
 
