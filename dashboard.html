@@ -2663,9 +2663,6 @@
       <li class="menu-item" id="menu-change-pass">
         <a onclick="openChangePasswordModal()"><span class="menu-text">Đổi Mật Khẩu</span></a>
       </li>
-      <li class="menu-item" id="menu-logs" style="display: none;">
-        <a onclick="showTab('logs')"><span class="menu-text">Nhật Ký</span></a>
-      </li>
     </ul>
   </aside>
 
@@ -2868,6 +2865,7 @@
                   <option value="cn">Chủ Nhật</option>
                 </select></div>
               <div class="filter-group"><label>Ca của bạn đó:</label><select id="swapTargetShift">
+                  <option value="Off">Nghỉ (Off)</option>
                   <option value="A">Ca A</option>
                   <option value="B">Ca B</option>
                   <option value="C">Ca C</option>
@@ -3686,15 +3684,21 @@
       return rostersByWeek;
     }
 
-    function saveCurrentRoster(roster) {
-      const weekKey = getWeekKey(currentWeekOffset);
-      const rostersByWeek = JSON.parse(localStorage.getItem('carmel_rosters_by_week')) || {};
-      rostersByWeek[weekKey] = roster;
-      localStorage.setItem('carmel_rosters_by_week', JSON.stringify(rostersByWeek));
-      if (currentWeekOffset === 0) localStorage.setItem('carmel_master_roster', JSON.stringify(roster));
-      pushDataToServer({ carmel_rosters_by_week: rostersByWeek, carmel_master_roster: roster });
-    }
+    let isSavingData = false;
 
+    async function saveCurrentRoster(roster) {
+      isSavingData = true;
+      try {
+        const weekKey = getWeekKey(currentWeekOffset);
+        const rostersByWeek = JSON.parse(localStorage.getItem('carmel_rosters_by_week')) || {};
+        rostersByWeek[weekKey] = roster;
+        localStorage.setItem('carmel_rosters_by_week', JSON.stringify(rostersByWeek));
+        if (currentWeekOffset === 0) localStorage.setItem('carmel_master_roster', JSON.stringify(roster));
+        await pushDataToServer({ carmel_rosters_by_week: rostersByWeek, carmel_master_roster: roster });
+      } finally {
+        isSavingData = false;
+      }
+    }
     function getCurrentRegistrations() {
       const weekKey = getWeekKey(currentWeekOffset);
       const regsByWeek = JSON.parse(localStorage.getItem('carmel_registrations_by_week')) || {};
@@ -4713,18 +4717,18 @@
         emergencyCandidates.slice(0, stillNeeded).forEach(name => assignShiftToStaff(name, dayKey, shiftKey));
       });
 
-      saveCurrentRoster(newRoster);
       return newRoster;
     }
-    function rebalanceMasterRoster() {
+
+    async function rebalanceMasterRoster() {
       if (currentUser.role !== 'manager') return;
       const newRoster = rebalanceAlgorithm();
       if (!newRoster) { alert('Chưa có nhân viên để chia lịch!'); return; }
+      await saveCurrentRoster(newRoster);
       renderRosterGridTable();
       renderSalaryTable();
       alert('Đã chia lịch tuần thành công!');
     }
-
     function renderRosterGridTable() {
       renderCustomShiftCodesUI();
       const tbody = document.getElementById('rosterGridBody');
@@ -4829,12 +4833,12 @@
       closeCustomShiftModal();
     }
 
-    function adminUpdateCell(staffName, dayKey, newShift) {
+    async function adminUpdateCell(staffName, dayKey, newShift) {
       let masterRoster = getCurrentRoster();
       if (!masterRoster[staffName]) masterRoster[staffName] = {};
       masterRoster[staffName][dayKey] = newShift;
       syncPinnedTemplateIfNeeded(staffName, dayKey, newShift);
-      saveCurrentRoster(masterRoster);
+      await saveCurrentRoster(masterRoster);
       renderRosterGridTable();
       renderSalaryTable();
     }
@@ -4847,7 +4851,7 @@
       Object.keys(userAccounts).forEach(name => {
         if (name.toLowerCase() !== 'admin') emptyRoster[name] = { t2: 'Off', t3: 'Off', t4: 'Off', t5: 'Off', t6: 'Off', t7: 'Off', cn: 'Off' };
       });
-      saveCurrentRoster(emptyRoster);
+      await saveCurrentRoster(emptyRoster);
       renderRosterGridTable();
       renderSalaryTable();
     }
@@ -5147,6 +5151,22 @@
       const targetStaff = document.getElementById('passTargetStaff').value;
       if (!targetStaff) { alert('Chưa có nhân viên nhận ca!'); if (btn) btn.disabled = false; return; }
 
+      const currentRoster = getCurrentRoster();
+      const myCell = (currentRoster[currentUser.name] && currentRoster[currentUser.name][day]) || 'Off';
+      const targetCell = (currentRoster[targetStaff] && currentRoster[targetStaff][day]) || 'Off';
+
+      const shiftRegex = new RegExp(`(?:^|[^A-Za-z])${shift}(?:[0-9]|\\(|$|[^A-Za-z])`, 'i');
+      if (!shiftRegex.test(myCell)) {
+        alert(`Bạn không có Ca ${shift} vào ${dayNames[day]} trên Bảng Lịch Làm để pass!`);
+        if (btn) btn.disabled = false;
+        return;
+      }
+      if (shiftRegex.test(targetCell)) {
+        alert(`${targetStaff} đã có sẵn Ca ${shift} vào ${dayNames[day]} rồi!`);
+        if (btn) btn.disabled = false;
+        return;
+      }
+
       const newReq = { id: Date.now(), type: 'PASS', from: currentUser.name, to: targetStaff, fromDay: day, fromShift: shift, status: 'PENDING', weekKey: getWeekKey(currentWeekOffset) };
       let requests = JSON.parse(localStorage.getItem('carmel_shift_requests')) || [];
       requests.push(newReq);
@@ -5176,6 +5196,26 @@
       const targetShift = document.getElementById('swapTargetShift').value;
 
       if (!targetStaff) { alert('Chưa chọn nhân viên đổi ca!'); if (btn) btn.disabled = false; return; }
+
+      const currentRoster = getCurrentRoster();
+      const myCell = (currentRoster[currentUser.name] && currentRoster[currentUser.name][myDay]) || 'Off';
+      const targetCell = (currentRoster[targetStaff] && currentRoster[targetStaff][targetDay]) || 'Off';
+
+      const myShiftRegex = new RegExp(`(?:^|[^A-Za-z])${myShift}(?:[0-9]|\\(|$|[^A-Za-z])`, 'i');
+      if (!myShiftRegex.test(myCell)) {
+        alert(`Bạn không có Ca ${myShift} vào ${dayNames[myDay]} trên Bảng Lịch Làm để đổi!`);
+        if (btn) btn.disabled = false;
+        return;
+      }
+
+      if (targetShift !== 'Off') {
+        const targetShiftRegex = new RegExp(`(?:^|[^A-Za-z])${targetShift}(?:[0-9]|\\(|$|[^A-Za-z])`, 'i');
+        if (!targetShiftRegex.test(targetCell)) {
+          alert(`${targetStaff} không có Ca ${targetShift} vào ${dayNames[targetDay]} trên Bảng Lịch Làm để đổi!`);
+          if (btn) btn.disabled = false;
+          return;
+        }
+      }
 
       const newReq = { id: Date.now(), type: 'SWAP', from: currentUser.name, to: targetStaff, fromDay: myDay, fromShift: myShift, toDay: targetDay, toShift: targetShift, status: 'PENDING', weekKey: getWeekKey(currentWeekOffset) };
       let requests = JSON.parse(localStorage.getItem('carmel_shift_requests')) || [];
@@ -5260,16 +5300,18 @@
       const req = requests.find(r => r.id === reqId);
       if (!req) return;
 
-      // Hàm phụ tách chuỗi ca thành mảng các block (vd: "A(7h-12h)B" -> ["A(7h-12h)", "B"])
       function splitShiftBlocks(str) {
         if (!str || str === 'Off') return [];
-        return str.match(/[A-C](?:\([^)]+\))?/gi) || [];
+        const customCodes = Object.keys(getCustomShiftCodes()).sort((a, b) => b.length - a.length);
+        const escapedCodes = customCodes.map(c => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        const patternParts = [...escapedCodes, '[A-C]'];
+        const regex = new RegExp(`(?:${patternParts.join('|')})(?:\\([^)]+\\))?`, 'gi');
+        return str.match(regex) || [];
       }
 
-      // Hàm phụ nối lại các block ca theo thứ tự A -> B -> C
       function joinShiftBlocks(blocks) {
         if (!blocks || blocks.length === 0) return 'Off';
-        const unique = Array.from(new Set(blocks)).sort((a, b) => a.charAt(0).localeCompare(b.charAt(0)));
+        const unique = Array.from(new Set(blocks)).sort((a, b) => a.localeCompare(b));
         return unique.join('');
       }
 
@@ -5300,45 +5342,58 @@
 
       } else if (req.type === 'SWAP') {
         const fromBlocks = splitShiftBlocks(masterRoster[req.from][req.fromDay]);
-        const toBlocks = splitShiftBlocks(masterRoster[req.to][req.toDay]);
-
         const fromMatched = fromBlocks.find(b => b.startsWith(req.fromShift));
-        const toMatched = toBlocks.find(b => b.startsWith(req.toShift));
-        if (!fromMatched || !toMatched) {
-          alert('Ca nguồn không còn trong lịch chính thức. Yêu cầu đổi ca không thể duyệt.');
+        if (!fromMatched) {
+          alert(`Nhân viên ${req.from} không còn Ca ${req.fromShift} trong lịch chính thức.`);
           return;
         }
 
-        masterRoster[req.from][req.fromDay] = joinShiftBlocks(fromBlocks.filter(b => !b.startsWith(req.fromShift)));
-        masterRoster[req.to][req.toDay] = joinShiftBlocks(toBlocks.filter(b => !b.startsWith(req.toShift)));
+        if (req.toShift === 'Off') {
+          masterRoster[req.from][req.fromDay] = joinShiftBlocks(fromBlocks.filter(b => !b.startsWith(req.fromShift)));
+          const toNewSourceBlocks = splitShiftBlocks(masterRoster[req.to][req.fromDay]);
+          if (!toNewSourceBlocks.some(b => b.startsWith(req.fromShift))) toNewSourceBlocks.push(fromMatched);
+          masterRoster[req.to][req.fromDay] = joinShiftBlocks(toNewSourceBlocks);
+        } else {
+          const toBlocks = splitShiftBlocks(masterRoster[req.to][req.toDay]);
+          const toMatched = toBlocks.find(b => b.startsWith(req.toShift));
+          if (!toMatched) {
+            alert(`Nhân viên ${req.to} không còn Ca ${req.toShift} trong lịch chính thức.`);
+            return;
+          }
 
-        const fromNewTargetBlocks = splitShiftBlocks(masterRoster[req.from][req.toDay]);
-        if (!fromNewTargetBlocks.some(b => b.startsWith(req.toShift))) fromNewTargetBlocks.push(toMatched);
-        masterRoster[req.from][req.toDay] = joinShiftBlocks(fromNewTargetBlocks);
+          masterRoster[req.from][req.fromDay] = joinShiftBlocks(fromBlocks.filter(b => !b.startsWith(req.fromShift)));
+          masterRoster[req.to][req.toDay] = joinShiftBlocks(toBlocks.filter(b => !b.startsWith(req.toShift)));
 
-        const toNewSourceBlocks = splitShiftBlocks(masterRoster[req.to][req.fromDay]);
-        if (!toNewSourceBlocks.some(b => b.startsWith(req.fromShift))) toNewSourceBlocks.push(fromMatched);
-        masterRoster[req.to][req.fromDay] = joinShiftBlocks(toNewSourceBlocks);
+          const fromNewTargetBlocks = splitShiftBlocks(masterRoster[req.from][req.toDay]);
+          if (!fromNewTargetBlocks.some(b => b.startsWith(req.toShift))) fromNewTargetBlocks.push(toMatched);
+          masterRoster[req.from][req.toDay] = joinShiftBlocks(fromNewTargetBlocks);
+
+          const toNewSourceBlocks = splitShiftBlocks(masterRoster[req.to][req.fromDay]);
+          if (!toNewSourceBlocks.some(b => b.startsWith(req.fromShift))) toNewSourceBlocks.push(fromMatched);
+          masterRoster[req.to][req.fromDay] = joinShiftBlocks(toNewSourceBlocks);
+        }
       }
 
-      req.status = 'APPROVED';
-      localStorage.setItem('carmel_shift_requests', JSON.stringify(requests));
-
-      rostersByWeek[requestWeekKey] = masterRoster;
-      localStorage.setItem('carmel_rosters_by_week', JSON.stringify(rostersByWeek));
-      if (requestWeekKey === getWeekKey(0)) {
-        localStorage.setItem('carmel_master_roster', JSON.stringify(masterRoster));
-      }
-      pushDataToServer({
-        carmel_rosters_by_week: rostersByWeek,
-        ...(requestWeekKey === getWeekKey(0) ? { carmel_master_roster: masterRoster } : {})
-      });
-
-      renderRosterGridTable();
-      renderSalaryTable();
-      renderShiftRequests();
-
+      isSavingData = true;
       try {
+        req.status = 'APPROVED';
+        localStorage.setItem('carmel_shift_requests', JSON.stringify(requests));
+
+        rostersByWeek[requestWeekKey] = masterRoster;
+        localStorage.setItem('carmel_rosters_by_week', JSON.stringify(rostersByWeek));
+        if (requestWeekKey === getWeekKey(0)) {
+          localStorage.setItem('carmel_master_roster', JSON.stringify(masterRoster));
+        }
+
+        renderRosterGridTable();
+        renderSalaryTable();
+        renderShiftRequests();
+
+        await pushDataToServer({
+          carmel_rosters_by_week: rostersByWeek,
+          ...(requestWeekKey === getWeekKey(0) ? { carmel_master_roster: masterRoster } : {})
+        });
+
         await apiFetch('/api/shifts/handle-request', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -5350,13 +5405,14 @@
             weekKey: requestWeekKey
           })
         });
+
+        alert('Đã phê duyệt, cập nhật bảng lịch làm, tính lại chấm công và gửi thông báo cho nhân viên!');
       } catch (e) {
         console.error('Lỗi gửi duyệt ca lên server:', e);
+      } finally {
+        isSavingData = false;
       }
-
-      alert('Đã phê duyệt, cập nhật bảng lịch làm, tính lại chấm công và gửi thông báo cho nhân viên!');
-    }
-    async function rejectRequest(reqId) {
+    } async function rejectRequest(reqId) {
       if (currentUser.role !== 'manager') return;
       let requests = JSON.parse(localStorage.getItem('carmel_shift_requests')) || [];
       const req = requests.find(r => r.id === reqId);
@@ -5801,6 +5857,12 @@
       }
     }
     setInterval(() => {
+      const activeTag = document.activeElement ? document.activeElement.tagName : '';
+      const isUserTypingOrSelecting = ['INPUT', 'SELECT', 'TEXTAREA'].includes(activeTag);
+      const isModalOpen = document.querySelector('.custom-modal.active') !== null;
+
+      if (isSavingData || isUserTypingOrSelecting || isModalOpen) return;
+
       syncDataFromServer();
       if (document.getElementById('tab-logs')?.style.display !== 'none') {
         loadAuditLogs();
